@@ -288,14 +288,34 @@ export default function BusFareCalculator() {
       {/* ════════════════════════════════════════════════
           Hero Header
           ════════════════════════════════════════════════ */}
-      <header className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 dark:from-slate-950 dark:via-blue-950/50 dark:to-indigo-950 border-b border-white/5 dark:border-white/10">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-24 left-1/4 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl" />
-          <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 right-10 w-[200px] h-[200px] bg-amber-500/10 dark:bg-amber-500/5 rounded-full blur-2xl" />
+      <header className="relative overflow-hidden bg-slate-900 dark:bg-slate-950 border-b border-white/5 dark:border-white/10">
+        {/* ─── Image Slideshow Background ─── */}
+        <div className="absolute inset-0 z-0">
+          {SLIDES.map((src, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <img
+                src={src}
+                alt={`NSU Campus ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-blue-950/80 to-indigo-950/90 dark:from-slate-950/95 dark:via-blue-950/90 dark:to-indigo-950/95" />
+            </div>
+          ))}
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <div className="absolute -top-24 left-1/4 w-[500px] h-[500px] bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl mix-blend-screen" />
+          <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] bg-indigo-500/20 dark:bg-indigo-500/10 rounded-full blur-3xl mix-blend-screen" />
+          <div className="absolute top-1/2 right-10 w-[200px] h-[200px] bg-amber-500/20 dark:bg-amber-500/10 rounded-full blur-2xl mix-blend-screen" />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
           <div className="flex justify-between items-start mb-5">
             <div className="flex items-center gap-3 animate-fade-in-up">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/25 backdrop-blur-sm">
@@ -336,6 +356,22 @@ export default function BusFareCalculator() {
               {TOTAL_DAYS} Total Days
             </span>
           </div>
+
+          {/* ─── Slide Indicators ─── */}
+          <div className="mt-8 flex gap-2.5 animate-fade-in-up animation-delay-300">
+            {SLIDES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  index === currentSlide
+                    ? "w-8 h-2 bg-white shadow-md shadow-black/20"
+                    : "w-2 h-2 bg-white/40 hover:bg-white/80"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </header>
 
@@ -343,41 +379,6 @@ export default function BusFareCalculator() {
           Main Content
           ════════════════════════════════════════════════ */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        
-        {/* ─── Image Slideshow ─── */}
-        <div className="mb-10 relative w-full h-[250px] sm:h-[350px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/5 group animate-fade-in-up animation-delay-200">
-          {SLIDES.map((src, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === currentSlide ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <img
-                src={src}
-                alt={`NSU Campus ${index + 1}`}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            </div>
-          ))}
-          {/* Slide Indicators */}
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2.5 z-10">
-            {SLIDES.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentSlide
-                    ? "w-8 h-2.5 bg-white shadow-md shadow-black/20"
-                    : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
         {/* ─── Route Selector ─── */}
         <div className="mb-8 animate-fade-in-up animation-delay-200">
           <label
