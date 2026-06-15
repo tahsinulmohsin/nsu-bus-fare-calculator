@@ -268,7 +268,7 @@ export default function BusFareCalculator() {
      Render
      ═════════════════════════════════════════════════════ */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/20 transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-slate-950 dark:bg-gradient-to-br dark:from-slate-950 dark:via-blue-950/20 dark:to-indigo-950/20 transition-colors duration-300">
       {/* ════════════════════════════════════════════════
           Hero Header
           ════════════════════════════════════════════════ */}
