@@ -170,10 +170,9 @@ const ROUTES: Record<string, RouteData> = {
    Slideshow Images
    ═══════════════════════════════════════════════════════ */
 const SLIDES = [
-  "/images/1.jpg",
-  "/images/2.jpg",
-  "/images/3.jpg",
-  "/images/4.jpg",
+  "/images/image-1.png",
+  "/images/image-2.png",
+  "/images/image-3.png",
 ];
 
 /* ═══════════════════════════════════════════════════════
