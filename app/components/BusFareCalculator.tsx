@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useTheme } from "next-themes";
+import Image from "next/image";
 import {
   Bus,
   Calculator,
@@ -166,11 +167,21 @@ const ROUTES: Record<string, RouteData> = {
 };
 
 /* ═══════════════════════════════════════════════════════
+   Slideshow Images
+   ═══════════════════════════════════════════════════════ */
+const SLIDES = [
+  "/images/campus.png",
+  "/images/bus_fleet.png",
+  "/images/students.png",
+];
+
+/* ═══════════════════════════════════════════════════════
    Component
    ═══════════════════════════════════════════════════════ */
 export default function BusFareCalculator() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   /* ── State ── */
   const [selectedRoute, setSelectedRoute] = useState<string>("");
@@ -191,6 +202,11 @@ export default function BusFareCalculator() {
     if (Date.now() > deadline) {
       setIsDeadlineOver(true);
     }
+
+    const slideInterval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    }, 5000);
+    return () => clearInterval(slideInterval);
   }, []);
 
   /* ── Precomputed weekday counts for semester ── */
@@ -327,6 +343,41 @@ export default function BusFareCalculator() {
           Main Content
           ════════════════════════════════════════════════ */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        
+        {/* ─── Image Slideshow ─── */}
+        <div className="mb-10 relative w-full h-[250px] sm:h-[350px] lg:h-[450px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/5 group animate-fade-in-up animation-delay-200">
+          {SLIDES.map((src, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <img
+                src={src}
+                alt={`NSU Campus ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            </div>
+          ))}
+          {/* Slide Indicators */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2.5 z-10">
+            {SLIDES.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  index === currentSlide
+                    ? "w-8 h-2.5 bg-white shadow-md shadow-black/20"
+                    : "w-2.5 h-2.5 bg-white/50 hover:bg-white/80"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
         {/* ─── Route Selector ─── */}
         <div className="mb-8 animate-fade-in-up animation-delay-200">
           <label
