@@ -1,4 +1,4 @@
-# NSU Bus Fare Calculator 🚌
+# NSU Bus Fare Calculator 🚌 (v1.1.0)
 
 A modern, responsive web application designed for students of North South University (NSU) to calculate their bus fare for the Summer 2026 semester.
 
@@ -17,7 +17,7 @@ A modern, responsive web application designed for students of North South Univer
 - [React 19](https://react.dev/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [Lucide React](https://lucide.dev/) (Icons)
-- [next-themes](https://github.com/pacocoursey/next-themes) (Dark mode)
+- [next-themes](https://github.com/pacocoursey/next-themes) (Dark mode toggle)
 
 ## Getting Started 🚀
 
