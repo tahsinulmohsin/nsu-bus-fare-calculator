@@ -1,4 +1,4 @@
-# NSU Bus Fare Calculator 🚌 (v1.1.0)
+# NSU Bus Fare Calculator 🚌 (v1.1.1)
 
 A modern, responsive web application designed for students of North South University (NSU) to calculate their bus fare for the Summer 2026 semester.
 
