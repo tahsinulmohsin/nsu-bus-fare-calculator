@@ -1,27 +1,34 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Providers";
+import { SEMESTER_LABEL } from "./lib/semester";
 
-const poppins = Poppins({
+const geist = Geist({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-poppins",
+  variable: "--font-geist",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "NSU Bus Fare Calculator | Summer 2026",
+  title: `NSU Bus Fare Calculator | ${SEMESTER_LABEL}`,
   description:
-    "Calculate your semester bus fare and view pickup schedules for North South University Summer 2026 bus service. Covers 6 routes across Dhaka.",
+    `Work out your NSU bus fare for ${SEMESTER_LABEL}, check pickup points and times across 6 routes in Dhaka, and follow the Summer 2026 fare refund steps.`,
   keywords: [
     "NSU",
     "North South University",
     "bus fare",
     "calculator",
-    "Summer 2026",
+    SEMESTER_LABEL,
     "transport",
     "schedule",
+    "fare refund",
   ],
 };
 
@@ -32,7 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className} antialiased`}>
+      <body
+        className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

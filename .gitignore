@@ -27,3 +27,7 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# local agent tooling
+.claude-flow/
+.claude/

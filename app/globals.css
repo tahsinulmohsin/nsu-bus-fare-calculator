@@ -3,7 +3,26 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: var(--font-poppins), "Poppins", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Design tokens
+
+   Accent lock: blue is the single brand accent. Orange is
+   reserved for the one primary booking action. Red, amber and
+   emerald appear only as semantic status, always paired with an
+   icon or text so colour is never the only signal.
+
+   Radius scale: cards 16px, controls 10px, pills full.
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --radius-card: 16px;
+  --radius-control: 10px;
 }
 
 html {
@@ -15,75 +34,140 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ─── Animations ──────────────────────────────────── */
-@keyframes fade-in-up {
+/* ═══════════════════════════════════════════════════════
+   Motion
+
+   Durations stay under 300ms for interface feedback. Easing is
+   ease-out on entry so movement starts immediately. Entries never
+   scale from 0, and every animation collapses under
+   prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════ */
+@keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translate3d(0, 14px, 0);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
   }
 }
 
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35);
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.98);
   }
-  50% {
-    box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 
-.animate-fade-in-up {
-  animation: fade-in-up 0.6s ease-out both;
+/* Hero copy enters on load, staggered by 60ms per element. */
+.rise {
+  animation: rise 520ms var(--ease-out) both;
 }
 
-.animation-delay-100 {
-  animation-delay: 100ms;
-}
-.animation-delay-200 {
-  animation-delay: 200ms;
-}
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-.animation-delay-400 {
-  animation-delay: 400ms;
+.stagger-1 { animation-delay: 60ms; }
+.stagger-2 { animation-delay: 120ms; }
+.stagger-3 { animation-delay: 180ms; }
+.stagger-4 { animation-delay: 240ms; }
+
+/* Scroll reveal. The element is hidden until the observer marks it
+   visible, then settles into place. */
+.reveal {
+  opacity: 0;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2.5s ease-in-out infinite;
+.reveal[data-visible="true"] {
+  animation: settle 480ms var(--ease-out) both;
 }
 
-/* ─── Custom Scrollbar ────────────────────────────── */
+/* Without JavaScript the observer never runs, so the reveal must not
+   be allowed to hide content permanently. */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+  }
+}
+
+/* Content that swaps inside a container crossfades rather than
+   snapping, so the change reads as one object updating. */
+.swap {
+  animation: settle 320ms var(--ease-out) both;
+}
+
+/* Pressable surfaces confirm the press instantly. */
+.pressable {
+  transition: transform 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out), color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+.pressable:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rise,
+  .reveal[data-visible="true"],
+  .swap {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+  }
+
+  .pressable {
+    transition: background-color 160ms linear, border-color 160ms linear,
+      color 160ms linear;
+  }
+
+  .pressable:active {
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Form and scrollbar details
+   ═══════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 3px;
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #94a3b8;
+}
+:where(.dark) ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+:where(.dark) ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
 
-/* ─── Number Input Spinners ───────────────────────── */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -93,7 +177,15 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-/* ─── Select Arrow Override ───────────────────────── */
 select {
   background-image: none;
+}
+
+/* Keyboard focus stays visible everywhere. */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+:where(.dark) :focus-visible {
+  outline-color: #60a5fa;
 }
