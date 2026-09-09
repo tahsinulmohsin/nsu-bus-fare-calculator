@@ -132,8 +132,11 @@ export default function BusFareCalculator() {
           {/* Navigation stays on one line and under 80px tall. */}
           <nav className="flex h-[72px] items-center justify-between">
             <span className="flex items-center gap-2 text-sm font-semibold text-white">
-              <Bus className="h-5 w-5 text-blue-400" aria-hidden="true" />
-              NSU Bus Fare
+              <Bus className="h-5 w-5 shrink-0 text-blue-400" aria-hidden="true" />
+              <span className="hidden sm:inline">
+                North South University Bus Fare
+              </span>
+              <span className="sm:hidden">NSU Bus Fare</span>
             </span>
             {mounted && (
               <button
@@ -197,8 +200,8 @@ export default function BusFareCalculator() {
             />
             <p className="text-sm leading-relaxed text-amber-900 dark:text-amber-100">
               <span className="font-semibold">
-                NSU has not published the official {SEMESTER_LABEL} bus service
-                notice yet.
+                North South University has not published the official{" "}
+                {SEMESTER_LABEL} bus service notice yet.
               </span>{" "}
               The dates, booking window and fares here are worked out from the{" "}
               {SEMESTER_LABEL} academic calendar and how last semester ran, so
@@ -577,7 +580,7 @@ export default function BusFareCalculator() {
         <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <span className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300">
             <Bus className="h-4 w-4" aria-hidden="true" />
-            NSU Bus Fare Calculator, {SEMESTER_LABEL}
+            North South University Bus Fare Calculator, {SEMESTER_LABEL}
           </span>
           <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
             Unofficial tool. Always check the{" "}

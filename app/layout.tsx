@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `NSU Bus Fare Calculator | ${SEMESTER_LABEL}`,
   description:
-    `Work out your NSU bus fare for ${SEMESTER_LABEL}, check pickup points and times across 6 routes in Dhaka, and follow the Summer 2026 fare refund steps.`,
+    `Work out your North South University (NSU) bus fare for ${SEMESTER_LABEL}, check pickup points and times across 6 routes in Dhaka, and follow the Summer 2026 fare refund steps.`,
   keywords: [
     "NSU",
     "North South University",

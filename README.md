@@ -1,4 +1,4 @@
-# NSU Bus Fare Calculator (v2.0.0)
+# North South University (NSU) Bus Fare Calculator (v2.0.1)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
