@@ -1,15 +1,19 @@
 "use client";
 
-import { ArrowRight, Bus, Clock, MapPin } from "lucide-react";
-import { LIMITED_DEPARTURE_ROUTES, ROUTES, ROUTE_LIST } from "../lib/routes";
+import { ArrowRight, Bus, Clock, Info, MapPin } from "lucide-react";
+import {
+  ARRIVALS,
+  DEPARTURE_NOTES,
+  ROUTES,
+  ROUTE_LIST,
+} from "../lib/routes";
 import { TRIP_LABELS } from "../lib/semester";
 import { Reveal } from "./Reveal";
 
-/* Pickup points, campus arrivals and campus departures for one route.
+/* Stoppages, campus arrivals and campus departures for one route.
 
-   Pickup times are a small matrix (point against trip), so it stays a
-   table on desktop and becomes one card per point on mobile rather
-   than a table that scrolls sideways. */
+   Each stoppage carries a single indicative morning pickup time, so the
+   same list works at every width without a table that scrolls sideways. */
 export function RouteSchedule({
   selectedRoute,
   onSelectRoute,
@@ -19,7 +23,7 @@ export function RouteSchedule({
 }) {
   const routeData = selectedRoute ? ROUTES[selectedRoute] : null;
   const routeInfo = ROUTE_LIST.find((r) => r.key === selectedRoute);
-  const limitedDepartures = LIMITED_DEPARTURE_ROUTES.includes(selectedRoute);
+  const departureNote = DEPARTURE_NOTES[selectedRoute];
 
   return (
     <section
@@ -32,12 +36,11 @@ export function RouteSchedule({
             Routes and timings
           </h2>
           <p className="mt-3 max-w-[65ch] leading-relaxed text-slate-600 dark:text-slate-300">
-            Six routes across Dhaka. Pick one to see where it stops, when it
-            reaches campus, and when it leaves.
+            Six routes across Dhaka. Every route reaches campus at the same
+            three times, but the evening trips back differ by route.
           </p>
         </Reveal>
 
-        {/* Route picker */}
         <Reveal delay={60}>
           <div
             className="mt-8 flex flex-wrap gap-2"
@@ -60,9 +63,7 @@ export function RouteSchedule({
                 >
                   <span
                     className={`font-mono text-xs ${
-                      active
-                        ? "text-blue-100"
-                        : "text-slate-400 dark:text-slate-500"
+                      active ? "text-blue-100" : "text-slate-400 dark:text-slate-500"
                     }`}
                   >
                     {route.number}
@@ -76,7 +77,7 @@ export function RouteSchedule({
 
         {routeData && routeInfo ? (
           <div key={selectedRoute} className="swap mt-8 space-y-6">
-            {/* Pickup points */}
+            {/* Stoppages */}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
               <div className="flex items-center gap-2.5 border-b border-slate-200 px-6 py-4 dark:border-slate-800">
                 <MapPin
@@ -84,84 +85,38 @@ export function RouteSchedule({
                   aria-hidden="true"
                 />
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                  {routeInfo.label} pickup points
+                  {routeInfo.label} stoppages
                 </h3>
               </div>
 
-              {/* Desktop: matrix of point against trip */}
-              <div className="hidden sm:block">
-                <table className="w-full text-left text-sm">
-                  <caption className="sr-only">
-                    Pickup points and departure times for the {routeInfo.label}{" "}
-                    route
-                  </caption>
-                  <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800">
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400"
-                      >
-                        Pickup point
-                      </th>
-                      {TRIP_LABELS.map((label) => (
-                        <th
-                          key={label}
-                          scope="col"
-                          className="px-4 py-3 text-xs font-semibold tracking-wide text-slate-500 uppercase dark:text-slate-400"
-                        >
-                          {label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {routeData.pickups.map((pickup) => (
-                      <tr
-                        key={pickup.point}
-                        className="border-b border-slate-100 last:border-0 dark:border-slate-800/60"
-                      >
-                        <th
-                          scope="row"
-                          className="px-6 py-3.5 pr-8 font-medium text-slate-800 dark:text-slate-200"
-                        >
-                          {pickup.point}
-                        </th>
-                        {pickup.times.map((time, i) => (
-                          <td
-                            key={i}
-                            className="px-4 py-3.5 font-mono text-slate-600 tabular-nums dark:text-slate-300"
-                          >
-                            {time}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile: one card per pickup point */}
-              <ul className="divide-y divide-slate-100 sm:hidden dark:divide-slate-800/60">
-                {routeData.pickups.map((pickup) => (
-                  <li key={pickup.point} className="px-5 py-4">
-                    <p className="font-medium text-slate-800 dark:text-slate-200">
-                      {pickup.point}
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5">
-                      {pickup.times.map((time, i) => (
-                        <span key={i} className="text-sm">
-                          <span className="text-slate-500 dark:text-slate-400">
-                            {TRIP_LABELS[i] ?? `Trip ${i + 1}`}{" "}
-                          </span>
-                          <span className="font-mono text-slate-800 tabular-nums dark:text-slate-200">
-                            {time}
-                          </span>
-                        </span>
-                      ))}
-                    </div>
+              <ol className="grid sm:grid-cols-2">
+                {routeData.pickups.map((pickup, index) => (
+                  <li
+                    key={pickup.point}
+                    className="flex items-baseline justify-between gap-4 border-b border-slate-100 px-6 py-3.5 last:border-0 sm:even:border-l dark:border-slate-800/60"
+                  >
+                    <span className="flex items-baseline gap-3">
+                      <span className="font-mono text-xs text-slate-400 tabular-nums dark:text-slate-500">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-sm text-slate-800 dark:text-slate-200">
+                        {pickup.point}
+                      </span>
+                    </span>
+                    <span className="shrink-0 font-mono text-sm text-slate-600 tabular-nums dark:text-slate-300">
+                      {pickup.morning}
+                    </span>
                   </li>
                 ))}
-              </ul>
+              </ol>
+
+              <p className="flex items-start gap-2 border-t border-slate-100 bg-slate-50 px-6 py-3.5 text-xs leading-relaxed text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                Morning pickup times are indicative, carried over from last
+                semester. The Fall 2026 notice lists the stoppages but no
+                pickup times, and the afternoon and evening trips were
+                re-timed, so check the transport portal for those.
+              </p>
             </div>
 
             {/* Campus arrivals and departures */}
@@ -174,8 +129,9 @@ export function RouteSchedule({
                   />
                 }
                 title="Arrives at NSU"
-                times={routeData.arrivals}
+                times={ARRIVALS}
                 labels={TRIP_LABELS}
+                note="The same three arrivals on all six routes."
               />
               <TimeList
                 icon={
@@ -186,16 +142,11 @@ export function RouteSchedule({
                 }
                 title="Leaves NSU"
                 times={routeData.departures}
-                note={
-                  limitedDepartures
-                    ? "This route has fewer return trips than the others."
-                    : undefined
-                }
+                note={departureNote}
               />
             </div>
           </div>
         ) : (
-          /* Empty state: says what to do next, not just that nothing is here. */
           <Reveal delay={120}>
             <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center dark:border-slate-700 dark:bg-slate-900/50">
               <Bus
@@ -206,8 +157,8 @@ export function RouteSchedule({
                 Pick a route above
               </p>
               <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-                You will get every pickup point with its times, plus when the
-                bus reaches campus and when it heads back.
+                You will get every stoppage on that route, and exactly which
+                trips back to it run in the evening.
               </p>
             </div>
           </Reveal>
@@ -241,7 +192,7 @@ function TimeList({
       <ul className="space-y-2">
         {times.map((time, i) => (
           <li
-            key={i}
+            key={time}
             className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-2.5 dark:bg-slate-800/60"
           >
             <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">

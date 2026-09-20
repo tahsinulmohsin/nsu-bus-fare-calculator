@@ -1,14 +1,28 @@
-/* Route schedules for the NSU student bus service.
-   Times come from the NSU Transport portal. Verify each semester. */
+/* Routes, stoppages and timings for the NSU student bus service.
+
+   Source: "Sale of NSU Students' Bus Ticket - Fall 2026", Office of the
+   Registrar. Stoppage names and every NSU arrival and departure time
+   below are quoted from that notice.
+
+   The notice lists stoppages WITHOUT per-stoppage pickup times, and it
+   standardised the NSU arrival times across all six routes (Summer 2026
+   had a different afternoon or evening arrival on four of them). The
+   afternoon and evening pickup times therefore had to be re-timed and
+   have not been republished, so they are not shown here.
+
+   Morning pickup times are carried over from the Summer 2026 schedule
+   and marked indicative in the UI. They are the one set that still
+   holds: the 7:40 AM arrival and the stoppage list are identical in
+   both notices. Confirm on the transport portal before relying on them. */
 
 export interface PickupPoint {
   point: string;
-  times: string[];
+  /* Indicative morning pickup, carried over from Summer 2026. */
+  morning: string;
 }
 
 export interface RouteData {
   pickups: PickupPoint[];
-  arrivals: string[];
   departures: string[];
 }
 
@@ -27,76 +41,84 @@ export const ROUTE_LIST: RouteInfo[] = [
   { key: "Khilgaon", label: "Khilgaon", number: "06" },
 ];
 
+/* Same three arrivals on every route for Fall 2026. */
+export const ARRIVALS = ["7:40 AM", "2:20 PM", "5:45 PM"];
+
 export const ROUTES: Record<string, RouteData> = {
   Uttara: {
     pickups: [
-      { point: "Abdullahpur (Polwel Market)", times: ["6:55 AM", "1:00 PM", "4:00 PM"] },
-      { point: "House Building (Janata Bank)", times: ["7:00 AM", "1:05 PM", "4:05 PM"] },
-      { point: "Azampur (Uttra East Thana)", times: ["7:05 AM", "1:10 PM", "4:10 PM"] },
-      { point: "Jashimuddin (Footover Bridge)", times: ["7:10 AM", "1:15 PM", "4:15 PM"] },
-      { point: "Airport (Traffic Police Box)", times: ["7:15 AM", "1:20 PM", "4:25 PM"] },
+      { point: "Abdullahpur (Polwel Market)", morning: "6:55 AM" },
+      { point: "House Building (Janata Bank)", morning: "7:00 AM" },
+      { point: "Azampur (Uttara East Police Station)", morning: "7:05 AM" },
+      { point: "Jashimuddin (Foot Over Bridge)", morning: "7:10 AM" },
+      { point: "Airport (Traffic Police Box)", morning: "7:15 AM" },
     ],
-    arrivals: ["7:40 AM", "1:45 PM", "5:20 PM"],
-    departures: ["11:20 AM", "02:40 PM", "06:30 PM"],
+    departures: ["11:20 AM", "2:40 PM", "6:30 PM"],
   },
   Mirpur: {
     pickups: [
-      { point: "Bangla College (Foot Over Bridge)", times: ["6:35 AM", "12:50 PM", "4:10 PM"] },
-      { point: "Mirpur-1, (New Market)", times: ["6:40 AM", "1:00 PM", "4:20 PM"] },
-      { point: "Mirpur-2, (National Bangla High School)", times: ["6:45 AM", "1:05 PM", "4:30 PM"] },
-      { point: "Mirpur-10, (Metro Rail Station)", times: ["6:50 AM", "1:10 PM", "4:40 PM"] },
-      { point: "Mirpur-11, (Metro Rail Station)", times: ["6:55 AM", "1:15 PM", "4:45 PM"] },
-      { point: "Mirpur-12, (CNG Station/Mirpur Ceramic)", times: ["7:00 AM", "1:25 PM", "4:55 PM"] },
-      { point: "ECB Square Jatri Chawni / Footover Bridge", times: ["7:10 AM", "1:35 PM", "5:05 PM"] },
+      { point: "Bangla College (Foot Over Bridge)", morning: "6:35 AM" },
+      { point: "Mirpur-1 (New Market)", morning: "6:40 AM" },
+      { point: "Mirpur-2 (National Bangla High School)", morning: "6:45 AM" },
+      { point: "Mirpur-10 (Metro Rail Station)", morning: "6:50 AM" },
+      { point: "Mirpur-11 (Metro Rail Station)", morning: "6:55 AM" },
+      { point: "Mirpur-12 (CNG Station / Mirpur Ceramic)", morning: "7:00 AM" },
+      { point: "ECB Square (Jatri Chhawni) / Foot Over Bridge", morning: "7:10 AM" },
     ],
-    arrivals: ["7:40 AM", "2:20 PM", "5:50 PM"],
-    departures: ["11:20 AM", "02:40 PM", "06:30 PM", "10:20 PM"],
+    departures: ["11:20 AM", "2:40 PM", "6:30 PM", "10:20 PM"],
   },
   Mohammadpur: {
     pickups: [
-      { point: "Mohammadpur (Japan Garden City)", times: ["6:30 AM", "12:30 PM", "4:15 PM"] },
-      { point: "Oposite of Suchana Community Center (Probal Housing)", times: ["6:35 AM", "12:35 PM", "4:20 PM"] },
-      { point: "Syamoli Bus Stand (Hotel Mohammadia)", times: ["6:40 AM", "12:40 PM", "4:25 PM"] },
-      { point: "Agargoan Metro Rail Station", times: ["6:50 AM", "12:50 PM", "4:35 PM"] },
-      { point: "BAF Shaheen College", times: ["7:00 AM", "1:00 PM", "4:45 PM"] },
-      { point: "Banani Rail Station", times: ["7:10 AM", "1:10 PM", "4:55 PM"] },
+      { point: "Mohammadpur (Japan Garden City)", morning: "6:30 AM" },
+      {
+        point: "Opposite of Suchana Community Center (Probal Housing)",
+        morning: "6:35 AM",
+      },
+      { point: "Syamoli Bus Stand (Hotel Mohammadia)", morning: "6:40 AM" },
+      { point: "Agargoan Metro Rail Station", morning: "6:50 AM" },
+      { point: "BAF Shaheen College", morning: "7:00 AM" },
+      { point: "Banani Rail Station", morning: "7:10 AM" },
     ],
-    arrivals: ["7:40 AM", "2:20 PM", "5:45 PM"],
-    departures: ["11:20 AM", "02:40 PM", "06:30 PM", "10:20 PM"],
+    departures: ["11:20 AM", "2:40 PM", "6:30 PM", "10:20 PM"],
   },
   Dhanmondi: {
     pickups: [
-      { point: "Jigatola Bus Stand (Japan Bangladesh Hospital)", times: ["6:30 AM", "12:40 PM", "4:10 PM"] },
-      { point: "Dhanmondi-27, (Rapa Plaza)", times: ["6:40 AM", "12:55 PM", "4:25 PM"] },
-      { point: "Khamarbari Mor", times: ["6:45 AM", "1:00 PM", "4:35 PM"] },
-      { point: "Mohakhali Fly Over Banani End Point.", times: ["7:00 AM", "1:20 PM", "4:55 PM"] },
+      { point: "Jigatola Bus Stand (Japan Bangladesh Hospital)", morning: "6:30 AM" },
+      { point: "Dhanmondi-27 (Rapa Plaza)", morning: "6:40 AM" },
+      /* The notice prints "Khamarbari Mother", which is a typo for
+         "Khamarbari Mor" as printed in earlier notices. */
+      { point: "Khamarbari Mor", morning: "6:45 AM" },
+      { point: "Mohakhali Fly Over (Banani End Point)", morning: "7:00 AM" },
     ],
-    arrivals: ["7:40 AM", "2:20 PM", "5:30 PM"],
-    departures: ["11:20 AM", "02:40 PM", "06:30 PM"],
+    departures: ["11:20 AM", "2:40 PM", "6:30 PM"],
   },
   Azimpur: {
     pickups: [
-      { point: "Azimpur (Matri Sadan Hospital)", times: ["6:30 AM", "12:40 PM", "4:40 PM"] },
-      { point: "Katabon Bus Stand", times: ["6:40 AM", "12:55 PM", "4:50 PM"] },
-      { point: "Bangla Motor Pharmacy Council Office", times: ["6:45 AM", "01:05 PM", "5:05 PM"] },
-      { point: "Mogbazar (NCC Bank)", times: ["6:50 AM", "1:20 PM", "5:20 PM"] },
-      { point: "Gulshan Niketon Gate-1, (Jatri Chawni)", times: ["7:00 AM", "1:30 PM", "5:40 PM"] },
+      { point: "Azimpur (Matri Sadan Hospital)", morning: "6:30 AM" },
+      { point: "Katabon Bus Stand", morning: "6:40 AM" },
+      { point: "Bangla Motor Pharmacy Council Office", morning: "6:45 AM" },
+      { point: "Mogbazar (NCC Bank)", morning: "6:50 AM" },
+      { point: "Gulshan Niketon Gate-1 (Jatri Chhawni)", morning: "7:00 AM" },
     ],
-    arrivals: ["7:40 AM", "1:50 PM", "6:50 PM"],
-    departures: ["11:20 AM", "02:40 PM"],
+    departures: ["11:20 AM", "2:40 PM"],
   },
   Khilgaon: {
     pickups: [
-      { point: "Notre Dame College", times: ["6:30 AM", "12:40 PM", "4:35 PM"] },
-      { point: "Rajarbag Bus Stand", times: ["6:35 AM", "12:45 PM", "4:45 PM"] },
-      { point: "Khilgaon Bagicha Jame Masjid", times: ["6:40 AM", "12:50 PM", "4:55 PM"] },
-      { point: "Malibagh Rail Gate (Ibne Sina Hospital)", times: ["6:50 AM", "12:55 PM", "5:10 PM"] },
-      { point: "Malibag (Abul Hotel)", times: ["6:55 AM", "1:00 PM", "5:15 PM"] },
-      { point: "Rampura Bridge opposite of BTV", times: ["7:00 AM", "1:05 PM", "5:25 PM"] },
+      { point: "Notre Dame College", morning: "6:30 AM" },
+      { point: "Rajarbag Bus Stand", morning: "6:35 AM" },
+      { point: "Khilgaon Bagicha Jame Masjid", morning: "6:40 AM" },
+      { point: "Malibagh Rail Gate (Ibne Sina Hospital)", morning: "6:50 AM" },
+      { point: "Malibag Abul Hotel", morning: "6:55 AM" },
+      { point: "Rampura Bridge (Opposite of BTV)", morning: "7:00 AM" },
     ],
-    arrivals: ["7:40 AM", "2:20 PM", "6:50 PM"],
-    departures: ["11:20 AM", "02:40 PM"],
+    departures: ["11:20 AM", "2:40 PM"],
   },
 };
 
-export const LIMITED_DEPARTURE_ROUTES = ["Azimpur", "Khilgaon"];
+/* Why a route's evening departures stop early, quoted from the notice. */
+export const DEPARTURE_NOTES: Record<string, string> = {
+  Uttara: "No 10:20 PM departure to Uttara.",
+  Dhanmondi: "No 10:20 PM departure to Dhanmondi.",
+  Azimpur: "No 6:30 PM or 10:20 PM departure to Azimpur.",
+  Khilgaon: "No 6:30 PM or 10:20 PM departure to Khilgaon.",
+};

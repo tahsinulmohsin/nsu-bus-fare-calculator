@@ -15,9 +15,7 @@ import {
   Ticket,
 } from "lucide-react";
 import {
-  BOOKING_DEADLINE_ISO,
   BOOKING_URL,
-  BOOKING_WINDOW,
   CALENDAR_URL,
   CHARGEABLE_DAYS,
   FARE_PER_TRIP,
@@ -28,13 +26,14 @@ import {
   SEMESTER_LABEL,
   SEMESTER_START,
   SEMESTER_START_DATE,
+  TICKET_SALES,
   TOTAL_DAYS,
   TRIP_LABELS,
   WEEKDAYS,
   countWeekdayInRange,
   type TripType,
 } from "../lib/semester";
-import { ROUTES, ROUTE_LIST } from "../lib/routes";
+import { ARRIVALS, ROUTES, ROUTE_LIST } from "../lib/routes";
 import { HeroVideo } from "./HeroVideo";
 import { RefundNotice } from "./RefundNotice";
 import { Reveal } from "./Reveal";
@@ -56,12 +55,20 @@ export default function BusFareCalculator() {
   const [fromNsuTiming, setFromNsuTiming] = useState("");
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [suspensions, setSuspensions] = useState(0);
-  const [bookingClosed, setBookingClosed] = useState(false);
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    setBookingClosed(Date.now() > new Date(BOOKING_DEADLINE_ISO).getTime());
+    setNow(Date.now());
   }, []);
+
+  /* Round trip and one way tickets sell in different windows, so the
+     note under the booking button follows the selected trip type. */
+  const sale = TICKET_SALES[tripType];
+  const saleClosed =
+    now !== null &&
+    sale.deadlineISO !== undefined &&
+    now > new Date(sale.deadlineISO).getTime();
 
   /* How many times each weekday falls inside the service period. */
   const weekdayCounts = useMemo(() => {
@@ -315,7 +322,7 @@ export default function BusFareCalculator() {
                         className="mt-2 min-h-11 w-full cursor-pointer rounded-[10px] border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                       >
                         <option value="">Any timing</option>
-                        {routeData.arrivals.map((time, i) => (
+                        {ARRIVALS.map((time, i) => (
                           <option key={i} value={String(i)}>
                             {TRIP_LABELS[i] ?? `Trip ${i + 1}`}, arrives {time}
                           </option>
@@ -517,17 +524,23 @@ export default function BusFareCalculator() {
                       <Ticket className="h-4 w-4" aria-hidden="true" />
                       Book on the NSU portal
                     </a>
-                    <p className="mt-3 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                      {tripType === "per-day" ? (
-                        "Ad hoc trips can be booked up to an hour before departure."
-                      ) : bookingClosed ? (
-                        <span className="font-medium text-red-600 dark:text-red-400">
-                          Booking for this window has closed.
-                        </span>
+                    <div className="mt-3 space-y-1 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                      {saleClosed ? (
+                        <p className="font-medium text-red-600 dark:text-red-400">
+                          The {TRIP_OPTIONS.find((o) => o.value === tripType)
+                            ?.label.toLowerCase()}{" "}
+                          ticket sale has closed.
+                        </p>
                       ) : (
-                        <>Booking window: {BOOKING_WINDOW}.</>
+                        <p>
+                          <span className="font-medium text-slate-700 dark:text-slate-200">
+                            Ticket sale:
+                          </span>{" "}
+                          {sale.window}
+                        </p>
                       )}
-                    </p>
+                      {sale.note && !saleClosed && <p>{sale.note}</p>}
+                    </div>
                   </div>
                 </div>
 
@@ -561,6 +574,10 @@ export default function BusFareCalculator() {
                       </dd>
                     </div>
                   ))}
+                  <p className="mt-4 border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                    From the {SEMESTER_LABEL} bus ticket notice issued by the
+                    Office of the Registrar.
+                  </p>
                 </dl>
               </div>
             </Reveal>

@@ -1,45 +1,53 @@
 /* ═══════════════════════════════════════════════════════════════
    Semester configuration and NSU bus service data.
 
+   Source: "Sale of NSU Students' Bus Ticket - Fall 2026", Office of the
+   Registrar. Service period, ticket prices and both ticket sale windows
+   below are quoted from that notice.
+
    ─── UPDATING FOR A NEW SEMESTER ───
-   Edit the values in this file only. Every day count is derived
-   from the dates, so the numbers shown in the UI can never drift
-   out of sync with the configured range.
-
-   How the Fall 2026 dates are derived (NSU Academic Calendar,
-   tentative, published 31 Aug 2026):
-   • Bus service starts on the first Saturday AFTER the last day of
-     course drop with 100% refund. For Fall 2026 that deadline is
-     Mon 28 Sep 2026, so service begins Sat 3 Oct 2026. The same
-     rule reproduces the Summer 2026 dates exactly (drop deadline
-     Tue 16 Jun 2026, service start Sat 20 Jun 2026).
-   • Service runs through the last day of final exams, Mon 28 Dec 2026.
-   • Booking opens on the drop deadline and closes the next day at
-     4:00 PM.
-
-   IMPORTANT: NSU has not published the official Fall 2026 bus
-   service notice yet. Everything below marked PROVISIONAL is
-   derived from the academic calendar and the Summer 2026 pattern,
-   not from an official transport notice. Replace it as soon as the
-   notice is out.
+   Edit the values in this file only. Every day count is derived from
+   the dates, so the numbers shown in the UI can never drift out of sync
+   with the configured range.
    ═══════════════════════════════════════════════════════════════ */
 
 export const SEMESTER_LABEL = "Fall 2026";
 
-/* PROVISIONAL until the official notice is published. */
-export const NOTICE_PUBLISHED = false;
+/* The official Fall 2026 notice is out, so nothing here is provisional. */
+export const NOTICE_PUBLISHED = true;
 
 export const SEMESTER_START = "October 3, 2026";
 export const SEMESTER_END = "December 28, 2026";
 export const SEMESTER_START_DATE = new Date(2026, 9, 3); // months are 0-indexed
 export const SEMESTER_END_DATE = new Date(2026, 11, 28);
 
-/* PROVISIONAL booking window. Confirm on the NSU Transport portal. */
-export const BOOKING_WINDOW =
-  "28 September 2026 to 29 September 2026, 10:00 AM to 4:00 PM";
-export const BOOKING_DEADLINE_ISO = "2026-09-29T16:00:00+06:00"; // 4:00 PM Bangladesh time
-
 export const FARE_PER_TRIP = 100; // BDT per direction, per day
+
+/* Round trip and one way tickets go on sale in two different windows,
+   and a pay per ticket trip is bought on the day. */
+export interface TicketSale {
+  window: string;
+  /* When the window closes, for the countdown. Pay per ticket has no
+     fixed deadline, so it has none. */
+  deadlineISO?: string;
+  note?: string;
+}
+
+export const TICKET_SALES: Record<TripType, TicketSale> = {
+  round: {
+    window: "28 to 29 September 2026, 10:00 AM to 4:00 PM",
+    deadlineISO: "2026-09-29T16:00:00+06:00",
+  },
+  "one-way": {
+    window: "30 September to 1 October 2026, 10:00 AM to 4:00 PM",
+    deadlineISO: "2026-10-01T16:00:00+06:00",
+    note: "Sold only if seats are still available.",
+  },
+  "per-day": {
+    window: "Buy at least 1 hour before the trip starts",
+    note: "Sold only if seats are still available.",
+  },
+};
 
 export const BOOKING_URL = "https://transport.northsouth.edu/";
 export const CALENDAR_URL = "https://www.northsouth.edu/academic/academic-calendar/";

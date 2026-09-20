@@ -1,4 +1,4 @@
-# North South University (NSU) Bus Fare Calculator (v2.0.1)
+# North South University (NSU) Bus Fare Calculator (v2.1.0)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
@@ -6,12 +6,8 @@ routes, and follow the Summer 2026 fare refund steps.
 
 Live: <https://nsu-bus-fare-calculator.vercel.app>
 
-> **Fall 2026 notice not published yet.** NSU has not released the official
-> Fall 2026 bus service notice. The service dates, booking window and fares in
-> this app are derived from the Fall 2026 academic calendar and the pattern the
-> Summer 2026 semester followed. The app says so on screen, and everything
-> provisional is flagged in `app/lib/semester.ts`. Update it when the notice
-> lands.
+All figures come from the official notice, *Sale of NSU Students' Bus Ticket -
+Fall 2026*, issued by the Office of the Registrar.
 
 ## How the fare is worked out
 
@@ -31,14 +27,38 @@ back, not as a discount, so the number you see is the number you actually pay.
 | Total days | 87 |
 | Fridays excluded | 12 |
 | Chargeable days | 75 |
-| One way | ৳100 |
-| Round trip | ৳200 |
+| One way | Tk 100 |
+| Round trip | Tk 200 |
 
-Dates come from the tentative Fall 2026 academic calendar (published
-31 Aug 2026). Service starts on the first Saturday after the last day of course
-drop with 100% refund (Mon 28 Sep 2026, so Sat 3 Oct 2026) and runs to the last
-day of final exams. The same rule reproduces the Summer 2026 dates exactly,
-which is why it is used here.
+### Ticket sale windows
+
+Round trip and one way tickets sell in two different windows, so the app shows
+the one matching the trip type you picked.
+
+| Trip type | Sale window |
+|---|---|
+| Round trip | 28 to 29 September 2026, 10:00 AM to 4:00 PM |
+| One way | 30 September to 1 October 2026, 10:00 AM to 4:00 PM, seats permitting |
+| Pay per ticket | At least 1 hour before the trip, seats permitting |
+
+### Timings
+
+Every route reaches NSU at **7:40 AM, 2:20 PM and 5:45 PM**. Departures from NSU
+differ by route:
+
+| Departure | Routes |
+|---|---|
+| 11:20 AM | All |
+| 2:40 PM | All |
+| 6:30 PM | Uttara, Mirpur, Mohammadpur, Dhanmondi |
+| 10:20 PM | Mirpur, Mohammadpur |
+
+The notice lists stoppages without per-stoppage pickup times, and it
+standardised the arrival times (Summer 2026 had a different afternoon or evening
+arrival on four routes). The afternoon and evening pickup times were therefore
+re-timed and have not been republished, so the app does not show them. Morning
+pickup times are carried over from Summer 2026 and labelled indicative, since
+the 7:40 AM arrival and the stoppage lists are identical in both notices.
 
 ## Features
 
@@ -63,9 +83,10 @@ weekday counts can never disagree with each other.
 
 1. Set `SEMESTER_LABEL`, `SEMESTER_START`, `SEMESTER_END` and the two `Date`
    objects from the new academic calendar.
-2. Set `BOOKING_WINDOW` and `BOOKING_DEADLINE_ISO` from the transport notice.
-3. Set `NOTICE_PUBLISHED` to `true` once the official notice is out. That hides
-   the provisional banner.
+2. Set `TICKET_SALES` from the transport notice, one entry per trip type.
+3. Set `NOTICE_PUBLISHED` to `false` while you are working from derived figures
+   rather than a published notice. That shows a banner saying so, and back to
+   `true` once the real notice is out.
 4. Update `REFUND` when the next refund notice is issued.
 
 Route timings live in `app/lib/routes.ts`.
