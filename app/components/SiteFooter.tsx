@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import footerBus from "../assets/footer-bus.webp";
+import campusBus from "../assets/campus-bus.webp";
 import nsuSeal from "../assets/nsu-seal.png";
 import {
   BOOKING_URL,
@@ -19,6 +19,7 @@ const ON_THIS_PAGE = [
   { href: "#ticket-sale", label: "Ticket sale" },
   { href: "#calculator", label: "Fare calculator" },
   { href: "#about", label: "How the bus works" },
+  { href: "#buses", label: "The buses" },
   { href: "#routes", label: "Routes and stops" },
   { href: "#faq", label: "Questions" },
   { href: "#refund", label: `${REFUND.semester} refund` },
@@ -33,8 +34,7 @@ const OFFICIAL = [
 const headingClass = "text-lg font-bold text-on-notice";
 const linkClass = "inline-flex min-h-9 items-center gap-1 text-sm text-on-notice hover:underline";
 
-/* northsouth.edu's footer: a photo band with the seal and name over it
-   (here the NSU lettering on a bus, as no campus photograph is on hand),
+/* northsouth.edu's footer: a campus photo with the seal and name over it
    then a cyan panel with rounded top corners holding four link columns.
    The name is this tool's, and the last column and the closing line say
    plainly that it is not the university's site. */
@@ -42,7 +42,7 @@ export function SiteFooter() {
   return (
     <footer className="relative isolate overflow-hidden bg-media">
       <Image
-        src={footerBus}
+        src={campusBus}
         alt=""
         fill
         placeholder="blur"

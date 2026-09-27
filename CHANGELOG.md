@@ -32,6 +32,9 @@ git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-ca
 
 - Two more clips in the hero, from NSU Daily Hub and The Daily NSU. The hero
   plays all three in turn with a crossfade, and credits the clip on screen.
+- "The NSU student buses", a photo band of the Mitsubishi Fuso Rosa
+  minibuses and their handover ceremony.
+- A campus photo behind the footer.
 - A back-to-top button on desktop.
 
 ### Removed

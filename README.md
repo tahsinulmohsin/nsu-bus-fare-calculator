@@ -156,6 +156,7 @@ app/
     Faq.tsx                 FAQ (server rendered)
     RefundNotice.tsx        Summer 2026 refund note
     HeroVideo.tsx           Background video with data and motion checks
+    BusGallery.tsx          Photos of the buses (server rendered)
     ScrollTopButton.tsx     Back-to-top button on desktop
     ui.tsx                  Section titles, date tiles, tags, notice bars, arrow links
   lib/
@@ -164,7 +165,7 @@ app/
     seo.ts                  Site URL, title, description and FAQ content
     useFareParams.ts        Calculator state kept in the URL
     useNow.ts, useClient.ts Clock, hydration and motion-preference stores
-app/assets/                 Hero still, footer and card frames, bus photo, NSU logo and seal
+app/assets/                 Hero still, card frame, bus and gallery photos, NSU logo and seal
 public/video/               The three hero clips, each cut for phones and wider screens
 Dockerfile, docker-compose.yml  Self-hosting
 DESIGN.md                   Visual design system
@@ -284,7 +285,10 @@ with where it came from and how it was made.
 | `public/video/bus-service.mp4`, `bus-service-mobile.mp4` | "NSU bus service", a YouTube Short by The Daily NSU, filmed by Rafiur Rahim Rafi (`ZkyqGpvHJyM`) | Top 110 px and bottom 140 px with the channel mark and signature cropped off. Phone cut: 480 px wide. Desktop cut: the centre 720×384 band |
 | `public/video/ac-bus.mp4`, `ac-bus-mobile.mp4` | "Big News! NSU is launching AC bus service for students", NSU TV & Radio (`-TNg9uyT6rA`) | Top 184 px with the channel mark cropped off, then scaled to 1152 px and 640 px wide |
 | `app/assets/hero-poster.webp` | Frame at 6 s of the AC bus video | Same crop, 1920 px wide. next/image serves it at the size each screen needs |
-| `app/assets/footer-bus.webp` | Frame at 16 s of the AC bus video | Same crop, 1600 px wide |
+| `app/assets/campus-bus.webp` | Owner-supplied photo of NSU bus 2 beside a campus building (original source not recorded) | 1920 px wide, used as the footer backdrop |
+| `app/assets/gallery-fleet.webp` | Photo of the buses in a row by NSU Daily Hub, supplied by the owner | Square crop that leaves out the NSU Daily Hub mark (credited under the gallery instead), 1000 px |
+| `app/assets/gallery-showroom.webp` | Owner-supplied photo of an NSU bus in a showroom (original source not recorded) | Square crop, 1000 px |
+| `app/assets/gallery-handover-1.webp`, `gallery-handover-2.webp` | Owner-supplied photos of the Mitsubishi Fuso Rosa handover ceremony (original source not recorded) | Square crops inside the original white frame, 1000 px |
 | `app/assets/ticket-bus.webp` | Frame at 12 s of the AC bus video | Same crop, 1200 px wide |
 | `app/assets/nsu-student-bus.jpg` | Third-party photo of an NSU minibus, supplied by the owner | As supplied, 480×640 |
 | `app/assets/nsu-logo.png`, `nsu-seal.png` | North South University's logo and seal, from northsouth.edu | As published, used at the owner's request |

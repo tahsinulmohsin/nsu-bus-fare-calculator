@@ -33,12 +33,11 @@ NSU-blue (#183F78) utility bar, Geist throughout, bold white hero type over
 footage, square navy and pale buttons, grey (#F5F5F5) bands with centred
 indigo (#211E53) section titles, a cyan "NOTICE" title bar over rows led by
 grey date tiles, yellow status tags, chevron list rows, cyan circular arrow
-links, a navy band holding a white message card, and a photo footer with a
-rounded cyan link panel. Amended at the finish review: no campus photograph
-can honestly be used (none is supplied, and northsouth.edu's are not ours to
-take), so the footer photo is a frame of the owner's footage showing the
-"North South University" lettering on a bus side, echoing the lettered
-building in NSU's own footer.
+links, a navy band holding a white message card, a grey photo band of the
+buses (owner's photos), and a campus-photo footer with a rounded cyan link
+panel. Amended after the finish review: the footer photo is the owner's
+photo of an NSU bus beside a campus building, supplied after the review
+found none on hand.
 
 STORY: A student sees NSU's own visual language, reads the sale dates as
 notices, works out their fare in the calculator card, finds their route in

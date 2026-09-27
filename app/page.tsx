@@ -1,5 +1,6 @@
 import BusFareCalculator from "./components/BusFareCalculator";
 import { AboutBusService } from "./components/AboutBusService";
+import { BusGallery } from "./components/BusGallery";
 import { Faq } from "./components/Faq";
 import { SiteFooter } from "./components/SiteFooter";
 import { ROUTE_LIST } from "./lib/routes";
@@ -104,6 +105,7 @@ export default function Home() {
       <BusFareCalculator
         renderedAt={renderedAt}
         about={<AboutBusService />}
+        gallery={<BusGallery />}
         faq={<Faq />}
         footer={<SiteFooter />}
       />

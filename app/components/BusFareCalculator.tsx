@@ -45,6 +45,7 @@ const TRIP_OPTIONS: { value: TripType; label: string; hint: string }[] = [
 export default function BusFareCalculator({
   renderedAt,
   about,
+  gallery,
   faq,
   footer,
 }: {
@@ -52,6 +53,7 @@ export default function BusFareCalculator({
   /* Server-rendered sections passed in so their text ships as plain HTML
      and adds nothing to the client bundle. */
   about?: React.ReactNode;
+  gallery?: React.ReactNode;
   faq?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
@@ -609,6 +611,8 @@ export default function BusFareCalculator({
         </section>
 
         {about}
+
+        {gallery}
 
         <RouteSchedule selectedRoute={selectedRoute} />
 
