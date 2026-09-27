@@ -187,7 +187,7 @@ export function HeroVideo() {
             videoRefs.current[slot] = el;
           }}
           data-front={started && front === slot}
-          className="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-500 ease-out data-[front=true]:opacity-100 motion-reduce:transition-none"
+          className="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-500 ease-in-out data-[front=true]:opacity-100 motion-reduce:transition-none"
           muted
           playsInline
           preload="none"

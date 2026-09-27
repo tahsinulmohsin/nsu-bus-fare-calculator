@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { CreditCard } from "lucide-react";
 import nsuSeal from "../assets/nsu-seal.png";
@@ -212,6 +213,19 @@ function SaleRow({
   const tile = bdTileParts(status.target ?? Date.parse(sessions[sessions.length - 1].closes));
   const tone = status.state === "open" ? "active" : status.state === "closed" ? "muted" : "default";
 
+  /* Mark the moment a sale opens while someone is watching, so the tile
+     can settle in once. The previous state is kept in state (React's
+     "store information from previous renders" pattern). Nothing is marked
+     until the live clock has taken over from the render time, so a page
+     that loads during an open sale does not flash. */
+  const isLive = live !== null;
+  const [seen, setSeen] = useState({ state: status.state, live: isLive });
+  const [justOpened, setJustOpened] = useState(false);
+  if (seen.state !== status.state || seen.live !== isLive) {
+    setJustOpened(seen.live && isLive && seen.state !== "open" && status.state === "open");
+    setSeen({ state: status.state, live: isLive });
+  }
+
   const caption =
     status.state === "upcoming"
       ? `until the sale opens on ${formatBdDateTime(status.target!)}`
@@ -228,8 +242,8 @@ function SaleRow({
     : `${title}: ${TAGS[status.state]}`;
 
   return (
-    <li className={`flex gap-4 px-5 py-5 sm:px-6 ${status.state === "open" ? "bg-accent-soft" : ""}`}>
-      <DateTile {...tile} tone={tone} />
+    <li className={`flex gap-4 px-5 py-5 transition-colors sm:px-6 ${status.state === "open" ? "bg-accent-soft" : ""}`}>
+      <DateTile {...tile} tone={tone} className={justOpened ? "sale-open" : ""} />
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <h3 className="text-lg font-bold text-heading">{title}</h3>

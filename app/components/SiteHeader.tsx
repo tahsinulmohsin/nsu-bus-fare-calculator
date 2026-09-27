@@ -151,7 +151,7 @@ export function SiteHeader() {
         <div
           id="site-menu"
           hidden={!menuOpen}
-          className="swap absolute inset-x-0 top-full border-t border-on-nav/15 bg-nav shadow-[0_16px_32px_-16px_rgb(0_0_0/0.5)] lg:hidden"
+          className="menu-panel absolute inset-x-0 top-full border-t border-on-nav/15 bg-nav shadow-[0_16px_32px_-16px_rgb(0_0_0/0.5)] lg:hidden"
         >
           <ul className="mx-auto max-w-7xl px-4 py-2 sm:px-6">
             {SECTIONS.map((section) => (

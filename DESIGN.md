@@ -276,7 +276,7 @@ The site is unofficial and says so at every point the university's marks appear.
 - Square buttons, rounded containers, circular icon controls.
 - One soft card shadow; tonal bands carry the rest of the depth.
 - Real, credited media only; the NSU logo and seal always travel with an "Unofficial" tag or disclaimer.
-- NSU-quiet motion: one headline rise, chevron turns, a 97% press, and nothing that loops except countdown digits and the hero footage.
+- NSU-quiet motion: one headline rise, chevron turns, rows and the fare card that open by growing, a 97% press, and nothing that loops except countdown digits and the hero footage.
 
 ## Colors
 
@@ -387,24 +387,28 @@ Shape follows northsouth.edu's split: buttons and choice segments are square (0)
 ### Navigation
 - **Utility bar:** 44px, NSU Blue, 0.875rem white official links split by thin white rules, underline on hover; hidden below 768px.
 - **Main bar:** 80px, deep navy, NSU logo (48px, 56px from 640px) then wordmark and Unofficial tag at left, section links (1rem medium white, underline on hover) and a round theme toggle at right from 1024px.
-- **Phone menu:** a square navy toggle opens a full-width navy sheet of 48px chevron rows that settles in; Escape closes it and returns focus.
+- **Phone menu:** a square navy toggle opens a full-width navy sheet of 48px chevron rows that drops 8px from under the bar and fades in over 200ms, and fades out in 150ms; Escape closes it and returns focus.
 
 ### Notice Board (signature)
 A card headed by a cyan uppercase notice bar, then rows each led by a grey 64px (72px from 640px) date tile with a big bold day over a tiny uppercase month, an indigo title, a yellow status tag and a body-small line. Tiles and tags change with the live countdown: an open sale's row takes the Notice Wash and its tile turns navy. The board ends with a centred arrow link: a 40px cyan disc holding an arrow, then a cyan semibold label.
 
 ### Chevron Rows
-Route and FAQ disclosures: 44px minimum rows that shade to Band Grey on hover over 200ms, with a cyan chevron that turns 90° in 200ms ease-out when open. Route rows lead with a numbered tile that turns navy for the chosen route.
+Route and FAQ disclosures: 44px minimum rows that shade to Band Grey on hover over 160ms, with a cyan chevron that turns 90° in 200ms ease-out when open. Where the browser can animate to an auto height (`interpolate-size`, `::details-content`), the content grows open over 220ms; elsewhere it opens instantly. Route rows lead with a numbered tile that turns navy for the chosen route.
 
 ### Fare Total
-A navy panel at the top of the summary card: muted label, 3rem bold tabular figure, subtle detail line, then a soft-ruled breakdown list below. On phones a navy fare bar slides up from the bottom edge (240ms in, 160ms out) once the total scrolls away.
+A navy panel at the top of the summary card: muted label, 3rem bold tabular figure, subtle detail line, then a soft-ruled breakdown list below. The refund and net-cost rows open by growing over 220ms when the first suspended day is added, so the booking button slides down instead of jumping. On phones a navy fare bar slides up from the bottom edge (240ms in, 160ms out) once the total scrolls away.
 
 ### Media Frames
 The hero is full-bleed footage shaded navy (a flat 70% veil on phones, a left-to-right gradient from 640px), with the credit for the playing clip in a small navy chip beside a round play/pause control at bottom right; clips crossfade over 500ms. The footer is the owner's campus bus photo under a navy gradient, carrying the seal, the name and a cyan link panel with 32px top corners.
 
 ### Motion
-Motion uses one curve, `cubic-bezier(0.23, 1, 0.32, 1)`. The H1 rises 12px once over 600ms, transform only and visible from the first frame. Swapped content settles in over 280ms (6px and opacity). Everything else is state feedback: the press, the chevron turn, the fare bar slide and row shading.
+Motion uses two curves, declared as Tailwind theme tokens so utilities and CSS share them: `--ease-out` `cubic-bezier(0.23, 1, 0.32, 1)` for everything that enters, presses or shades, and `--ease-in-out` `cubic-bezier(0.77, 0, 0.175, 1)` for the 500ms crossfade between hero clips. Every bare transition utility defaults to 160ms on `--ease-out`, the same as button presses and hover shading.
 
-**The NSU-Quiet Rule.** The hero headline's rise is the only authored entrance. Nothing loops except the countdown digits and the hero footage, and reduced motion keeps every state change while dropping the movement.
+The H1 rises 12px once over 600ms, transform only and visible from the first frame. Content that mounts inside a card settles in over 280ms (6px and opacity), and space that opens inside a card grows over 220ms. Everything else is state feedback: the press, the chevron turn, the menu drop, the fare bar slide and row shading. Theme switches change every colour at once, with transitions suppressed for that instant.
+
+When a ticket sale opens while the page is open, its date tile settles in from 94% with one cyan ring over 640ms. It plays once, on the live change only, never on page load.
+
+**The NSU-Quiet Rule.** The hero headline's rise is the only authored entrance, and the sale-opening tile is the only authored moment. Nothing loops except the countdown digits and the hero footage, and reduced motion keeps every state change while dropping the movement.
 
 ## Do's and Don'ts
 
@@ -422,5 +426,5 @@ Motion uses one curve, `cubic-bezier(0.23, 1, 0.32, 1)`. The H1 rises 12px once 
 - **Don't** use Status Yellow for anything but status.
 - **Don't** set text in Faint Grey; it is for decorative icons only.
 - **Don't** add a second typeface or put a label above a section title.
-- **Don't** add entrance animations beyond the hero headline's rise, or anything that loops besides the countdown and the footage.
+- **Don't** add entrance animations beyond the hero headline's rise, or anything that loops besides the countdown and the footage. Use CSS transitions, not keyframes, for anything a visitor can toggle.
 - **Don't** show the NSU logo or seal without the unofficial label or disclaimer nearby.

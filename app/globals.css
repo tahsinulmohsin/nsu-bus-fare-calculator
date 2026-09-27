@@ -12,6 +12,17 @@
    date tiles 12px, cards 16px, tags 4px, arrow links and icon buttons
    round. DESIGN.md documents the roles.
    ═══════════════════════════════════════════════════════ */
+/* Motion tokens. Declared in the theme (not on :root) so Tailwind's own
+   ease-out and ease-in-out utilities resolve to the same curves as the
+   CSS below, and so every bare transition utility (transition-colors and
+   the like) runs at the site's hover speed. */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --default-transition-duration: 160ms;
+  --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 @theme inline {
   --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
 
@@ -137,7 +148,6 @@
   --on-media-muted: #dde5f1;
 
   --focus: #0877ad;
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .dark {
@@ -229,8 +239,9 @@ a {
 /* ═══════════════════════════════════════════════════════
    Motion: NSU-quiet
 
-   Rows shade on hover, chevrons turn, buttons press, and the hero
-   headline rises once. Nothing loops except the countdown digits.
+   Rows shade on hover, chevrons turn, rows and the fare card open
+   by growing, buttons press, and the hero headline rises once. Nothing
+   loops except the countdown digits and the hero footage.
    ═══════════════════════════════════════════════════════ */
 /* The one authored entrance: the hero headline settles into place. It
    is visible from the first frame; only its position moves. */
@@ -293,6 +304,91 @@ details[open] > summary .chevron {
   transform: rotate(90deg);
 }
 
+/* Phone menu: hangs from the navy bar, so it drops in from above and
+   leaves faster than it arrives. A transition (not a keyframe), so a
+   quick double tap reverses from wherever it is. */
+.menu-panel {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out),
+    display 200ms allow-discrete;
+}
+
+.menu-panel[hidden] {
+  opacity: 0;
+  transform: translate3d(0, -8px, 0);
+  transition-duration: 150ms;
+}
+
+@starting-style {
+  .menu-panel:not([hidden]) {
+    opacity: 0;
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/* Height reveal for content that appears inside a card: the space opens
+   instead of jumping, so what sits below slides rather than teleports. */
+.reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 220ms var(--ease-out);
+}
+
+.reveal[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.reveal > * {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+
+.reveal[data-open="true"] > * {
+  opacity: 1;
+}
+
+/* Route and FAQ rows open by growing rather than snapping, where the
+   browser can animate to an auto height; elsewhere they open instantly. */
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition: block-size 220ms var(--ease-out),
+      content-visibility 220ms allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* The moment a ticket sale opens while the page is open: the date tile
+   settles in with one ring of cyan. Once, never on page load. */
+@keyframes sale-open {
+  0% {
+    transform: scale(0.94);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--notice) 55%, transparent);
+  }
+  55% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px color-mix(in oklab, var(--notice) 0%, transparent);
+  }
+}
+
+.sale-open {
+  animation: sale-open 640ms var(--ease-out) both;
+}
+
 /* Phone fare bar: slides up from its own edge, leaves faster. */
 .fare-bar {
   transform: translate3d(0, 110%, 0);
@@ -329,6 +425,31 @@ details[open] > summary .chevron {
 
   .chevron {
     transition: none;
+  }
+
+  .menu-panel,
+  .menu-panel[hidden] {
+    transform: none;
+    transition: opacity 150ms linear, display 150ms allow-discrete;
+  }
+
+  @starting-style {
+    .menu-panel:not([hidden]) {
+      transform: none;
+    }
+  }
+
+  .reveal,
+  .reveal > * {
+    transition: none;
+  }
+
+  details::details-content {
+    transition: none;
+  }
+
+  .sale-open {
+    animation: none;
   }
 
   .fare-bar {

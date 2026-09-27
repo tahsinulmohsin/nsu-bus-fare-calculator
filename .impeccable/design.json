@@ -940,7 +940,7 @@
    {
     "name": "ease-out",
     "value": "cubic-bezier(0.23, 1, 0.32, 1)",
-    "purpose": "The one curve for every authored transition."
+    "purpose": "Every transition that enters, presses or shades. A Tailwind theme token; bare transition utilities default to it at 160ms."
    },
    {
     "name": "rise",
@@ -950,7 +950,7 @@
    {
     "name": "settle",
     "value": "opacity 0 and translateY(6px) to rest, 280ms ease-out",
-    "purpose": "Content swapped inside a container (fare breakdown, sale state, phone menu). Reduced motion: 200ms linear fade."
+    "purpose": "Content mounted inside a card (the suspended-days control). Reduced motion: 200ms linear fade."
    },
    {
     "name": "press",
@@ -964,7 +964,7 @@
    },
    {
     "name": "row-shade",
-    "value": "background-color 200ms",
+    "value": "background-color 160ms ease-out",
     "purpose": "Chevron rows and tiles shade on hover."
    },
    {
@@ -974,8 +974,28 @@
    },
    {
     "name": "hero-crossfade",
-    "value": "opacity 500ms ease-out",
+    "value": "opacity 500ms ease-in-out",
     "purpose": "Hero clips crossfade in turn; reduced motion disables the transition."
+   },
+   {
+    "name": "ease-in-out",
+    "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+    "purpose": "The 500ms crossfade between hero clips only."
+   },
+   {
+    "name": "menu-drop",
+    "value": "opacity 0 and translateY(-8px) to rest, 200ms ease-out in, 150ms out (transition with @starting-style)",
+    "purpose": "Phone menu sheet, which hangs from the nav bar. Reduced motion: opacity only."
+   },
+   {
+    "name": "grow-open",
+    "value": "height 0 to auto (grid-template-rows 0fr to 1fr, or ::details-content with interpolate-size), 220ms ease-out",
+    "purpose": "Route and FAQ rows, and the fare card's refund rows, so what sits below slides instead of jumping. Reduced motion: instant."
+   },
+   {
+    "name": "sale-open",
+    "value": "scale(0.94) to 1 with one 12px cyan ring, 640ms ease-out, once",
+    "purpose": "The date tile of a ticket sale that opens while the page is open. Live change only, never on page load."
    }
   ],
   "breakpoints": [

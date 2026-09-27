@@ -55,7 +55,7 @@ export function RouteSchedule({ selectedRoute }: { selectedRoute: string }) {
                       }
                     }}
                   >
-                    <summary className="flex min-h-11 cursor-pointer items-center gap-4 px-5 py-4 transition-colors duration-200 hover:bg-sunken sm:px-6">
+                    <summary className="flex min-h-11 cursor-pointer items-center gap-4 px-5 py-4 transition-colors hover:bg-sunken sm:px-6">
                       <span
                         className={`flex size-14 shrink-0 flex-col items-center justify-center rounded-tile ${
                           mine ? "bg-primary text-on-primary" : "bg-tile text-heading"

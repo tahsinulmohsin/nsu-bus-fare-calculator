@@ -495,8 +495,11 @@ export default function BusFareCalculator({
                       <p className="mt-2 text-sm text-on-inverse-subtle">{totalDetail}</p>
                     </div>
 
-                    {refundDays > 0 && (
-                      <dl className="swap divide-y divide-line-soft">
+                    {/* Always mounted so the space can open and close
+                        instead of jumping; hidden from assistive tech while
+                        there is no refund to report. */}
+                    <div className="reveal" data-open={refundDays > 0}>
+                      <dl aria-hidden={refundDays === 0} className="divide-y divide-line-soft border-b border-line-soft">
                         <div className="flex items-center justify-between px-6 py-4 sm:px-8">
                           <dt className="text-sm text-ink-body">Expected refund, after the semester</dt>
                           <dd className="text-base font-bold text-positive tabular-nums">
@@ -510,9 +513,9 @@ export default function BusFareCalculator({
                           </dd>
                         </div>
                       </dl>
-                    )}
+                    </div>
 
-                    <div className="border-t border-line-soft p-6 sm:p-8">
+                    <div className="p-6 sm:p-8">
                       <a
                         href={BOOKING_URL}
                         target="_blank"

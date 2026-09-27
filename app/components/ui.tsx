@@ -44,14 +44,16 @@ export function DateTile({
   day,
   month,
   tone = "default",
+  className = "",
 }: {
   day: string;
   month: string;
   tone?: TileTone;
+  className?: string;
 }) {
   return (
     <span
-      className={`flex size-16 shrink-0 flex-col items-center justify-center rounded-tile transition-colors duration-200 sm:size-[4.5rem] ${TILE_TONES[tone]}`}
+      className={`flex size-16 shrink-0 flex-col items-center justify-center rounded-tile transition-colors sm:size-[4.5rem] ${TILE_TONES[tone]} ${className}`}
     >
       <span className="text-2xl leading-none font-bold tabular-nums">{day}</span>
       <span className="mt-1 text-[0.6875rem] font-semibold uppercase">{month}</span>

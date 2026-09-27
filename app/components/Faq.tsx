@@ -14,7 +14,7 @@ export function Faq() {
         <div className="mt-10 divide-y divide-line-soft overflow-hidden rounded-card bg-surface shadow-card ring-1 ring-line sm:mt-12">
           {FAQS.map((item) => (
             <details key={item.question}>
-              <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-4 px-5 py-4 transition-colors duration-200 hover:bg-sunken sm:px-6 sm:py-5">
+              <summary className="flex min-h-11 cursor-pointer items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-sunken sm:px-6 sm:py-5">
                 <h3 className="text-base font-bold text-heading sm:text-lg">{item.question}</h3>
                 <ChevronRight className="chevron size-5 shrink-0 text-accent" aria-hidden="true" />
               </summary>

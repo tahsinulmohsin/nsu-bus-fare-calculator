@@ -5,6 +5,28 @@ All notable changes to the NSU Bus Fare Calculator. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Every version is a
 git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/releases).
 
+## [2.5.2] - 2026-09-28
+
+### Fixed
+
+- Switching between light and dark now changes every colour at once.
+  Buttons and date tiles used to fade behind the page for a moment.
+- The phone menu drops in from under the navy bar instead of rising from
+  below, fades out when closed, and reverses cleanly if tapped twice.
+- The hero clips dissolve evenly into each other instead of cutting in.
+- Hover shading runs at one speed everywhere.
+
+### Added
+
+- Route and FAQ rows grow open instead of snapping, in browsers that can
+  animate to an automatic height.
+- The fare card's refund rows open smoothly, so the booking button slides
+  down instead of jumping.
+- When a ticket sale opens while the page is open, its date tile settles in
+  with a single cyan ring. It never plays on page load.
+
+All of these respect reduced motion.
+
 ## [2.5.1] - 2026-09-28
 
 ### Changed
@@ -241,6 +263,7 @@ Also included: a bus favicon and Poppins font fixes from the previous version.
 - First release, for the Summer 2026 semester: fare calculator for round trip,
   one way and per day trips, schedules for six routes, and the booking window.
 
+[2.5.2]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.5.1...v2.5.2
 [2.5.1]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.5.0...v2.5.1
 [2.5.0]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.5...v2.5.0
 [2.4.5]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.4...v2.4.5
