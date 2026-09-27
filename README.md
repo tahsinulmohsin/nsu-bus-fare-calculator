@@ -216,6 +216,9 @@ produce FAQ snippets. The visible FAQ text is what helps.
   not redirected.
 - The page regenerates at most hourly (incremental static regeneration), so the
   ticket sale countdowns always ship in the right state.
+- [Vercel Web Analytics](https://vercel.com/docs/analytics) counts page views
+  without cookies. It is only rendered when the build runs on Vercel, so the
+  Docker build carries no analytics.
 - The `production` git tag marks the commit that is live. See
   [Versions and releases](#versions-and-releases).
 

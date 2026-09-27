@@ -1,6 +1,6 @@
 {
   "name": "nsu-bus-fare-calculator",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "description": "Work out the North South University (NSU) student bus fare, routes, stops and ticket sale times for the semester.",
   "homepage": "https://nsu-bus.tahsinulmohsin.me",
   "repository": {
@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "lucide-react": "^1.18.0",
     "next": "16.2.9",
     "next-themes": "^0.4.6",

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Providers";
@@ -79,6 +80,10 @@ export default function RootLayout({
         className={`${geist.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
+        {/* Vercel Web Analytics: cookieless page view counts. Only rendered
+            on Vercel, where /_vercel/insights exists; a self-hosted build
+            would otherwise request a script that 404s on every page. */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );
