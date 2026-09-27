@@ -713,7 +713,8 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
       </footer>
 
       {/* ═══════════════ Phone fare bar ═══════════════ */}
-      <div
+      <aside
+        aria-label="Running fare total"
         className="fare-bar fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface shadow-[0_-8px_24px_-12px_rgb(15_23_43/0.35)] lg:hidden"
         data-visible={barVisible}
         inert={!barVisible}
@@ -744,7 +745,7 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
             </a>
           </div>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }
