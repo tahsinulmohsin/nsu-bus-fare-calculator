@@ -255,6 +255,11 @@
     "section": "typography"
    },
    {
+    "name": "The Matched Columns Rule",
+    "body": "Beside the controls goes only what changes as they change. Anything static moves below both columns, so neither side is left with a hole.",
+    "section": "layout"
+   },
+   {
     "name": "The Calculator First Rule",
     "body": "Nothing above the calculator may take more than one phone screen. When something new needs to sit above it, something else gets smaller.",
     "section": "layout"

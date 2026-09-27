@@ -180,11 +180,13 @@ All colours are semantic tokens defined in `app/globals.css` and swapped for the
 
 ## Layout
 
-A single column that becomes a 3:2 split on large screens: controls on the left, the fare summary on the right, sticky while you scroll. Content sits in a 1152px (72rem) container with 16px to 32px side padding. Sections are separated by 64px to 80px, groups inside a section by 32px, and fields inside a group by 8px to 12px.
+A single column that becomes a 3:2 split on large screens: controls on the left, the fare summary on the right, sticky while you scroll. Only the live result sits beside the controls, so both columns start at the same height; the static reference facts run as a full-width strip beneath them. On a phone the order is controls, fare, facts. Content sits in a 1152px (72rem) container with 16px to 32px side padding. Sections are separated by 64px to 80px, groups inside a section by 32px, and fields inside a group by 8px to 12px.
 
 On phones the summary falls below the controls, so a fixed fare bar at the bottom of the screen shows the running total while the controls are on screen and hides when the full summary is visible. Scroll padding keeps keyboard focus clear of it.
 
 The page order follows the student's task: when to buy (ticket sale), what it costs (calculator), where the bus goes (routes), and last semester's refund. Once both ticket sales close, the ticket sale band collapses to a single line.
+
+**The Matched Columns Rule.** Beside the controls goes only what changes as they change. Anything static moves below both columns, so neither side is left with a hole.
 
 **The Calculator First Rule.** Nothing above the calculator may take more than one phone screen. When something new needs to sit above it, something else gets smaller.
 

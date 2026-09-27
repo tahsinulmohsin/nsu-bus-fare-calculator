@@ -382,7 +382,7 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
 
           <div className="mt-10 grid gap-8 lg:grid-cols-5">
             {/* ─── Controls ─── */}
-            <div ref={controlsRef} className="min-w-0 space-y-8 lg:col-span-3">
+            <div ref={controlsRef} className="min-w-0 space-y-8 lg:col-span-3 lg:row-start-1">
               <Reveal delay={60}>
                 <fieldset>
                   <legend className="text-sm font-medium text-ink-strong">Trip type</legend>
@@ -561,10 +561,14 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
               )}
             </div>
 
-            {/* ─── Summary ─── */}
-            <div className="min-w-0 lg:col-span-2">
-              <Reveal delay={80}>
-                <div id="fare-summary" className="scroll-mt-4 space-y-4 lg:sticky lg:top-6">
+            {/* ─── Summary ───
+                Only the live result lives beside the controls, so the two
+                columns start out nearly the same height. */}
+            <div className="min-w-0 lg:col-span-2 lg:col-start-4 lg:row-start-1">
+              {/* h-full gives the sticky card room to travel. Without it the
+                  wrapper is exactly the card's height and sticky never engages. */}
+              <Reveal delay={80} className="h-full">
+                <div id="fare-summary" className="scroll-mt-4 lg:sticky lg:top-6">
                   <div className="overflow-hidden rounded-card border border-line bg-surface">
                     <div ref={totalRef} className="bg-inverse px-6 py-7">
                       <p className="text-sm font-medium text-on-inverse-muted">
@@ -648,33 +652,47 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
                     </div>
                   </div>
 
-                  <div className="rounded-card border border-line bg-surface p-6 text-sm">
-                    <div className="mb-4 flex items-center gap-2.5">
-                      <Info className="h-5 w-5 text-accent-ink" aria-hidden="true" />
-                      <h3 className="font-semibold text-ink">{SEMESTER_LABEL} at a glance</h3>
-                    </div>
-                    <dl>
-                      {[
-                        { term: "Service period", value: `${SEMESTER_START} to ${SEMESTER_END}` },
-                        { term: "Chargeable days", value: `${CHARGEABLE_DAYS} of ${TOTAL_DAYS}` },
-                        { term: "Fridays excluded", value: String(FRIDAYS) },
-                        { term: "One way", value: `৳${FARE_PER_TRIP}` },
-                        { term: "Round trip", value: `৳${FARE_PER_TRIP * 2}` },
-                      ].map((row) => (
-                        <div
-                          key={row.term}
-                          className="flex items-baseline justify-between gap-4 border-t border-line-soft py-2.5 first:border-0 first:pt-0"
-                        >
-                          <dt className="text-ink-body">{row.term}</dt>
-                          <dd className="text-right font-mono text-ink tabular-nums">{row.value}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                    <p className="mt-4 border-t border-line-soft pt-4 text-xs leading-relaxed text-ink-body">
-                      From the {SEMESTER_LABEL} bus ticket notice issued by the
-                      Office of the Registrar.
-                    </p>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* ─── Reference facts ───
+                A full-width strip under both columns on large screens, and
+                after the fare on a phone, so it never leaves a hole beside
+                the shorter column. */}
+            <div className="min-w-0 lg:col-span-5 lg:col-start-1 lg:row-start-2">
+              <Reveal delay={120}>
+                <div
+                  role="group"
+                  aria-labelledby="glance-title"
+                  className="rounded-card border border-line bg-surface p-6"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Info className="h-5 w-5 text-accent-ink" aria-hidden="true" />
+                    <h3 id="glance-title" className="font-semibold text-ink">
+                      {SEMESTER_LABEL} at a glance
+                    </h3>
                   </div>
+                  <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:grid-cols-7">
+                    {[
+                      { term: "Service period", value: `${SEMESTER_START} to ${SEMESTER_END}`, wide: true },
+                      { term: "Chargeable days", value: `${CHARGEABLE_DAYS} of ${TOTAL_DAYS}` },
+                      { term: "Fridays excluded", value: String(FRIDAYS) },
+                      { term: "One way", value: `৳${FARE_PER_TRIP}` },
+                      { term: "Round trip", value: `৳${FARE_PER_TRIP * 2}` },
+                    ].map((fact) => (
+                      <div key={fact.term} className={fact.wide ? "col-span-2 sm:col-span-4 lg:col-span-3" : undefined}>
+                        <dt className="text-xs text-ink-body">{fact.term}</dt>
+                        <dd className="mt-1 font-mono text-sm font-medium text-ink tabular-nums">
+                          {fact.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                  <p className="mt-5 border-t border-line-soft pt-4 text-xs leading-relaxed text-ink-body">
+                    From the {SEMESTER_LABEL} bus ticket notice issued by the
+                    Office of the Registrar.
+                  </p>
                 </div>
               </Reveal>
             </div>
