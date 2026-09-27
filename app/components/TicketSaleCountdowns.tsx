@@ -4,10 +4,13 @@ import {
   CalendarClock,
   CircleCheck,
   CircleSlash,
+  CreditCard,
   MoonStar,
 } from "lucide-react";
 import {
+  PAYMENT_METHODS,
   TICKET_SALES,
+  allSalesClosed,
   getSaleStatus,
   type SaleState,
   type TripType,
@@ -28,27 +31,31 @@ const BADGES: Record<
   upcoming: {
     label: "Not open yet",
     icon: CalendarClock,
-    className: "bg-blue-100 text-blue-700 dark:bg-blue-500/15 dark:text-blue-300",
+    className: "bg-accent-soft text-accent-strong",
   },
   open: {
     label: "On sale now",
     icon: CircleCheck,
-    className:
-      "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+    className: "bg-positive-soft text-positive-ink",
   },
   paused: {
     label: "Paused until 10 AM",
     icon: MoonStar,
-    className: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+    className: "bg-caution-soft text-caution-ink",
   },
   closed: {
     label: "Sale closed",
     icon: CircleSlash,
-    className: "bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+    className: "bg-neutral-soft text-neutral-ink",
   },
 };
 
-const UNITS = ["days", "hours", "min", "sec"] as const;
+const UNITS = [
+  { short: "d", long: "days" },
+  { short: "h", long: "hours" },
+  { short: "m", long: "minutes" },
+  { short: "s", long: "seconds" },
+];
 
 function splitDuration(ms: number): number[] {
   const total = Math.max(0, Math.floor(ms / 1000));
@@ -60,43 +67,86 @@ function splitDuration(ms: number): number[] {
   ];
 }
 
-/* Two live countdowns, one per ticket sale.
+/* A live countdown for each ticket sale, kept to a slim band so the
+   calculator is still close to the top on a phone. Once both sales are
+   over it shrinks to a single line pointing at pay per ticket.
 
-   The digits tick every second, so they do not animate: motion on
-   something that changes this often reads as noise. Figures are tabular
-   so the width never jumps between ticks. */
-export function TicketSaleCountdowns() {
-  const now = useNow(1_000);
+   `renderedAt` is when the server rendered the page. It decides which
+   layout ships in the HTML, so the band does not jump after load; the
+   ticking digits only appear once the browser knows the real time. */
+export function TicketSaleCountdowns({ renderedAt }: { renderedAt: number }) {
+  const live = useNow(1_000);
+  const now = live ?? renderedAt;
+
+  if (allSalesClosed(now)) {
+    return (
+      <section
+        id="ticket-sale"
+        aria-labelledby="ticket-sale-title"
+        className="border-b border-line bg-band"
+      >
+        <div className="mx-auto flex max-w-6xl gap-3 px-4 py-6 sm:px-6 lg:px-8">
+          <CircleSlash
+            className="mt-0.5 h-5 w-5 shrink-0 text-ink-muted"
+            aria-hidden="true"
+          />
+          <div>
+            <h2 id="ticket-sale-title" className="font-semibold text-ink">
+              Round trip and one way ticket sales have closed
+            </h2>
+            <p className="mt-1 max-w-[60ch] text-sm leading-relaxed text-ink-body">
+              You can still pay per ticket at least an hour before a trip, if
+              seats are available. Pay with {PAYMENT_METHODS}.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       id="ticket-sale"
-      className="border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/40"
+      aria-labelledby="ticket-sale-title"
+      className="border-b border-line bg-band"
     >
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
-            Ticket sale
-          </h2>
-          <p className="mt-3 max-w-[65ch] leading-relaxed text-slate-600 dark:text-slate-300">
-            Round trip and one way tickets go on sale separately on the NSU
-            Transport portal. All times are Bangladesh time.
-          </p>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+            <h2
+              id="ticket-sale-title"
+              className="text-xl font-semibold tracking-tight text-ink sm:text-2xl"
+            >
+              Ticket sale
+            </h2>
+            <p className="text-sm text-ink-body">
+              Times are Bangladesh time.
+            </p>
+          </div>
         </Reveal>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
           {CARDS.map((card, index) => (
             <Reveal key={card.type} delay={60 + index * 60}>
-              <SaleCard type={card.type} title={card.title} now={now} />
+              <SaleCard type={card.type} title={card.title} now={now} live={live} />
             </Reveal>
           ))}
         </div>
 
         <Reveal delay={180}>
-          <p className="mt-6 max-w-[65ch] text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-            Missed both? You can still pay per ticket at least an hour before a
-            trip, if seats are available.
-          </p>
+          <div className="mt-4 flex flex-col gap-2 text-sm leading-relaxed text-ink-body sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+            <p className="flex max-w-[60ch] items-start gap-2 font-medium text-ink-strong">
+              <CreditCard
+                className="mt-0.5 h-4 w-4 shrink-0 text-accent-ink"
+                aria-hidden="true"
+              />
+              Pay with {PAYMENT_METHODS} only.
+            </p>
+            <p className="max-w-[60ch]">
+              Missed both? Pay per ticket at least an hour before a trip, if
+              seats are available.
+            </p>
+          </div>
         </Reveal>
       </div>
     </section>
@@ -107,21 +157,21 @@ function SaleCard({
   type,
   title,
   now,
+  live,
 }: {
   type: TripType;
   title: string;
-  now: number | null;
+  now: number;
+  live: number | null;
 }) {
   const sale = TICKET_SALES[type];
-  const status =
-    now !== null && sale.sessions ? getSaleStatus(sale.sessions, now) : null;
-  const badge = status ? BADGES[status.state] : null;
+  const status = getSaleStatus(sale.sessions!, now);
+  const badge = BADGES[status.state];
   const parts =
-    status?.target != null && now !== null ? splitDuration(status.target - now) : null;
+    live !== null && status.target !== null ? splitDuration(status.target - live) : null;
 
-  const caption = !status
-    ? ""
-    : status.state === "upcoming"
+  const caption =
+    status.state === "upcoming"
       ? "until the sale opens"
       : status.state === "paused"
         ? "until the sale reopens"
@@ -133,68 +183,46 @@ function SaleCard({
 
   const spoken = parts
     ? `${title}: ${parts[0]} days, ${parts[1]} hours, ${parts[2]} minutes ${caption}`
-    : `${title}: ${badge?.label ?? "loading"}`;
+    : `${title}: ${badge.label}`;
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-          {title}
-        </h3>
-        {badge && (
-          <span
-            className={`swap inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${badge.className}`}
-          >
-            <badge.icon className="h-3.5 w-3.5" aria-hidden="true" />
-            {badge.label}
-          </span>
-        )}
+    <div className="flex h-full flex-col rounded-card border border-line bg-surface p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-sm font-semibold text-ink">{title}</h3>
+        <span
+          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${badge.className}`}
+        >
+          <badge.icon className="h-3.5 w-3.5" aria-hidden="true" />
+          {badge.label}
+        </span>
       </div>
 
-      {status?.state === "closed" ? (
-        <p className="swap mt-5 flex min-h-[92px] items-center rounded-[10px] bg-slate-50 px-4 text-sm leading-relaxed text-slate-600 dark:bg-slate-800/60 dark:text-slate-300">
+      {status.state === "closed" ? (
+        <p className="mt-3 text-sm leading-relaxed text-ink-body">
           This sale has ended. Check the portal in case seats were released.
         </p>
       ) : (
-        <div
-          role="timer"
-          aria-label={spoken}
-          className="mt-5 grid grid-cols-4 gap-2"
-        >
-          {UNITS.map((unit, i) => (
-            <div
-              key={unit}
-              className="rounded-[10px] bg-slate-50 px-2 py-3 text-center dark:bg-slate-800/60"
-            >
-              <span
-                className="block font-mono text-2xl font-semibold text-slate-900 tabular-nums sm:text-3xl dark:text-slate-50"
-                aria-hidden="true"
-              >
-                {parts ? String(parts[i]).padStart(2, "0") : "--"}
+        <>
+          <div
+            role="timer"
+            aria-label={spoken}
+            className="mt-3 flex flex-wrap items-baseline gap-x-3 font-mono tabular-nums"
+          >
+            {UNITS.map((unit, i) => (
+              <span key={unit.short} className="flex items-baseline" aria-hidden="true">
+                <span className="text-3xl font-semibold text-ink">
+                  {parts ? String(parts[i]).padStart(2, "0") : "--"}
+                </span>
+                <span className="ml-0.5 text-sm text-ink-muted">{unit.short}</span>
               </span>
-              <span
-                className="mt-1 block text-xs text-slate-500 dark:text-slate-400"
-                aria-hidden="true"
-              >
-                {unit}
-              </span>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+          <p className="mt-1 text-xs text-ink-muted">{caption}</p>
+        </>
       )}
 
-      <p className="mt-2 min-h-5 text-xs text-slate-500 dark:text-slate-400">
-        {caption}
-      </p>
-
-      <p className="mt-4 border-t border-slate-100 pt-4 text-sm text-slate-700 dark:border-slate-800 dark:text-slate-200">
-        {sale.window}
-      </p>
-      {sale.note && (
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-          {sale.note}
-        </p>
-      )}
+      <p className="mt-auto pt-3 text-sm text-ink-strong">{sale.window}</p>
+      {sale.note && <p className="mt-0.5 text-xs text-ink-muted">{sale.note}</p>}
     </div>
   );
 }

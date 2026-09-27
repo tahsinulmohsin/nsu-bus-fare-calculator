@@ -23,6 +23,10 @@ export const SEMESTER_END_DATE = new Date(2026, 11, 28);
 
 export const FARE_PER_TRIP = 100; // BDT per direction, per day
 
+/* How tickets are paid for. Refunds go the other way and are bank
+   transfer only (see REFUND), so the two are always stated separately. */
+export const PAYMENT_METHODS = "bKash or a bank card";
+
 /* Round trip and one way tickets go on sale in two different windows,
    and a pay per ticket trip is bought on the day. */
 /* The notice gives each sale as a date range with 10:00 AM to 4:00 PM
@@ -83,6 +87,38 @@ export function getSaleStatus(sessions: SaleSession[], now: number): SaleStatus 
     if (now < closes) return { state: "open", target: closes, lastDay };
   }
   return { state: "closed", target: null, lastDay: true };
+}
+
+/* True once both the round trip and one way sales are over. */
+export function allSalesClosed(now: number): boolean {
+  return (["round", "one-way"] as const).every(
+    (type) => getSaleStatus(TICKET_SALES[type].sessions!, now).state === "closed"
+  );
+}
+
+/* Dates and times are always shown in Bangladesh time, whatever the
+   visitor's device is set to, because that is what the notice uses. */
+function bdParts(ms: number) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Dhaka",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  }).formatToParts(ms);
+  return Object.fromEntries(parts.map((p) => [p.type, p.value]));
+}
+
+/* "4:00 PM" */
+export function formatBdTime(ms: number): string {
+  const p = bdParts(ms);
+  return `${p.hour}:${p.minute} ${p.dayPeriod}`;
+}
+
+/* "28 Sep at 10:00 AM" */
+export function formatBdDateTime(ms: number): string {
+  const p = bdParts(ms);
+  return `${p.day} ${p.month} at ${p.hour}:${p.minute} ${p.dayPeriod}`;
 }
 
 export const BOOKING_URL = "https://transport.northsouth.edu/";

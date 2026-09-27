@@ -1,4 +1,4 @@
-# North South University (NSU) Bus Fare Calculator (v2.2.1)
+# North South University (NSU) Bus Fare Calculator (v2.3.0)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
@@ -70,19 +70,37 @@ the 7:40 AM arrival and the stoppage lists are identical in both notices.
 
 - **Ticket sale countdowns**, one each for round trip and one way, that know
   whether a sale has not opened, is open, is paused overnight, or has closed.
-- **Fare calculator** for round trip, one way, and per day ad hoc trips, with a
-  per weekday breakdown of how often each day falls in the semester.
+  Once both sales are over the band shrinks to a single line pointing at pay
+  per ticket.
+- **Fare calculator** for round trip, one way, and pay per ticket, with a per
+  weekday breakdown of how often each day falls in the semester and a
+  "Select all" shortcut.
 - **Refund estimate** for days you expect the service to be suspended, shown
   alongside the amount charged at booking and your net cost.
+- **Booking guidance that follows the sale.** The note under the booking button
+  says when the sale for your trip type opens, how long it has left, or that
+  it has closed (with a one-tap switch to pay per ticket). Tickets are paid
+  with bKash or a bank card only.
+- **Shareable fares.** The trip type, route, days and suspended days live in
+  the URL, and "Copy a link to this fare" copies it.
+- **Phone fare bar.** On small screens a compact running total follows the
+  controls, so the result is visible while you tap days.
 - **Route schedules** for all six routes (Uttara, Mirpur, Mohammadpur,
-  Dhanmondi, Azimpur, Khilgaon), as a table on desktop and cards on mobile.
+  Dhanmondi, Azimpur, Khilgaon).
 - **Summer 2026 refund note** at the end of the page, with the suspended
   dates and who to contact if your refund has not arrived. The claim form
   closed on 15 September 2026.
-- **Light and dark themes**, both checked to WCAG AA contrast.
-- **Motion that respects `prefers-reduced-motion`**, including the hero video,
-  which never autoplays when reduced motion is requested and always has a
-  visible play and pause control.
+- **Light and dark themes** built on one set of semantic colour tokens. Every
+  text and control colour is checked with axe-core to WCAG AA in both themes,
+  in every ticket sale state.
+- **Considerate hero video.** It downloads nothing until the hero is on
+  screen, serves a 640px file (about 1 MB) to phones, and does not start by
+  itself when reduced motion is requested, when the browser is in data saver
+  mode, or on a slow connection. It pauses when scrolled away or when the tab
+  is hidden, and the play and pause control always wins.
+
+The visual system (tokens, type, components and rules) is documented in
+[DESIGN.md](DESIGN.md).
 
 ## Updating for a new semester
 
@@ -122,11 +140,15 @@ npm run dev
 
 Then open <http://localhost:3000>.
 
-The hero video is committed at `public/video/hero.mp4`. To regenerate it from a
-source file:
+The hero video is committed in two sizes. To regenerate them from a source
+file:
 
 ```bash
-ffmpeg -i source.mkv -an -vf "scale=1152:-2,fps=25" -c:v libx264 -crf 31 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero.mp4
+ffmpeg -i source.mkv -an -vf "scale=1152:-2,fps=24" -c:v libx264 -crf 35 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero.mp4
+```
+
+```bash
+ffmpeg -i source.mkv -an -vf "scale=640:-2,fps=24" -c:v libx264 -profile:v main -crf 39 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero-mobile.mp4
 ```
 
 ## Deployment

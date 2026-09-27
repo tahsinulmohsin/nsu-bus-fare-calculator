@@ -28,14 +28,18 @@ export function RouteSchedule({
   return (
     <section
       id="routes"
-      className="border-t border-slate-200 py-16 sm:py-20 dark:border-slate-800"
+      aria-labelledby="routes-title"
+      className="scroll-mt-4 border-t border-line py-16 sm:py-20"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-50">
+          <h2
+            id="routes-title"
+            className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
+          >
             Routes and timings
           </h2>
-          <p className="mt-3 max-w-[65ch] leading-relaxed text-slate-600 dark:text-slate-300">
+          <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-body">
             Six routes across Dhaka. Every route reaches campus at the same
             three times, but the evening trips back differ by route.
           </p>
@@ -57,13 +61,13 @@ export function RouteSchedule({
                   aria-pressed={active}
                   className={`pressable flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium ${
                     active
-                      ? "border-blue-600 bg-blue-600 text-white"
-                      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+                      ? "border-accent bg-accent text-on-accent"
+                      : "border-line-control bg-surface text-ink-strong hover:border-line-hover hover:bg-sunken"
                   }`}
                 >
                   <span
                     className={`font-mono text-xs ${
-                      active ? "text-blue-100" : "text-slate-400 dark:text-slate-500"
+                      active ? "text-on-accent" : "text-ink-muted"
                     }`}
                   >
                     {route.number}
@@ -78,13 +82,13 @@ export function RouteSchedule({
         {routeData && routeInfo ? (
           <div key={selectedRoute} className="swap mt-8 space-y-6">
             {/* Stoppages */}
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex items-center gap-2.5 border-b border-slate-200 px-6 py-4 dark:border-slate-800">
+            <div className="overflow-hidden rounded-card border border-line bg-surface">
+              <div className="flex items-center gap-2.5 border-b border-line px-6 py-4">
                 <MapPin
-                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                  className="h-5 w-5 text-accent-ink"
                   aria-hidden="true"
                 />
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                <h3 className="font-semibold text-ink">
                   {routeInfo.label} stoppages
                 </h3>
               </div>
@@ -93,24 +97,24 @@ export function RouteSchedule({
                 {routeData.pickups.map((pickup, index) => (
                   <li
                     key={pickup.point}
-                    className="flex items-baseline justify-between gap-4 border-b border-slate-100 px-6 py-3.5 last:border-0 sm:even:border-l dark:border-slate-800/60"
+                    className="flex items-baseline justify-between gap-4 border-b border-line-soft px-6 py-3.5 last:border-0 sm:even:border-l"
                   >
                     <span className="flex items-baseline gap-3">
-                      <span className="font-mono text-xs text-slate-400 tabular-nums dark:text-slate-500">
+                      <span className="font-mono text-xs text-ink-muted tabular-nums">
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="text-sm text-slate-800 dark:text-slate-200">
+                      <span className="text-sm text-ink-strong">
                         {pickup.point}
                       </span>
                     </span>
-                    <span className="shrink-0 font-mono text-sm text-slate-600 tabular-nums dark:text-slate-300">
+                    <span className="shrink-0 font-mono text-sm text-ink-body tabular-nums">
                       {pickup.morning}
                     </span>
                   </li>
                 ))}
               </ol>
 
-              <p className="flex items-start gap-2 border-t border-slate-100 bg-slate-50 px-6 py-3.5 text-xs leading-relaxed text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400">
+              <p className="flex items-start gap-2 border-t border-line-soft bg-sunken px-6 py-3.5 text-xs leading-relaxed text-ink-body">
                 <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 Morning pickup times are indicative, carried over from last
                 semester. The Fall 2026 notice lists the stoppages but no
@@ -124,7 +128,7 @@ export function RouteSchedule({
               <TimeList
                 icon={
                   <ArrowRight
-                    className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                    className="h-5 w-5 text-accent-ink"
                     aria-hidden="true"
                   />
                 }
@@ -136,7 +140,7 @@ export function RouteSchedule({
               <TimeList
                 icon={
                   <Bus
-                    className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                    className="h-5 w-5 text-accent-ink"
                     aria-hidden="true"
                   />
                 }
@@ -148,15 +152,15 @@ export function RouteSchedule({
           </div>
         ) : (
           <Reveal delay={120}>
-            <div className="mt-8 rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center dark:border-slate-700 dark:bg-slate-900/50">
+            <div className="mt-8 rounded-card border border-dashed border-line-hover bg-surface px-6 py-14 text-center">
               <Bus
-                className="mx-auto h-8 w-8 text-slate-300 dark:text-slate-600"
+                className="mx-auto h-8 w-8 text-ink-faint"
                 aria-hidden="true"
               />
-              <p className="mt-4 font-medium text-slate-700 dark:text-slate-200">
+              <p className="mt-4 font-medium text-ink-strong">
                 Pick a route above
               </p>
-              <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+              <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-ink-body">
                 You will get every stoppage on that route, and exactly which
                 trips back to it run in the evening.
               </p>
@@ -182,10 +186,10 @@ function TimeList({
   note?: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+    <div className="rounded-card border border-line bg-surface p-6">
       <div className="mb-4 flex items-center gap-2.5">
         {icon}
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+        <h3 className="font-semibold text-ink">
           {title}
         </h3>
       </div>
@@ -193,20 +197,20 @@ function TimeList({
         {times.map((time, i) => (
           <li
             key={time}
-            className="flex items-center justify-between rounded-[10px] bg-slate-50 px-4 py-2.5 dark:bg-slate-800/60"
+            className="flex items-center justify-between rounded-control bg-sunken px-4 py-2.5"
           >
-            <span className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-              <Clock className="h-3.5 w-3.5 text-slate-400" aria-hidden="true" />
+            <span className="flex items-center gap-2 text-sm text-ink-body">
+              <Clock className="h-3.5 w-3.5 text-ink-faint" aria-hidden="true" />
               {labels?.[i] ?? `Trip ${i + 1}`}
             </span>
-            <span className="font-mono text-sm font-semibold text-slate-900 tabular-nums dark:text-slate-100">
+            <span className="font-mono text-sm font-semibold text-ink tabular-nums">
               {time}
             </span>
           </li>
         ))}
       </ul>
       {note && (
-        <p className="mt-3 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+        <p className="mt-3 text-xs leading-relaxed text-ink-body">
           {note}
         </p>
       )}
