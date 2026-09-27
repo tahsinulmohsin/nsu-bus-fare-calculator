@@ -5,6 +5,14 @@ All notable changes to the NSU Bus Fare Calculator. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Every version is a
 git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/releases).
 
+## [2.4.4] - 2026-09-27
+
+### Added
+
+- A photo of an NSU student bus beside "How the NSU student bus works",
+  filling the empty space on the right on desktop and sitting below the text
+  on phones. It loads lazily as WebP with descriptive alt text.
+
 ## [2.4.3] - 2026-09-27
 
 ### Added
@@ -177,6 +185,7 @@ Also included: a bus favicon and Poppins font fixes from the previous version.
 - First release, for the Summer 2026 semester: fare calculator for round trip,
   one way and per day trips, schedules for six routes, and the booking window.
 
+[2.4.4]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.3...v2.4.4
 [2.4.3]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.2...v2.4.3
 [2.4.2]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.0...v2.4.1

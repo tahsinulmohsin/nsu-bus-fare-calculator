@@ -150,7 +150,7 @@ app/
     BusFareCalculator.tsx   The page: hero, calculator, fare bar, footer
     TicketSaleCountdowns.tsx  Live countdowns for the two ticket sales
     RouteSchedule.tsx       All six routes with stops and trips back
-    AboutBusService.tsx     "How the NSU student bus works" (server rendered)
+    AboutBusService.tsx     "How the NSU student bus works" and bus photo (server rendered)
     Faq.tsx                 FAQ (server rendered)
     RefundNotice.tsx        Summer 2026 refund note
     HeroVideo.tsx           Background video with data and motion checks
@@ -161,6 +161,7 @@ app/
     seo.ts                  Site URL, title, description and FAQ content
     useFareParams.ts        Calculator state kept in the URL
     useNow.ts, useClient.ts Clock, hydration and motion-preference stores
+app/assets/                 Bus photograph (optimised by next/image)
 public/video/               Hero video (desktop and phone) and poster
 Dockerfile, docker-compose.yml  Self-hosting
 DESIGN.md                   Visual design system
@@ -281,8 +282,9 @@ use, change and share it, including commercially, as long as the copyright and
 license notice stay with it.
 
 The license covers the code only. The hero video in `public/video/` comes from
-a third-party news clip, and the North South University name, the route and
-fare data from its notices, and the NSU TV logo in the footage belong to their
+a third-party news clip, and the bus photograph in `app/assets/` is a
+third-party image. They, the North South University name, the route and fare
+data from its notices, and the NSU TV logo in the footage belong to their
 respective owners. None of these are licensed here.
 
 ---
