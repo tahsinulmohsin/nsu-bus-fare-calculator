@@ -4,6 +4,7 @@
 [![Website](https://img.shields.io/website?url=https%3A%2F%2Fnsu-bus.tahsinulmohsin.me&label=nsu-bus.tahsinulmohsin.me)](https://nsu-bus.tahsinulmohsin.me)
 [![Deployed on Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?logo=vercel)](https://nsu-bus.tahsinulmohsin.me)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs)](https://nextjs.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Work out what the North South University (NSU) student bus costs you for the
 **Fall 2026** semester, see every pickup point and trip time on all six Dhaka
@@ -26,6 +27,7 @@ always confirm on the [NSU Transport portal](https://transport.northsouth.edu/).
 - [Search engine setup](#search-engine-setup)
 - [Deployment](#deployment)
 - [Versions and releases](#versions-and-releases)
+- [License](#license)
 
 ## Features
 
@@ -271,6 +273,17 @@ git push -f origin production
 # 3. Publish the release notes from the changelog entry.
 gh release create v2.5.0 --title "v2.5.0" --notes-file notes.md
 ```
+
+## License
+
+The source code is released under the [MIT License](LICENSE). You are free to
+use, change and share it, including commercially, as long as the copyright and
+license notice stay with it.
+
+The license covers the code only. The hero video in `public/video/` comes from
+a third-party news clip, and the North South University name, the route and
+fare data from its notices, and the NSU TV logo in the footage belong to their
+respective owners. None of these are licensed here.
 
 ---
 
