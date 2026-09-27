@@ -18,12 +18,15 @@ colors:
   ink-muted-dark: "oklch(70.4% 0.04 256.788)"
   accent: "oklch(54.6% 0.245 262.881)"
   accent-ink-dark: "oklch(70.7% 0.165 254.624)"
+  accent-hover-dark: "oklch(62.3% 0.214 259.815)"
   accent-soft: "oklch(97% 0.014 254.604)"
   on-accent: "oklch(100% 0 0)"
   cta: "oklch(55.3% 0.195 38.402)"
   cta-hover: "oklch(47% 0.157 37.304)"
   positive: "oklch(50.8% 0.118 165.612)"
   positive-dark: "oklch(76.5% 0.177 163.223)"
+  positive-tint-dark: "oklch(69.6% 0.17 162.48)"
+  caution-tint-dark: "oklch(76.9% 0.188 70.08)"
   caution-ink: "oklch(47.3% 0.137 46.201)"
   danger: "oklch(50.5% 0.213 27.518)"
   inverse: "oklch(20.8% 0.042 265.755)"
@@ -147,6 +150,8 @@ All colours are semantic tokens defined in `app/globals.css` and swapped for the
 ### Secondary
 - **Ticket Orange** (`cta`, hover `cta-hover`): the booking button and nothing else.
 
+In dark mode the soft status backgrounds are mixed from a brighter base (`positive-tint-dark`, `caution-tint-dark`, and `accent-hover-dark` for the selection wash) at 12 to 15% over the surface.
+
 ### Neutral
 - **Paper** (`canvas`, `surface`): page and card backgrounds in light mode; deep navy slate in dark mode.
 - **Band** (`band`, `sunken`): the tinted band behind the ticket sale and refund sections, and quiet inset rows.
@@ -226,6 +231,9 @@ Softly rounded throughout: cards at 16px, controls and buttons at 10px, chips, b
 
 ### Navigation
 A single-line bar inside the hero: the bus mark and name on the left, the theme toggle on the right, 72px tall. A skip link to the calculator appears on first Tab.
+
+### Disclosures
+Routes and FAQ answers use native `<details>`: a 16px-radius bordered surface, a full-width summary row (44px minimum, tinted on hover) and a chevron that turns when open. Content stays in the HTML while closed, so it is readable by search engines and works without JavaScript. The route picked in the calculator opens itself and gets a blue border and a "Your route" badge.
 
 ### The Fare Panel
 The inverse block at the top of the summary card holds the total in 36px Geist Mono. Under it: the expected refund and net cost when there are suspended days, the booking button, the sale note, and the payment line ("Pay with bKash or a bank card only").

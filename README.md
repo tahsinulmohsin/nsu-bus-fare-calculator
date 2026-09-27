@@ -1,4 +1,4 @@
-# North South University (NSU) Bus Fare Calculator (v2.3.2)
+# North South University (NSU) Bus Fare Calculator (v2.4.0)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
@@ -86,7 +86,12 @@ the 7:40 AM arrival and the stoppage lists are identical in both notices.
 - **Phone fare bar.** On small screens a compact running total follows the
   controls, so the result is visible while you tap days.
 - **Route schedules** for all six routes (Uttara, Mirpur, Mohammadpur,
-  Dhanmondi, Azimpur, Khilgaon).
+  Dhanmondi, Azimpur, Khilgaon): every stop in order with its morning pickup
+  time, the trips back from campus, and the fare, as expandable rows that are
+  all in the page HTML.
+- **A plain-language guide and FAQ** covering fares, payment, ticket sale
+  dates, the service period, timings, refunds, and the fact that this is an
+  unofficial tool.
 - **Summer 2026 refund note** at the end of the page, with the suspended
   dates and who to contact if your refund has not arrived. The claim form
   closed on 15 September 2026.
@@ -150,6 +155,35 @@ ffmpeg -i source.mkv -an -vf "scale=1152:-2,fps=24" -c:v libx264 -crf 35 -preset
 ```bash
 ffmpeg -i source.mkv -an -vf "scale=640:-2,fps=24" -c:v libx264 -profile:v main -crf 39 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero-mobile.mp4
 ```
+
+## Search engine setup
+
+- Title, description, canonical URL, robots directives, Open Graph and
+  Twitter cards live in `app/layout.tsx`, fed by `app/lib/seo.ts`.
+- `app/robots.ts`, `app/sitemap.ts` and `app/manifest.ts` generate
+  `/robots.txt`, `/sitemap.xml` and `/manifest.webmanifest`.
+- `app/page.tsx` renders one JSON-LD `@graph` (WebSite, CollegeOrUniversity,
+  WebApplication, FAQPage) into the server HTML.
+- The FAQ on the page and in the JSON-LD come from the same list in
+  `app/lib/seo.ts`, and every answer is built from the semester and route
+  data, so updating a semester updates both.
+
+Google retired FAQ rich results on 7 May 2026, so the FAQPage markup will not
+produce FAQ snippets; the visible FAQ text is what helps.
+
+## Self-hosting with Docker
+
+The app builds as a standalone Node server, so it runs anywhere Docker does.
+
+```bash
+docker compose up -d --build
+```
+
+That serves it on port 3000. Pages regenerate hourly inside the container,
+exactly as on Vercel. The canonical URL, sitemap and structured data keep
+pointing at the Vercel address, so search engines treat that as the one real
+page. To make another address canonical instead, build with
+`--build-arg NEXT_PUBLIC_SITE_URL=https://your.domain`.
 
 ## Deployment
 

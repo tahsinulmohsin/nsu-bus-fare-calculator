@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Providers";
+import { ROUTE_LIST } from "./lib/routes";
 import { SEMESTER_LABEL } from "./lib/semester";
+import { SEO_DESCRIPTION, SEO_TITLE, SITE_NAME, SITE_URL } from "./lib/seo";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -16,35 +18,46 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const DESCRIPTION = `Work out your North South University (NSU) bus fare for ${SEMESTER_LABEL}, check pickup points and times across 6 routes in Dhaka, and see who to contact about a Summer 2026 fare refund.`;
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nsu-bus-fare-calculator.vercel.app"),
-  title: `NSU Bus Fare Calculator | ${SEMESTER_LABEL}`,
-  description: DESCRIPTION,
+  metadataBase: new URL(SITE_URL),
+  title: SEO_TITLE,
+  description: SEO_DESCRIPTION,
+  applicationName: SITE_NAME,
+  category: "education",
   keywords: [
-    "NSU",
-    "North South University",
-    "bus fare",
-    "calculator",
+    "NSU student bus",
+    "NSU bus fare",
+    "NSU bus routes",
+    "North South University bus fare calculator",
+    "North South University transport",
+    "NSU shuttle",
+    ...ROUTE_LIST.map((r) => `${r.label} to NSU bus`),
     SEMESTER_LABEL,
-    "transport",
-    "schedule",
-    "fare refund",
   ],
-  alternates: { canonical: "/" },
+  alternates: { canonical: `${SITE_URL}/` },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
-    url: "/",
-    siteName: "NSU Bus Fare Calculator",
-    title: `NSU Bus Fare Calculator | ${SEMESTER_LABEL}`,
-    description: DESCRIPTION,
-    locale: "en_BD",
+    url: `${SITE_URL}/`,
+    siteName: SITE_NAME,
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    locale: "en_GB",
   },
   twitter: {
     card: "summary_large_image",
-    title: `NSU Bus Fare Calculator | ${SEMESTER_LABEL}`,
-    description: DESCRIPTION,
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
   },
 };
 

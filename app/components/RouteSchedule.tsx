@@ -1,29 +1,30 @@
 "use client";
 
-import { ArrowRight, Bus, Clock, Info, MapPin } from "lucide-react";
-import {
-  ARRIVALS,
-  DEPARTURE_NOTES,
-  ROUTES,
-  ROUTE_LIST,
-} from "../lib/routes";
-import { TRIP_LABELS } from "../lib/semester";
+import { useState } from "react";
+import { ChevronDown, Info } from "lucide-react";
+import { ARRIVALS, DEPARTURE_NOTES, ROUTES, ROUTE_LIST } from "../lib/routes";
+import { FARE_PER_TRIP, SEMESTER_LABEL } from "../lib/semester";
 import { Reveal } from "./Reveal";
 
-/* Stoppages, campus arrivals and campus departures for one route.
+const listJoin = (items: string[]) =>
+  items.length <= 1
+    ? items.join("")
+    : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
 
-   Each stoppage carries a single indicative morning pickup time, so the
-   same list works at every width without a table that scrolls sideways. */
-export function RouteSchedule({
-  selectedRoute,
-  onSelectRoute,
-}: {
-  selectedRoute: string;
-  onSelectRoute: (route: string) => void;
-}) {
-  const routeData = selectedRoute ? ROUTES[selectedRoute] : null;
-  const routeInfo = ROUTE_LIST.find((r) => r.key === selectedRoute);
-  const departureNote = DEPARTURE_NOTES[selectedRoute];
+export const routeAnchor = (key: string) => `route-${key.toLowerCase()}`;
+
+/* Every route, its stops, its trips back and its fare, as a list of
+   native disclosures.
+
+   All six routes are in the HTML whether they are open or not, so a
+   search for "Uttara to NSU bus" or a stop name finds this page, and a
+   visitor can scan every route without picking one first. The route
+   chosen in the calculator opens itself and is marked as theirs. */
+export function RouteSchedule({ selectedRoute }: { selectedRoute: string }) {
+  /* Routes the visitor opened or closed by hand. The calculator's route
+     is open unless they closed it. */
+  const [toggled, setToggled] = useState<Record<string, boolean>>({});
+  const isOpen = (key: string) => toggled[key] ?? key === selectedRoute;
 
   return (
     <section
@@ -33,187 +34,119 @@ export function RouteSchedule({
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <h2
-            id="routes-title"
-            className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
-          >
-            Routes and timings
+          <h2 id="routes-title" className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            NSU bus routes and pickup points
           </h2>
           <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-body">
-            Six routes across Dhaka. Every route reaches campus at the same
-            three times, but the evening trips back differ by route.
+            Six routes across Dhaka, all at Tk {FARE_PER_TRIP} one way or Tk{" "}
+            {FARE_PER_TRIP * 2} for a round trip. Every route reaches the
+            Bashundhara campus at {listJoin(ARRIVALS)}. Open a route to see its
+            stops and when the bus heads back.
           </p>
         </Reveal>
 
-        <Reveal delay={60}>
-          <div
-            className="mt-8 flex flex-wrap gap-2"
-            role="group"
-            aria-label="Bus route"
-          >
-            {ROUTE_LIST.map((route) => {
-              const active = route.key === selectedRoute;
-              return (
-                <button
-                  key={route.key}
-                  type="button"
-                  onClick={() => onSelectRoute(active ? "" : route.key)}
-                  aria-pressed={active}
-                  className={`pressable flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium ${
-                    active
-                      ? "border-accent bg-accent text-on-accent"
-                      : "border-line-control bg-surface text-ink-strong hover:border-line-hover hover:bg-sunken"
+        <ol className="mt-8 space-y-3">
+          {ROUTE_LIST.map((route) => {
+            const data = ROUTES[route.key];
+            const mine = route.key === selectedRoute;
+            const [firstStop] = data.pickups[0].point.split(" (");
+            const lastTrip = data.departures[data.departures.length - 1];
+            const note = DEPARTURE_NOTES[route.key];
+
+            return (
+              <li key={route.key} id={routeAnchor(route.key)} className="scroll-mt-4">
+                <details
+                  open={isOpen(route.key)}
+                  onToggle={(event) => {
+                    const open = event.currentTarget.open;
+                    if (open !== isOpen(route.key)) {
+                      setToggled((t) => ({ ...t, [route.key]: open }));
+                    }
+                  }}
+                  className={`group rounded-card border bg-surface ${
+                    mine ? "border-accent" : "border-line"
                   }`}
                 >
-                  <span
-                    className={`font-mono text-xs ${
-                      active ? "text-on-accent" : "text-ink-muted"
-                    }`}
-                  >
-                    {route.number}
-                  </span>
-                  {route.label}
-                </button>
-              );
-            })}
-          </div>
-        </Reveal>
-
-        {routeData && routeInfo ? (
-          <div key={selectedRoute} className="swap mt-8 space-y-6">
-            {/* Stoppages */}
-            <div className="overflow-hidden rounded-card border border-line bg-surface">
-              <div className="flex items-center gap-2.5 border-b border-line px-6 py-4">
-                <MapPin
-                  className="h-5 w-5 text-accent-ink"
-                  aria-hidden="true"
-                />
-                <h3 className="font-semibold text-ink">
-                  {routeInfo.label} stoppages
-                </h3>
-              </div>
-
-              <ol className="grid sm:grid-cols-2">
-                {routeData.pickups.map((pickup, index) => (
-                  <li
-                    key={pickup.point}
-                    className="flex items-baseline justify-between gap-4 border-b border-line-soft px-6 py-3.5 last:border-0 sm:even:border-l"
-                  >
-                    <span className="flex items-baseline gap-3">
-                      <span className="font-mono text-xs text-ink-muted tabular-nums">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="text-sm text-ink-strong">
-                        {pickup.point}
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center gap-4 rounded-card px-5 py-4 hover:bg-sunken [&::-webkit-details-marker]:hidden">
+                    <span className="font-mono text-sm text-ink-muted tabular-nums" aria-hidden="true">
+                      {route.number}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <h3 className="font-semibold text-ink">{route.label} to NSU</h3>
+                      <span className="mt-0.5 block text-sm text-ink-body">
+                        {data.pickups.length} stops from {firstStop}, last bus back at {lastTrip}
                       </span>
                     </span>
-                    <span className="shrink-0 font-mono text-sm text-ink-body tabular-nums">
-                      {pickup.morning}
-                    </span>
-                  </li>
-                ))}
-              </ol>
+                    {mine && (
+                      <span className="hidden shrink-0 rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-strong sm:inline">
+                        Your route
+                      </span>
+                    )}
+                    <ChevronDown
+                      className="h-5 w-5 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none"
+                      aria-hidden="true"
+                    />
+                  </summary>
 
-              <p className="flex items-start gap-2 border-t border-line-soft bg-sunken px-6 py-3.5 text-xs leading-relaxed text-ink-body">
-                <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                Morning pickup times are indicative, carried over from last
-                semester. The Fall 2026 notice lists the stoppages but no
-                pickup times, and the afternoon and evening trips were
-                re-timed, so check the transport portal for those.
-              </p>
-            </div>
+                  <div className="grid gap-6 border-t border-line-soft px-5 py-5 md:grid-cols-[minmax(0,1fr)_16rem]">
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-medium text-ink-strong">
+                        Pickup points, in order
+                      </h4>
+                      <ol className="mt-2">
+                        {data.pickups.map((pickup, index) => (
+                          <li
+                            key={pickup.point}
+                            className="flex items-baseline justify-between gap-4 border-b border-line-soft py-2.5 last:border-0"
+                          >
+                            <span className="flex min-w-0 items-baseline gap-3">
+                              <span className="font-mono text-xs text-ink-muted tabular-nums">
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
+                              <span className="text-sm text-ink-strong">{pickup.point}</span>
+                            </span>
+                            <span className="shrink-0 font-mono text-sm text-ink-body tabular-nums">
+                              {pickup.morning}
+                            </span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
 
-            {/* Campus arrivals and departures */}
-            <div className="grid gap-6 sm:grid-cols-2">
-              <TimeList
-                icon={
-                  <ArrowRight
-                    className="h-5 w-5 text-accent-ink"
-                    aria-hidden="true"
-                  />
-                }
-                title="Arrives at NSU"
-                times={ARRIVALS}
-                labels={TRIP_LABELS}
-                note="The same three arrivals on all six routes."
-              />
-              <TimeList
-                icon={
-                  <Bus
-                    className="h-5 w-5 text-accent-ink"
-                    aria-hidden="true"
-                  />
-                }
-                title="Leaves NSU"
-                times={routeData.departures}
-                note={departureNote}
-              />
-            </div>
-          </div>
-        ) : (
-          <Reveal delay={120}>
-            <div className="mt-8 rounded-card border border-dashed border-line-hover bg-surface px-6 py-14 text-center">
-              <Bus
-                className="mx-auto h-8 w-8 text-ink-faint"
-                aria-hidden="true"
-              />
-              <p className="mt-4 font-medium text-ink-strong">
-                Pick a route above
-              </p>
-              <p className="mx-auto mt-1.5 max-w-sm text-sm leading-relaxed text-ink-body">
-                You will get every stoppage on that route, and exactly which
-                trips back to it run in the evening.
-              </p>
-            </div>
-          </Reveal>
-        )}
+                    <dl className="space-y-4 text-sm">
+                      <div>
+                        <dt className="text-ink-body">Bus fare from {route.label}</dt>
+                        <dd className="mt-0.5 font-medium text-ink">
+                          Tk {FARE_PER_TRIP} one way, Tk {FARE_PER_TRIP * 2} round trip
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-ink-body">Reaches NSU</dt>
+                        <dd className="mt-0.5 font-mono text-ink tabular-nums">{ARRIVALS.join(", ")}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-ink-body">Leaves NSU</dt>
+                        <dd className="mt-0.5 font-mono text-ink tabular-nums">
+                          {data.departures.join(", ")}
+                        </dd>
+                        {note && <dd className="mt-1 text-xs leading-relaxed text-ink-body">{note}</dd>}
+                      </div>
+                    </dl>
+                  </div>
+                </details>
+              </li>
+            );
+          })}
+        </ol>
+
+        <p className="mt-5 flex max-w-[60ch] items-start gap-2 text-xs leading-relaxed text-ink-body">
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          Morning pickup times are indicative, carried over from last semester.
+          The {SEMESTER_LABEL} notice lists the stops but not their times, and the
+          afternoon and evening trips were re-timed, so check the transport
+          portal for those.
+        </p>
       </div>
     </section>
-  );
-}
-
-function TimeList({
-  icon,
-  title,
-  times,
-  labels,
-  note,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  times: string[];
-  labels?: string[];
-  note?: string;
-}) {
-  return (
-    <div className="rounded-card border border-line bg-surface p-6">
-      <div className="mb-4 flex items-center gap-2.5">
-        {icon}
-        <h3 className="font-semibold text-ink">
-          {title}
-        </h3>
-      </div>
-      <ul className="space-y-2">
-        {times.map((time, i) => (
-          <li
-            key={time}
-            className="flex items-center justify-between rounded-control bg-sunken px-4 py-2.5"
-          >
-            <span className="flex items-center gap-2 text-sm text-ink-body">
-              <Clock className="h-3.5 w-3.5 text-ink-faint" aria-hidden="true" />
-              {labels?.[i] ?? `Trip ${i + 1}`}
-            </span>
-            <span className="font-mono text-sm font-semibold text-ink tabular-nums">
-              {time}
-            </span>
-          </li>
-        ))}
-      </ul>
-      {note && (
-        <p className="mt-3 text-xs leading-relaxed text-ink-body">
-          {note}
-        </p>
-      )}
-    </div>
   );
 }

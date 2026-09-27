@@ -75,7 +75,8 @@ export const ROUTES: Record<string, RouteData> = {
         morning: "6:35 AM",
       },
       { point: "Syamoli Bus Stand (Hotel Mohammadia)", morning: "6:40 AM" },
-      { point: "Agargoan Metro Rail Station", morning: "6:50 AM" },
+      /* The notice prints "Agargoan", a typo for Agargaon. */
+      { point: "Agargaon Metro Rail Station", morning: "6:50 AM" },
       { point: "BAF Shaheen College", morning: "7:00 AM" },
       { point: "Banani Rail Station", morning: "7:10 AM" },
     ],

@@ -40,11 +40,13 @@ import {
   type TripType,
 } from "../lib/semester";
 import { useNow } from "../lib/useNow";
-import { ROUTES, ROUTE_LIST } from "../lib/routes";
+import { useIsClient } from "../lib/useClient";
+import { useFareParams } from "../lib/useFareParams";
+import { ROUTE_LIST } from "../lib/routes";
 import { HeroVideo } from "./HeroVideo";
 import { RefundNotice } from "./RefundNotice";
 import { Reveal } from "./Reveal";
-import { RouteSchedule } from "./RouteSchedule";
+import { RouteSchedule, routeAnchor } from "./RouteSchedule";
 import { TicketSaleCountdowns } from "./TicketSaleCountdowns";
 
 /* Labels follow the notice: Round Trip, One Way Trip, Pay Per Ticket. */
@@ -54,18 +56,29 @@ const TRIP_OPTIONS: { value: TripType; label: string; hint: string }[] = [
   { value: "per-day", label: "Pay per ticket", hint: "Bought on the day" },
 ];
 
-export default function BusFareCalculator({ renderedAt }: { renderedAt: number }) {
+export default function BusFareCalculator({
+  renderedAt,
+  about,
+  faq,
+}: {
+  renderedAt: number;
+  /* Server-rendered sections passed in so their text ships as plain HTML
+     and adds nothing to the client bundle. */
+  about?: React.ReactNode;
+  faq?: React.ReactNode;
+}) {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  const [selectedRoute, setSelectedRoute] = useState("");
-  const [tripType, setTripType] = useState<TripType>("round");
-  const [selectedDays, setSelectedDays] = useState<number[]>([]);
-  const [suspensions, setSuspensions] = useState(0);
-  const [urlReady, setUrlReady] = useState(false);
-  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
-  const interacted = useRef(false);
+  const mounted = useIsClient();
   const now = useNow(30_000);
+
+  /* ─── Shareable state ───
+     Trip type, route, days and suspended days live in the URL, so a
+     student can send a friend exactly the fare they worked out. */
+  const [params, setParams] = useFareParams();
+  const { trip: tripType, route: selectedRoute, days: selectedDays, suspended: suspensions } =
+    params;
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
+  const [interacted, setInteracted] = useState(false);
 
   /* How many times each weekday falls inside the service period. */
   const weekdayCounts = useMemo(() => {
@@ -79,57 +92,14 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
   const countFor = (days: number[]) =>
     days.reduce((sum, day) => sum + (weekdayCounts[day] ?? 0), 0);
 
-  /* ─── Shareable state ───
-     The fare lives in the URL, so a student can send a friend exactly
-     the route and days they picked. Read once on load, then kept in
-     sync without adding history entries. */
-  useEffect(() => {
-    setMounted(true);
-    const params = new URLSearchParams(window.location.search);
-
-    const trip = params.get("trip");
-    if (TRIP_OPTIONS.some((o) => o.value === trip)) setTripType(trip as TripType);
-
-    const route = params.get("route");
-    if (route && ROUTES[route]) setSelectedRoute(route);
-
-    const days = (params.get("days") ?? "")
-      .split(",")
-      .map((slug) => WEEKDAYS.find((d) => d.short.toLowerCase() === slug)?.key)
-      .filter((key): key is (typeof WEEKDAYS)[number]["key"] => key !== undefined);
-    const uniqueDays = [...new Set(days)];
-    if (uniqueDays.length) setSelectedDays(uniqueDays);
-
-    const suspended = parseInt(params.get("suspended") ?? "", 10);
-    if (suspended > 0) setSuspensions(Math.min(suspended, countFor(uniqueDays)));
-
-    setUrlReady(true);
-    // Runs once on load; countFor only reads the fixed weekday counts.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!urlReady) return;
-    const params = new URLSearchParams();
-    if (tripType !== "round") params.set("trip", tripType);
-    if (selectedRoute) params.set("route", selectedRoute);
-    if (selectedDays.length) {
-      params.set(
-        "days",
-        WEEKDAYS.filter((d) => selectedDays.includes(d.key))
-          .map((d) => d.short.toLowerCase())
-          .join(",")
-      );
-    }
-    if (suspensions > 0) params.set("suspended", String(suspensions));
-    const query = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`
-    );
+  /* Every change goes through here: it records that the visitor has
+     acted (so the total starts being announced) and invalidates any
+     earlier "Link copied" confirmation. */
+  const change = (next: Parameters<typeof setParams>[0]) => {
+    setInteracted(true);
     setCopyState("idle");
-  }, [urlReady, tripType, selectedRoute, selectedDays, suspensions]);
+    setParams(next);
+  };
 
   const billedDays = countFor(selectedDays);
   const refundDays = Math.min(suspensions, billedDays);
@@ -182,39 +152,26 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
   }
 
   /* ─── Handlers ─── */
-  const changeTrip = (value: TripType) => {
-    interacted.current = true;
-    setTripType(value);
-  };
+  const changeTrip = (value: TripType) => change({ trip: value });
 
-  const changeRoute = (route: string) => {
-    interacted.current = true;
-    setSelectedRoute(route);
-  };
+  const changeRoute = (route: string) => change({ route });
 
   const toggleDay = (dayKey: number) => {
-    interacted.current = true;
     const next = selectedDays.includes(dayKey)
       ? selectedDays.filter((d) => d !== dayKey)
       : [...selectedDays, dayKey];
-    setSelectedDays(next);
-    setSuspensions((current) => Math.min(current, countFor(next)));
+    change({ days: next, suspended: Math.min(suspensions, countFor(next)) });
   };
 
-  const toggleAllDays = () => {
-    interacted.current = true;
-    if (allDaysSelected) {
-      setSelectedDays([]);
-      setSuspensions(0);
-    } else {
-      setSelectedDays(WEEKDAYS.map((d) => d.key));
-    }
-  };
+  const toggleAllDays = () =>
+    change(
+      allDaysSelected
+        ? { days: [], suspended: 0 }
+        : { days: WEEKDAYS.map((d) => d.key) }
+    );
 
-  const changeSuspensions = (value: number) => {
-    interacted.current = true;
-    setSuspensions(Math.min(billedDays, Math.max(0, value)));
-  };
+  const changeSuspensions = (value: number) =>
+    change({ suspended: Math.min(billedDays, Math.max(0, value)) });
 
   const copyLink = async () => {
     try {
@@ -263,7 +220,7 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
       barVisible && narrow ? "96px" : "";
   }, [barVisible]);
 
-  const announcement = interacted.current
+  const announcement = interacted
     ? `Charged at booking: ${money(totalFare)} taka. ${totalDetail}.${
         refundDays > 0 ? ` Expected refund ${money(refundAmount)} taka.` : ""
       }`
@@ -318,12 +275,13 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
             </div>
 
             <h1 className="rise stagger-1 mt-5 text-4xl font-semibold tracking-tight text-balance text-on-media sm:text-5xl lg:text-6xl">
-              Know your bus fare before you book
+              NSU student bus fare calculator
             </h1>
 
             <p className="rise stagger-2 mt-5 max-w-xl text-lg leading-relaxed text-on-media-muted">
-              Pick your days, and see what {SEMESTER_LABEL} costs and what comes
-              back if a trip is cancelled.
+              Pick your days and see what North South University&apos;s{" "}
+              {SEMESTER_LABEL} bus costs, and what comes back if a trip is
+              cancelled.
             </p>
 
             <div className="rise stagger-3 mt-8">
@@ -439,7 +397,7 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
                     Your route does not change the fare.{" "}
                     {routeInfo ? (
                       <a
-                        href="#routes"
+                        href={`#${routeAnchor(routeInfo.key)}`}
                         className="-my-3 inline-flex items-center py-3 font-medium text-accent-ink underline hover:text-accent-strong"
                       >
                         See the {routeInfo.label} stops and times
@@ -703,7 +661,11 @@ export default function BusFareCalculator({ renderedAt }: { renderedAt: number }
           </p>
         </section>
 
-        <RouteSchedule selectedRoute={selectedRoute} onSelectRoute={changeRoute} />
+        {about}
+
+        <RouteSchedule selectedRoute={selectedRoute} />
+
+        {faq}
 
         <RefundNotice />
       </main>
