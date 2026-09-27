@@ -1,0 +1,9 @@
+services:
+  nsu-bus-fare:
+    build: .
+    image: nsu-bus-fare-calculator:latest
+    container_name: nsu-bus-fare
+    restart: unless-stopped
+    ports:
+      # Host port 3000. Change the left side if 3000 is taken.
+      - "3000:3000"

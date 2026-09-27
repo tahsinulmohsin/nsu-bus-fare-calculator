@@ -1,0 +1,291 @@
+{
+ "schemaVersion": 2,
+ "generatedAt": "2026-09-27T14:37:53.499378+00:00",
+ "title": "Design System: NSU Bus Fare Calculator",
+ "extensions": {
+  "colorMeta": {
+   "accent": {
+    "role": "primary",
+    "displayName": "Counter Blue",
+    "canonical": "oklch(54.6% 0.245 262.881)",
+    "tonalRamp": [
+     "oklch(15% 0.2 262.9)",
+     "oklch(25% 0.2 262.9)",
+     "oklch(35% 0.2 262.9)",
+     "oklch(45% 0.2 262.9)",
+     "oklch(55% 0.2 262.9)",
+     "oklch(70% 0.2 262.9)",
+     "oklch(85% 0.2 262.9)",
+     "oklch(95% 0.2 262.9)"
+    ]
+   },
+   "accent-soft": {
+    "role": "primary",
+    "displayName": "Selection Wash",
+    "canonical": "oklch(97% 0.014 254.604)"
+   },
+   "cta": {
+    "role": "secondary",
+    "displayName": "Ticket Orange",
+    "canonical": "oklch(55.3% 0.195 38.402)",
+    "tonalRamp": [
+     "oklch(15% 0.17 38.4)",
+     "oklch(25% 0.17 38.4)",
+     "oklch(35% 0.17 38.4)",
+     "oklch(45% 0.17 38.4)",
+     "oklch(55% 0.17 38.4)",
+     "oklch(70% 0.17 38.4)",
+     "oklch(85% 0.17 38.4)",
+     "oklch(95% 0.17 38.4)"
+    ]
+   },
+   "canvas": {
+    "role": "neutral",
+    "displayName": "Paper",
+    "canonical": "oklch(100% 0 0)"
+   },
+   "band": {
+    "role": "neutral",
+    "displayName": "Band",
+    "canonical": "oklch(98.4% 0.003 247.858)"
+   },
+   "line": {
+    "role": "neutral",
+    "displayName": "Rule",
+    "canonical": "oklch(92.9% 0.013 255.508)"
+   },
+   "ink": {
+    "role": "neutral",
+    "displayName": "Ink",
+    "canonical": "oklch(20.8% 0.042 265.755)",
+    "tonalRamp": [
+     "oklch(15% 0.042 257)",
+     "oklch(25% 0.042 257)",
+     "oklch(35% 0.042 257)",
+     "oklch(45% 0.042 257)",
+     "oklch(55% 0.042 257)",
+     "oklch(70% 0.042 257)",
+     "oklch(85% 0.042 257)",
+     "oklch(95% 0.042 257)"
+    ]
+   },
+   "inverse": {
+    "role": "neutral",
+    "displayName": "Night Panel",
+    "canonical": "oklch(20.8% 0.042 265.755)"
+   },
+   "media": {
+    "role": "neutral",
+    "displayName": "Footage Dark",
+    "canonical": "oklch(12.9% 0.042 264.695)"
+   },
+   "positive": {
+    "role": "tertiary",
+    "displayName": "On Sale Green",
+    "canonical": "oklch(50.8% 0.118 165.612)"
+   },
+   "danger": {
+    "role": "tertiary",
+    "displayName": "Closed Red",
+    "canonical": "oklch(50.5% 0.213 27.518)"
+   }
+  },
+  "typographyMeta": {
+   "display": {
+    "displayName": "Display",
+    "purpose": "The hero headline only."
+   },
+   "headline": {
+    "displayName": "Headline",
+    "purpose": "Section titles."
+   },
+   "title": {
+    "displayName": "Title",
+    "purpose": "Card titles."
+   },
+   "body": {
+    "displayName": "Body",
+    "purpose": "Section introductions, capped at 60ch."
+   },
+   "label": {
+    "displayName": "Label",
+    "purpose": "Form labels and option names."
+   },
+   "caption": {
+    "displayName": "Caption",
+    "purpose": "Helper text under controls, capped at 60ch."
+   },
+   "figure": {
+    "displayName": "Figure",
+    "purpose": "Fare totals and countdown digits, tabular Geist Mono."
+   }
+  },
+  "shadows": [
+   {
+    "name": "fare-bar",
+    "value": "0 -8px 24px -12px rgb(15 23 43 / 0.35)",
+    "purpose": "The only shadow: the phone fare bar floating over content."
+   }
+  ],
+  "motion": [
+   {
+    "name": "ease-out",
+    "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+    "purpose": "All interface motion eases out so movement starts at once."
+   },
+   {
+    "name": "press",
+    "value": "160ms",
+    "purpose": "Press feedback: scale to 0.97 and back."
+   },
+   {
+    "name": "reveal",
+    "value": "480ms",
+    "purpose": "Section content settling in as it scrolls into view."
+   },
+   {
+    "name": "fare-bar",
+    "value": "240ms in, 160ms out",
+    "purpose": "Phone fare bar slides from its own edge and leaves faster than it arrives."
+   }
+  ],
+  "breakpoints": [
+   {
+    "name": "sm",
+    "value": "640px"
+   },
+   {
+    "name": "md",
+    "value": "768px"
+   },
+   {
+    "name": "lg",
+    "value": "1024px"
+   }
+  ]
+ },
+ "components": [
+  {
+   "name": "Primary Button",
+   "kind": "button",
+   "refersTo": "button-primary",
+   "description": "The hero's 'Work out my fare' action.",
+   "html": "<a class=\"ds-btn-primary\" href=\"#\">Work out my fare</a>",
+   "css": ".ds-btn-primary{display:inline-flex;align-items:center;min-height:44px;padding:14px 24px;border-radius:10px;background:var(--accent);color:var(--on-accent);font:600 14px/20px Geist,system-ui,sans-serif;text-decoration:none;transition:transform 160ms cubic-bezier(0.23,1,0.32,1),background-color 160ms cubic-bezier(0.23,1,0.32,1)}.ds-btn-primary:hover{background:var(--accent-hover)}.ds-btn-primary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.ds-btn-primary:active{transform:scale(0.97)}"
+  },
+  {
+   "name": "Booking Button",
+   "kind": "button",
+   "refersTo": "button-cta",
+   "description": "The one orange action. Label follows the sale state.",
+   "html": "<a class=\"ds-btn-cta\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z\"/><path d=\"M13 5v2\"/><path d=\"M13 17v2\"/><path d=\"M13 11v2\"/></svg>Book on the NSU portal</a>",
+   "css": ".ds-btn-cta{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:14px 20px;border-radius:10px;background:var(--cta);color:var(--on-accent);font:600 14px/20px Geist,system-ui,sans-serif;text-decoration:none;transition:transform 160ms cubic-bezier(0.23,1,0.32,1),background-color 160ms cubic-bezier(0.23,1,0.32,1)}.ds-btn-cta:hover{background:var(--cta-hover)}.ds-btn-cta:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.ds-btn-cta:active{transform:scale(0.97)}"
+  },
+  {
+   "name": "Option Toggle",
+   "kind": "custom",
+   "refersTo": "option-toggle",
+   "description": "Trip type and weekday choices; pressed state uses the Selection Wash.",
+   "html": "<div class=\"ds-toggles\"><button class=\"ds-toggle\" aria-pressed=\"true\"><b>Sun</b><span>13</span></button><button class=\"ds-toggle\" aria-pressed=\"false\"><b>Mon</b><span>13</span></button></div>",
+   "css": ".ds-toggles{display:flex;gap:8px}.ds-toggle{min-width:72px;min-height:44px;padding:10px 8px;border-radius:10px;border:1px solid var(--line-control);background:var(--surface);color:var(--ink-strong);font:600 14px/20px Geist,system-ui,sans-serif;cursor:pointer;transition:border-color 160ms,background-color 160ms,transform 160ms}.ds-toggle span{display:block;font:400 12px/16px 'Geist Mono',monospace;color:var(--ink-body);font-variant-numeric:tabular-nums}.ds-toggle:hover{border-color:var(--line-hover)}.ds-toggle[aria-pressed=true]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-strong)}.ds-toggle:focus-visible{outline:2px solid var(--focus);outline-offset:2px}.ds-toggle:active{transform:scale(0.97)}"
+  },
+  {
+   "name": "Route Chip",
+   "kind": "chip",
+   "refersTo": "route-chip",
+   "description": "Route picker in the schedule section.",
+   "html": "<button class=\"ds-chip\" aria-pressed=\"false\"><span>02</span>Mirpur</button>",
+   "css": ".ds-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 16px;border-radius:9999px;border:1px solid var(--line-control);background:var(--surface);color:var(--ink-strong);font:500 14px/20px Geist,system-ui,sans-serif;cursor:pointer}.ds-chip span{font:400 12px/16px 'Geist Mono',monospace;color:var(--ink-muted)}.ds-chip:hover{background:var(--sunken);border-color:var(--line-hover)}.ds-chip[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}.ds-chip:focus-visible{outline:2px solid var(--focus);outline-offset:2px}"
+  },
+  {
+   "name": "Status Badge",
+   "kind": "chip",
+   "description": "Sale status: icon and word on a tinted pill.",
+   "html": "<span class=\"ds-badge\">On sale now</span>",
+   "css": ".ds-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:9999px;background:var(--positive-soft);color:var(--positive-ink);font:600 12px/16px Geist,system-ui,sans-serif}"
+  },
+  {
+   "name": "Select Field",
+   "kind": "input",
+   "description": "Route select; label above, 44px tall.",
+   "html": "<label class=\"ds-label\">Route<select class=\"ds-select\"><option>02 Mirpur</option></select></label>",
+   "css": ".ds-label{display:grid;gap:8px;font:500 14px/20px Geist,system-ui,sans-serif;color:var(--ink-strong)}.ds-select{min-height:44px;padding:10px 14px;border-radius:10px;border:1px solid var(--line-control);background:var(--surface);color:var(--ink);font:400 14px/20px Geist,system-ui,sans-serif}.ds-select:focus-visible{outline:2px solid var(--focus);outline-offset:2px}"
+  },
+  {
+   "name": "Fare Panel",
+   "kind": "custom",
+   "refersTo": "fare-panel",
+   "description": "The running total, inverse in both themes.",
+   "html": "<div class=\"ds-fare\"><p>Charged at booking</p><strong>৳7,600</strong><small>38 days at ৳200 a day</small></div>",
+   "css": ".ds-fare{padding:28px 24px;border-radius:16px;background:var(--inverse);font-family:Geist,system-ui,sans-serif}.ds-fare p{margin:0;font:500 14px/20px Geist,system-ui,sans-serif;color:var(--on-inverse-muted)}.ds-fare strong{display:block;margin-top:6px;font:600 36px/40px 'Geist Mono',monospace;color:var(--on-inverse);font-variant-numeric:tabular-nums;letter-spacing:-0.025em}.ds-fare small{display:block;margin-top:8px;font-size:12px;color:var(--on-inverse-subtle)}"
+  },
+  {
+   "name": "Card",
+   "kind": "card",
+   "refersTo": "card",
+   "description": "Bordered surface for grouped content; never nested.",
+   "html": "<div class=\"ds-card\"><h3>Days the service did not run</h3><p>12 and 13 July 2026, heavy rainfall.</p></div>",
+   "css": ".ds-card{padding:24px;border-radius:16px;border:1px solid var(--line);background:var(--surface);font-family:Geist,system-ui,sans-serif}.ds-card h3{margin:0 0 8px;font:600 16px/24px Geist,system-ui,sans-serif;color:var(--ink)}.ds-card p{margin:0;font:400 14px/22px Geist,system-ui,sans-serif;color:var(--ink-body)}"
+  }
+ ],
+ "narrative": {
+  "northStar": "The Fare Board",
+  "overview": "The page behaves like the fare board at a bus counter: the numbers are the headline and everything around them stays quiet. Slate neutrals and generous spacing carry the structure, one blue accent marks what can be chosen, and the only warm colour on the page is the orange button that sends a student to book. Every price, count, date and countdown is set in Geist Mono with tabular figures, so figures line up and never shift as they change.\n\nThe hero is the one expressive moment: real footage of NSU students and the bus, under a dark scrim, with the headline set directly on it. Below the hero the page is a tool and behaves like one.",
+  "keyCharacteristics": [
+   "Figures first: money and time in tabular mono, labels in quiet sans.",
+   "One accent, one booking colour, status colours only with words.",
+   "Flat and bordered, with a single inverse panel for the running total.",
+   "Every date and time in Bangladesh time, whatever the device says.",
+   "Light and dark themes share one token set; only the values swap."
+  ],
+  "rules": [
+   {
+    "name": "The One Booking Button Rule",
+    "body": "Orange appears exactly once on the page, on the button that goes to the NSU Transport portal. Nothing else may use it.",
+    "section": "colors"
+   },
+   {
+    "name": "The Status Needs Words Rule",
+    "body": "positive, caution-ink and danger only mark state (on sale, paused, closed, refund amount) and always travel with an icon or a word. Colour is never the only signal.",
+    "section": "colors"
+   },
+   {
+    "name": "The Tabular Money Rule",
+    "body": "Every price, day count, time and countdown uses Geist Mono with tabular figures. A number that changes must never change width.",
+    "section": "typography"
+   },
+   {
+    "name": "The Matched Columns Rule",
+    "body": "Beside the controls goes only what changes as they change. Anything static moves below both columns, so neither side is left with a hole.",
+    "section": "layout"
+   },
+   {
+    "name": "The Calculator First Rule",
+    "body": "Nothing above the calculator may take more than one phone screen. When something new needs to sit above it, something else gets smaller.",
+    "section": "layout"
+   },
+   {
+    "name": "The No Card In Card Rule",
+    "body": "A card never contains another card. Lists inside a card use dividers; a contact inside a card uses a top rule.",
+    "section": "elevation"
+   }
+  ],
+  "dos": [
+   "Do put every new colour through a semantic token in app/globals.css with a value for both themes.",
+   "Do set money, counts and times in Geist Mono with tabular figures.",
+   "Do pair every status colour with an icon or a word.",
+   "Do state dates and times in Bangladesh time.",
+   "Do keep text at ink-muted or darker; check 4.5:1 contrast in both themes.",
+   "Do keep touch targets at 44px, using padding and negative margins for text buttons.",
+   "Do keep payment (bKash or a bank card) and refunds (bank transfer only) stated separately."
+  ],
+  "donts": [
+   "Don't use orange for anything but the booking button.",
+   "Don't nest a card inside a card.",
+   "Don't add dark: variants in components; change the token instead.",
+   "Don't use ink-faint for text.",
+   "Don't add small uppercase labels above headings or number the sections.",
+   "Don't autoplay motion when the visitor has asked for reduced motion or is saving data."
+  ]
+ }
+}

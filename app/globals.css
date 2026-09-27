@@ -2,45 +2,219 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
-  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
-}
-
 /* ═══════════════════════════════════════════════════════
    Design tokens
 
-   Accent lock: blue is the single brand accent. Orange is
-   reserved for the one primary booking action. Red, amber and
-   emerald appear only as semantic status, always paired with an
-   icon or text so colour is never the only signal.
+   Components use only these semantic names. Each maps to a CSS
+   variable that swaps between the light and dark palettes below, so no
+   component carries its own dark variant and a colour can only change
+   in one place. DESIGN.md documents the roles.
 
-   Radius scale: cards 16px, controls 10px, pills full.
+   Accent lock: blue is the single brand accent. Orange (cta) is
+   reserved for the one booking action. Positive, caution and danger
+   are status only, always paired with an icon or words.
+
+   Shapes: cards use rounded-card, controls rounded-control, pills
+   rounded-full.
    ═══════════════════════════════════════════════════════ */
-:root {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+@theme inline {
+  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --radius-card: 16px;
   --radius-control: 10px;
+
+  --color-canvas: var(--canvas);
+  --color-band: var(--band);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-control: var(--line-control);
+  --color-line-hover: var(--line-hover);
+
+  --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-ink-body: var(--ink-body);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+
+  --color-positive: var(--positive);
+  --color-positive-soft: var(--positive-soft);
+  --color-positive-ink: var(--positive-ink);
+  --color-caution-soft: var(--caution-soft);
+  --color-caution-ink: var(--caution-ink);
+  --color-danger: var(--danger);
+  --color-neutral-soft: var(--neutral-soft);
+  --color-neutral-ink: var(--neutral-ink);
+
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-on-inverse-muted: var(--on-inverse-muted);
+  --color-on-inverse-subtle: var(--on-inverse-subtle);
+
+  /* The hero sits on footage in both themes, so its colours never swap. */
+  --color-media: var(--media);
+  --color-on-media: var(--on-media);
+  --color-on-media-muted: var(--on-media-muted);
+  --color-on-media-chip: var(--on-media-chip);
+  --color-media-accent: var(--media-accent);
+}
+
+:root {
+  color-scheme: light;
+
+  --canvas: oklch(100% 0 0);
+  --band: oklch(98.4% 0.003 247.858);
+  --surface: oklch(100% 0 0);
+  --sunken: oklch(98.4% 0.003 247.858);
+
+  --line: oklch(92.9% 0.013 255.508);
+  --line-soft: oklch(96.8% 0.007 247.896);
+  --line-control: oklch(92.9% 0.013 255.508);
+  --line-hover: oklch(86.9% 0.022 252.894);
+
+  --ink: oklch(20.8% 0.042 265.755);
+  --ink-strong: oklch(37.2% 0.044 257.287);
+  --ink-body: oklch(44.6% 0.043 257.281);
+  --ink-muted: oklch(55.4% 0.046 257.417);
+  /* Decorative icons only. Never text. */
+  --ink-faint: oklch(70.4% 0.04 256.788);
+
+  --accent: oklch(54.6% 0.245 262.881);
+  --accent-hover: oklch(48.8% 0.243 264.376);
+  --accent-ink: oklch(54.6% 0.245 262.881);
+  --accent-strong: oklch(48.8% 0.243 264.376);
+  --accent-soft: oklch(97% 0.014 254.604);
+  --on-accent: oklch(100% 0 0);
+
+  --cta: oklch(55.3% 0.195 38.402);
+  --cta-hover: oklch(47% 0.157 37.304);
+
+  --positive: oklch(50.8% 0.118 165.612);
+  --positive-soft: oklch(95% 0.052 163.051);
+  --positive-ink: oklch(50.8% 0.118 165.612);
+  --caution-soft: oklch(96.2% 0.059 95.617);
+  --caution-ink: oklch(47.3% 0.137 46.201);
+  --danger: oklch(50.5% 0.213 27.518);
+  --neutral-soft: oklch(92.9% 0.013 255.508);
+  --neutral-ink: oklch(37.2% 0.044 257.287);
+
+  --inverse: oklch(20.8% 0.042 265.755);
+  --on-inverse: oklch(100% 0 0);
+  --on-inverse-muted: oklch(86.9% 0.022 252.894);
+  --on-inverse-subtle: oklch(70.4% 0.04 256.788);
+
+  --media: oklch(12.9% 0.042 264.695);
+  --on-media: oklch(100% 0 0);
+  --on-media-muted: oklch(86.9% 0.022 252.894);
+  --on-media-chip: oklch(93.2% 0.032 255.585);
+  --media-accent: oklch(70.7% 0.165 254.624);
+
+  --focus: oklch(54.6% 0.245 262.881);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --canvas: oklch(12.9% 0.042 264.695);
+  --band: color-mix(in oklab, oklch(20.8% 0.042 265.755) 40%, oklch(12.9% 0.042 264.695));
+  --surface: oklch(20.8% 0.042 265.755);
+  --sunken: color-mix(in oklab, oklch(27.9% 0.041 260.031) 60%, oklch(20.8% 0.042 265.755));
+
+  --line: oklch(27.9% 0.041 260.031);
+  --line-soft: color-mix(in oklab, oklch(27.9% 0.041 260.031) 60%, oklch(20.8% 0.042 265.755));
+  --line-control: oklch(37.2% 0.044 257.287);
+  --line-hover: oklch(44.6% 0.043 257.281);
+
+  --ink: oklch(98.4% 0.003 247.858);
+  --ink-strong: oklch(92.9% 0.013 255.508);
+  --ink-body: oklch(86.9% 0.022 252.894);
+  --ink-muted: oklch(70.4% 0.04 256.788);
+  --ink-faint: oklch(55.4% 0.046 257.417);
+
+  --accent: oklch(54.6% 0.245 262.881);
+  --accent-hover: oklch(62.3% 0.214 259.815);
+  --accent-ink: oklch(70.7% 0.165 254.624);
+  --accent-strong: oklch(80.9% 0.105 251.813);
+  --accent-soft: color-mix(in oklab, oklch(62.3% 0.214 259.815) 12%, oklch(20.8% 0.042 265.755));
+
+  --positive: oklch(76.5% 0.177 163.223);
+  --positive-soft: color-mix(in oklab, oklch(69.6% 0.17 162.48) 15%, oklch(20.8% 0.042 265.755));
+  --positive-ink: oklch(84.5% 0.143 164.978);
+  --caution-soft: color-mix(in oklab, oklch(76.9% 0.188 70.08) 15%, oklch(20.8% 0.042 265.755));
+  --caution-ink: oklch(87.9% 0.169 91.605);
+  --danger: oklch(70.4% 0.191 22.216);
+  --neutral-soft: oklch(27.9% 0.041 260.031);
+  --neutral-ink: oklch(86.9% 0.022 252.894);
+
+  --inverse: color-mix(in oklab, oklch(27.9% 0.041 260.031) 70%, oklch(20.8% 0.042 265.755));
+  --on-inverse-subtle: oklch(70.4% 0.04 256.788);
+
+  --focus: oklch(70.7% 0.165 254.624);
 }
 
 html {
   scroll-behavior: smooth;
+  accent-color: var(--accent);
 }
 
 body {
+  background: var(--canvas);
+  color: var(--ink);
+  caret-color: var(--accent);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* The parts the browser draws still carry the palette. */
+::selection {
+  background: color-mix(in oklab, var(--accent) 24%, transparent);
+  color: var(--ink);
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-hover);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
 }
 
 /* ═══════════════════════════════════════════════════════
    Motion
 
-   Durations stay under 300ms for interface feedback. Easing is
-   ease-out on entry so movement starts immediately. Entries never
-   scale from 0, and every animation collapses under
-   prefers-reduced-motion.
+   Interface feedback stays under 300ms and eases out, so movement
+   starts the moment the user acts. Nothing scales from zero.
    ═══════════════════════════════════════════════════════ */
 @keyframes rise {
   from {
@@ -64,6 +238,15 @@ body {
   }
 }
 
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Hero copy enters on load, staggered by 60ms per element. */
 .rise {
   animation: rise 520ms var(--ease-out) both;
@@ -72,10 +255,8 @@ body {
 .stagger-1 { animation-delay: 60ms; }
 .stagger-2 { animation-delay: 120ms; }
 .stagger-3 { animation-delay: 180ms; }
-.stagger-4 { animation-delay: 240ms; }
 
-/* Scroll reveal. The element is hidden until the observer marks it
-   visible, then settles into place. */
+/* Scroll reveal. Hidden until the observer marks it visible. */
 .reveal {
   opacity: 0;
 }
@@ -92,8 +273,7 @@ body {
   }
 }
 
-/* Content that swaps inside a container crossfades rather than
-   snapping, so the change reads as one object updating. */
+/* Content swapped inside a container crossfades rather than snapping. */
 .swap {
   animation: settle 320ms var(--ease-out) both;
 }
@@ -110,19 +290,41 @@ body {
   transform: scale(0.97);
 }
 
+/* Phone fare bar. Slides up from its own edge when the calculator is on
+   screen, and leaves faster than it arrives. */
+.fare-bar {
+  transform: translate3d(0, 110%, 0);
+  transition: transform 160ms var(--ease-out);
+}
+
+.fare-bar[data-visible="true"] {
+  transform: translate3d(0, 0, 0);
+  transition-duration: 240ms;
+}
+
+/* Reduced motion keeps every state change but drops the movement:
+   entrances become short fades or appear at once, presses stop
+   scaling, and colour changes still ease so feedback is not lost. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
   .rise,
-  .reveal[data-visible="true"],
   .swap {
-    animation: none;
+    animation: fade 200ms linear both;
   }
 
-  .reveal {
+  .stagger-1,
+  .stagger-2,
+  .stagger-3 {
+    animation-delay: 0ms;
+  }
+
+  .reveal,
+  .reveal[data-visible="true"] {
     opacity: 1;
+    animation: none;
   }
 
   .pressable {
@@ -134,40 +336,21 @@ body {
     transform: none;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .fare-bar {
+    transform: none;
+    opacity: 0;
+    transition: opacity 160ms linear;
+  }
+
+  .fare-bar[data-visible="true"] {
+    transform: none;
+    opacity: 1;
   }
 }
 
 /* ═══════════════════════════════════════════════════════
-   Form and scrollbar details
+   Form details
    ═══════════════════════════════════════════════════════ */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-:where(.dark) ::-webkit-scrollbar-thumb {
-  background: #334155;
-}
-:where(.dark) ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -179,13 +362,4 @@ input[type="number"] {
 
 select {
   background-image: none;
-}
-
-/* Keyboard focus stays visible everywhere. */
-:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-}
-:where(.dark) :focus-visible {
-  outline-color: #60a5fa;
 }

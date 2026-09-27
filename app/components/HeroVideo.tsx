@@ -1,89 +1,124 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import { Pause, Play } from "lucide-react";
 
-/* Background video for the hero.
+const POSTER = "/video/hero-poster.webp";
+const SOURCE_SMALL = "/video/hero-mobile.mp4"; // 640px, about 1 MB
+const SOURCE_LARGE = "/video/hero.mp4"; // 1152px, about 4 MB
 
-   The video is muted, looped and decorative, so it carries a poster
-   frame for the first paint and never autoplays when the visitor has
-   asked for reduced motion. A visible play and pause control is
-   always available, and playback stops while the tab is hidden so a
-   background tab is not decoding frames. */
+type Choice = "play" | "pause" | null;
+
+interface NetworkInformationLike {
+  saveData?: boolean;
+  effectiveType?: string;
+  addEventListener?: (type: "change", listener: () => void) => void;
+  removeEventListener?: (type: "change", listener: () => void) => void;
+}
+
+/* Muted, looping background footage for the hero.
+
+   Nothing downloads until the hero is actually on screen, and the video
+   only starts by itself when all of these hold: the visitor has not
+   asked for reduced motion, the browser is not in data saver mode or on
+   a slow connection, and the visitor has not paused it. Phones get a
+   640px file of about 1 MB instead of the 4 MB desktop file. The poster
+   frame covers every case where the video does not play.
+
+   Whatever the visitor chooses with the play and pause button wins over
+   those defaults, and playback stops while the hero is scrolled away or
+   the tab is hidden, then resumes on return. */
 export function HeroVideo() {
+  preload(POSTER, { as: "image", fetchPriority: "high" });
+
+  const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const choice = useRef<Choice>(null);
+  const syncRef = useRef<() => void>(() => {});
   const [playing, setPlaying] = useState(false);
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(query.matches);
-
-    const onChange = (event: MediaQueryListEvent) => {
-      setReduced(event.matches);
-      if (event.matches) videoRef.current?.pause();
-    };
-    query.addEventListener("change", onChange);
-    return () => query.removeEventListener("change", onChange);
-  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || reduced) return;
+    const wrap = wrapRef.current;
+    if (!video || !wrap) return;
 
-    video.play().then(
-      () => setPlaying(true),
-      () => setPlaying(false)
-    );
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const small = window.matchMedia("(max-width: 767px)");
+    const connection = (navigator as Navigator & { connection?: NetworkInformationLike })
+      .connection;
+    let inView = false;
 
-    const onVisibility = () => {
-      if (document.hidden) {
-        video.pause();
-      } else if (playing) {
-        void video.play();
+    const constrained = () =>
+      connection?.saveData === true ||
+      ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
+
+    const wantsToPlay = () =>
+      choice.current === "play" ||
+      (choice.current === null && !motion.matches && !constrained());
+
+    const sync = () => {
+      if (wantsToPlay() && inView && !document.hidden) {
+        if (!video.getAttribute("src")) {
+          video.src = small.matches ? SOURCE_SMALL : SOURCE_LARGE;
+        }
+        video.play().then(
+          () => setPlaying(true),
+          () => setPlaying(false)
+        );
+      } else {
+        if (!video.paused) video.pause();
+        setPlaying(false);
       }
     };
+    syncRef.current = sync;
 
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-    // `playing` is intentionally omitted: this effect only sets up
-    // autoplay and the visibility listener once per motion preference.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced]);
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      sync();
+    });
+    observer.observe(wrap);
+
+    document.addEventListener("visibilitychange", sync);
+    motion.addEventListener("change", sync);
+    connection?.addEventListener?.("change", sync);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+      motion.removeEventListener("change", sync);
+      connection?.removeEventListener?.("change", sync);
+    };
+  }, []);
 
   const toggle = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      void video.play();
-      setPlaying(true);
-    } else {
-      video.pause();
-      setPlaying(false);
-    }
+    choice.current = playing ? "pause" : "play";
+    syncRef.current();
   };
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden">
+    /* No z-index here on purpose: a z-index would create a stacking
+       context and trap the control button underneath the hero copy.
+       The footage and scrim paint below the z-10 copy anyway; the
+       button's z-20 lifts it above. */
+    <div ref={wrapRef} className="absolute inset-0 overflow-hidden">
       <video
         ref={videoRef}
         className="h-full w-full object-cover"
-        poster="/video/hero-poster.jpg"
+        poster={POSTER}
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         aria-hidden="true"
         tabIndex={-1}
-      >
-        <source src="/video/hero.mp4" type="video/mp4" />
-      </video>
+      />
 
-      {/* Scrim. The hero text sits on top of moving footage, so the
-          gradient is strong enough to hold contrast on every frame. */}
-      <div className="absolute inset-0 bg-slate-950/40" aria-hidden="true" />
+      {/* Scrim. The hero text sits on moving footage, so the gradient is
+          strong on the text side and lets the video show on the other. */}
+      <div className="absolute inset-0 bg-media/40" aria-hidden="true" />
       <div
-        className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-slate-950/25"
+        className="absolute inset-0 bg-gradient-to-r from-media/95 via-media/70 to-media/25"
         aria-hidden="true"
       />
 
@@ -91,7 +126,7 @@ export function HeroVideo() {
         type="button"
         onClick={toggle}
         aria-label={playing ? "Pause background video" : "Play background video"}
-        className="pressable absolute bottom-4 right-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-slate-950/60 text-white backdrop-blur-sm hover:bg-slate-950/80 cursor-pointer"
+        className="pressable absolute right-4 bottom-4 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-on-media/20 bg-media/60 text-on-media hover:bg-media/80"
       >
         {playing ? (
           <Pause className="h-4 w-4" aria-hidden="true" />

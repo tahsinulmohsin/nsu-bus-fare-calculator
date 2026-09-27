@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePrefersReducedMotion } from "../lib/useClient";
 
 /* Reveals children once they scroll into view.
 
-   IntersectionObserver is used rather than a scroll listener so no
-   work happens on the scroll frame. The observer disconnects after
-   the first reveal, and under reduced motion the content is shown
-   immediately without ever registering. */
+   IntersectionObserver is used rather than a scroll listener so no work
+   happens on the scroll frame, and it disconnects after the first
+   reveal. Under reduced motion the content is simply shown. */
 export function Reveal({
   children,
   delay = 0,
@@ -18,22 +18,17 @@ export function Reveal({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const reduced = usePrefersReducedMotion();
+  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
-
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setVisible(true);
-      return;
-    }
+    if (!node || reduced) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          setSeen(true);
           observer.disconnect();
         }
       },
@@ -42,13 +37,13 @@ export function Reveal({
 
     observer.observe(node);
     return () => observer.disconnect();
-  }, []);
+  }, [reduced]);
 
   return (
     <div
       ref={ref}
       className={`reveal ${className}`}
-      data-visible={visible}
+      data-visible={reduced || seen}
       style={delay ? { animationDelay: `${delay}ms` } : undefined}
     >
       {children}
