@@ -14,7 +14,6 @@
    ═══════════════════════════════════════════════════════ */
 @theme inline {
   --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --radius-card: 16px;
   --radius-tile: 12px;
