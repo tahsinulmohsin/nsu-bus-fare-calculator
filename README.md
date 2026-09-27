@@ -332,6 +332,7 @@ with where it came from and how it was made.
 | `app/assets/gallery-handover-1.webp`, `gallery-handover-2.webp` | Owner-supplied photos of the Mitsubishi Fuso Rosa handover ceremony (original source not recorded) | Square crops inside the original white frame, 1000 px |
 | `app/assets/ticket-bus.webp` | Frame at 12 s of the AC bus video | Same crop, 1200 px wide |
 | `app/assets/nsu-student-bus.jpg` | Third-party photo of an NSU minibus, supplied by the owner | As supplied, 480×640 |
+| `app/opengraph-image.jpg`, `app/twitter-image.jpg` | Link preview: the NSU logo, the page's headline and facts, and a crop of the owner-supplied campus bus photo | Rendered from HTML in Chromium with Geist, 1200×630 JPEG |
 | `app/assets/nsu-logo.png`, `nsu-seal.png` | North South University's logo and seal, from northsouth.edu | As published, used at the owner's request |
 
 The channel marks are cropped out to keep the footage clean, so the hero

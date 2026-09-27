@@ -1,1 +1,1 @@
-North South University Bus Fare Calculator for Fall 2026: know your bus fare before you book. Tk 100 one way, Tk 200 round trip, 3 October to 28 December.
+NSU Bus Fare Calculator, an unofficial tool for North South University students: the Fall 2026 student bus fare calculator, 3 October to 28 December, Tk 100 one way and Tk 200 round trip, beside a photo of an NSU bus.
