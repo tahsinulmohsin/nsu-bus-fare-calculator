@@ -129,9 +129,7 @@ export type TripType = "round" | "one-way" | "per-day";
    ═══════════════════════════════════════════════════════════════ */
 export const REFUND = {
   semester: "Summer 2026",
-  formUrl: "https://forms.gle/X6GfZJgXwmL5SmjC6",
   formDeadline: "15 September 2026",
-  formDeadlineISO: "2026-09-15T23:59:59+06:00",
   payoutBy: "26 September 2026",
   suspendedDays: [
     { date: "12 and 13 July 2026", reason: "Heavy rainfall" },
@@ -145,16 +143,10 @@ export const REFUND = {
       reason: "Government holiday for Eid-e-Miladunnabi",
     },
   ],
-  contacts: [
-    {
-      issue: "Cannot open the form even though you bought a ticket",
-      person: "Md. Shah Alam Amin",
-      role: "Administrative Officer, Department of Administration",
-    },
-    {
-      issue: "Refund has not arrived by the payout date",
-      person: "Mostafizur Rahman Chowdhury",
-      role: "Accounts Officer, Department of Finance and Accounts",
-    },
-  ],
+  /* The claim form has closed. Anyone whose refund has not arrived is
+     directed to the Accounts Officer, per the Registrar's notice. */
+  accountsContact: {
+    person: "Mostafizur Rahman Chowdhury",
+    role: "Accounts Officer, Department of Finance and Accounts",
+  },
 } as const;

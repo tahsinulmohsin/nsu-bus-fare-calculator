@@ -1,8 +1,8 @@
-# North South University (NSU) Bus Fare Calculator (v2.2.0)
+# North South University (NSU) Bus Fare Calculator (v2.2.1)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
-routes, and follow the Summer 2026 fare refund steps.
+routes, and see who to contact about a Summer 2026 fare refund.
 
 Live: <https://nsu-bus-fare-calculator.vercel.app>
 
@@ -76,8 +76,9 @@ the 7:40 AM arrival and the stoppage lists are identical in both notices.
   alongside the amount charged at booking and your net cost.
 - **Route schedules** for all six routes (Uttara, Mirpur, Mohammadpur,
   Dhanmondi, Azimpur, Khilgaon), as a table on desktop and cards on mobile.
-- **Summer 2026 refund guide** at the end of the page, with the suspended
-  dates, the claim steps, and who to contact if something is wrong.
+- **Summer 2026 refund note** at the end of the page, with the suspended
+  dates and who to contact if your refund has not arrived. The claim form
+  closed on 15 September 2026.
 - **Light and dark themes**, both checked to WCAG AA contrast.
 - **Motion that respects `prefers-reduced-motion`**, including the hero video,
   which never autoplays when reduced motion is requested and always has a
