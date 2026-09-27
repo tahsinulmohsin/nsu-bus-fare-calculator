@@ -5,7 +5,7 @@ All notable changes to the NSU Bus Fare Calculator. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Every version is a
 git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/releases).
 
-## [Unreleased]
+## [2.5.0] - 2026-09-28
 
 ### Changed
 
@@ -25,8 +25,6 @@ git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-ca
   scroll; only the hero headline moves.
 - The channel marks are cropped out of the hero footage, and the still under
   it is sharper and sized for each screen.
-- On phones the ticket sale board comes straight after the hero.
-- Removed the caption under the bus photo.
 
 ### Added
 
@@ -40,6 +38,11 @@ git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-ca
 ### Removed
 
 - The scroll reveal component.
+
+### Documentation
+
+- Screenshots in the README, a "Media and credits" table recording where every
+  video and photo came from, and a new DESIGN.md for the NSU-style system.
 
 ## [2.4.5] - 2026-09-27
 
@@ -229,6 +232,7 @@ Also included: a bus favicon and Poppins font fixes from the previous version.
 - First release, for the Summer 2026 semester: fare calculator for round trip,
   one way and per day trips, schedules for six routes, and the booking window.
 
+[2.5.0]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.5...v2.5.0
 [2.4.5]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.4...v2.4.5
 [2.4.4]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.3...v2.4.4
 [2.4.3]: https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/compare/v2.4.2...v2.4.3

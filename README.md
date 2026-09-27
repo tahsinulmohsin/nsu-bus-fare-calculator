@@ -16,8 +16,11 @@ All figures come from the official notice, *Sale of NSU Students' Bus Ticket,
 Fall 2026*, issued by the Office of the Registrar. This is an unofficial tool;
 always confirm on the [NSU Transport portal](https://transport.northsouth.edu/).
 
+![The NSU Bus Fare Calculator home page on desktop: the NSU logo and an Unofficial tag in a navy header, and the headline "NSU student bus fare calculator" over footage of the NSU buses](docs/screenshots/desktop-hero.jpg)
+
 ## Contents
 
+- [Screenshots](#screenshots)
 - [Features](#features)
 - [How the fare is worked out](#how-the-fare-is-worked-out)
 - [Fall 2026 at a glance](#fall-2026-at-a-glance)
@@ -30,14 +33,47 @@ always confirm on the [NSU Transport portal](https://transport.northsouth.edu/).
 - [Media and credits](#media-and-credits)
 - [License](#license)
 
+## Screenshots
+
+The page follows the look of [northsouth.edu](https://www.northsouth.edu/):
+a navy header, grey bands with centred titles, notice rows led by date tiles,
+and a cyan footer panel. It works in light and dark themes.
+
+**Ticket sale notice board.** Each date tile and yellow tag follows the live
+countdown. The tile turns navy while a sale is open.
+
+![The Fall 2026 ticket sale notice: round trip tickets on sale now with a navy 28 Sep tile and a countdown to 4:00 PM, one way tickets upcoming, and pay per ticket from 3 October](docs/screenshots/ticket-sale-board.jpg)
+
+**Fare calculator.** Pick the trip type, route, days and expected suspended
+days. The card on the right shows what you are charged at booking and what
+comes back.
+
+![The fare calculator for Mirpur, Saturday to Wednesday with 4 suspended days: Tk 12,600 charged at booking, Tk 800 expected back, Tk 11,800 net](docs/screenshots/fare-calculator.jpg)
+
+**Routes and stops.** Every route opens to show its pickup points, the trips
+back from campus and the fare. The route you picked is marked.
+
+![The routes list with Mirpur open, showing its seven pickup points in order and its trips back from NSU, beside a card of the arrival times every route shares](docs/screenshots/routes.jpg)
+
+**The buses.** Photos of NSU's Mitsubishi Fuso Rosa minibuses and their
+handover ceremony.
+
+![Four square photos of the NSU buses: the fleet in a row, a bus in a showroom, and two photos of the handover ceremony](docs/screenshots/bus-gallery.jpg)
+
+**On a phone**, in light and dark: the hero, the calculator with the running
+fare bar, and the notice board.
+
+![Three phone screens: the hero with the NSU logo, the calculator with a running total of Tk 7,600 in a navy bar at the bottom, and the notice board in the dark theme](docs/screenshots/phones.jpg)
+
 ## Features
 
 - **Fare calculator** for round trip, one way and pay per ticket. It shows how
   many times each weekday falls in the semester, what you are charged at
   booking, and what comes back if the bus does not run on some days.
-- **Ticket sale countdowns**, one for round trip and one for one way, that
-  know whether a sale has not opened, is open, is paused overnight or has
-  closed. Once both sales end they shrink to a single line.
+- **A ticket sale notice board** with live countdowns for the round trip and
+  one way sales. Each row knows whether its sale has not opened, is open, is
+  paused overnight or has closed, and its date tile and tag change with it.
+  Once both sales end the board shrinks to a single notice.
 - **Booking guidance that follows the sale.** The note under the booking
   button says when your trip type goes on sale, how long is left, or that it
   has closed, with a one-tap switch to pay per ticket.
@@ -46,15 +82,20 @@ always confirm on the [NSU Transport portal](https://transport.northsouth.edu/).
   campus and the fare. The route you pick in the calculator opens itself.
 - **Shareable fares.** Your trip, route, days and suspended days live in the
   URL, so "Copy a link to this fare" sends someone exactly what you worked out.
-- **Built for phones.** A running total follows you while you pick days, and
-  the hero video sends phones a 1 MB file, downloads nothing until it is on
-  screen, and stays still with reduced motion or data saver on.
+- **Built for phones.** A running total follows you while you pick days. The
+  hero plays three clips of the buses, each cut for phones. Nothing downloads
+  until the hero is on screen, the next clip loads only near the end of the
+  one playing, and the footage stays still with reduced motion or data saver
+  on.
+- **Photos of the buses**, from the fleet to their handover ceremony.
 - **A plain-language guide and FAQ** on fares, payment, sale dates, timings and
   refunds.
 - **Accessible in both themes.** Light and dark mode share one set of colour
   tokens, and every state passes axe-core WCAG 2.2 AA checks.
 
-The visual system is documented in [DESIGN.md](DESIGN.md).
+The visual system, modelled on northsouth.edu, is documented in
+[DESIGN.md](DESIGN.md). The site shows the North South University logo at the
+owner's request, always next to an "Unofficial" tag.
 
 ## How the fare is worked out
 
