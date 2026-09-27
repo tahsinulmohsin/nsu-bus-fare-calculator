@@ -1,6 +1,17 @@
-import { Banknote, CalendarClock, CircleUser, CloudRain, Info } from "lucide-react";
+import { Banknote, CircleUser } from "lucide-react";
 import { REFUND } from "../lib/semester";
-import { Reveal } from "./Reveal";
+import { DateTile, NoticeBar, SectionHeading, Tag } from "./ui";
+
+const MONTH =
+  /(January|February|March|April|May|June|July|August|September|October|November|December) (\d{4})/;
+
+/* Tile for a notice date such as "12 and 13 July 2026": the first day,
+   then the month and year. */
+function tileFor(date: string) {
+  const day = date.match(/\d{1,2}/)?.[0] ?? "";
+  const [, month = "", year = ""] = date.match(MONTH) ?? [];
+  return { day, month: `${month.slice(0, 3)} ${year.slice(2)}` };
+}
 
 /* Summer 2026 fare refund, from the Registrar's notice.
 
@@ -12,90 +23,64 @@ export function RefundNotice() {
   const contact = REFUND.accountsContact;
 
   return (
-    <section
-      id="refund"
-      aria-labelledby="refund-title"
-      className="border-t border-line bg-band py-16 sm:py-20"
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="flex flex-wrap items-center gap-3">
-            <h2
-              id="refund-title"
-              className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl"
-            >
-              {REFUND.semester} fare refund
-            </h2>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-neutral-soft px-3 py-1 text-xs font-semibold text-neutral-ink">
-              <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
-              Form closed
-            </span>
-          </div>
-          <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-body">
-            NSU suspended the student bus service on a few days last semester
-            and refunded students who had bought tickets for them. Claims were
-            made through a form that has now closed.
-          </p>
-        </Reveal>
+    <section id="refund" aria-labelledby="refund-title" className="scroll-mt-4 bg-canvas py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading id="refund-title" title={`${REFUND.semester} fare refund`}>
+          NSU suspended the student bus on a few days last semester and
+          refunded students who had bought tickets for them. Claims were made
+          through a form that has now closed.
+        </SectionHeading>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-5">
-          {/* Suspended days: a plain list, not tiles inside a card. */}
-          <Reveal delay={60} className="min-w-0 lg:col-span-3">
-            <div className="h-full rounded-card border border-line bg-surface p-6">
-              <div className="mb-2 flex items-center gap-2.5">
-                <CloudRain className="h-5 w-5 text-accent-ink" aria-hidden="true" />
-                <h3 className="font-semibold text-ink">Days the service did not run</h3>
-              </div>
-              <ul className="grid sm:grid-cols-2 sm:gap-x-8">
-                {REFUND.suspendedDays.map((day) => (
-                  <li key={day.date} className="border-b border-line-soft py-3.5 last:border-0 sm:[&:nth-last-child(2)]:border-0">
-                    <p className="font-mono text-sm font-semibold text-ink">{day.date}</p>
+        <div className="mt-10 grid gap-6 sm:mt-12 lg:grid-cols-12 lg:items-start lg:gap-8">
+          <div className="min-w-0 overflow-hidden rounded-card bg-surface shadow-card ring-1 ring-line lg:col-span-7">
+            <NoticeBar>Days the service did not run</NoticeBar>
+            <ul className="divide-y divide-line-soft">
+              {REFUND.suspendedDays.map((day) => (
+                <li key={day.date} className="flex items-center gap-4 px-5 py-4 even:bg-sunken/60 sm:px-6">
+                  <DateTile {...tileFor(day.date)} />
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-heading sm:text-lg">{day.date}</h3>
                     <p className="mt-0.5 text-sm leading-relaxed text-ink-body">{day.reason}</p>
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="min-w-0 rounded-card bg-surface p-6 shadow-card ring-1 ring-line sm:p-8 lg:col-span-5">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <h3 className="text-xl font-bold text-heading">Still waiting for your refund?</h3>
+              <Tag tone="muted">Form closed</Tag>
             </div>
-          </Reveal>
+            <p className="mt-3 leading-relaxed text-ink-body">
+              The claim form closed on {REFUND.formDeadline}, and refunds were
+              due by {REFUND.payoutBy}. If you submitted the form and the money
+              has not reached your bank account, contact the Accounts Officer.
+            </p>
 
-          {/* Still waiting */}
-          <Reveal delay={120} className="min-w-0 lg:col-span-2">
-            <div className="flex h-full flex-col rounded-card border border-line bg-surface p-6">
-              <h3 className="font-semibold text-ink">Still waiting for your refund?</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ink-body">
-                The claim form closed on {REFUND.formDeadline}, and refunds were
-                due by {REFUND.payoutBy}. If you submitted the form and the
-                money has not reached your bank account, contact the Accounts
-                Officer.
-              </p>
-
-              <div className="mt-5 flex gap-3 border-t border-line-soft pt-5">
-                <CircleUser
-                  className="mt-0.5 h-5 w-5 shrink-0 text-accent-ink"
-                  aria-hidden="true"
-                />
-                <div>
-                  <p className="text-sm font-medium text-ink">{contact.person}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-ink-body">{contact.role}</p>
-                </div>
+            <div className="mt-6 flex items-center gap-4 bg-sunken p-4">
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary">
+                <CircleUser className="size-6" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="font-bold text-heading">{contact.person}</p>
+                <p className="mt-0.5 text-sm leading-relaxed text-ink-body">{contact.role}</p>
               </div>
-
-              <p className="mt-auto flex items-start gap-2 pt-5 text-xs leading-relaxed text-ink-body">
-                <Banknote className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                Refunds go to a bank account only, even if you paid for your
-                ticket with bKash. They are never sent to bKash or any other
-                mobile wallet.
-              </p>
             </div>
-          </Reveal>
+
+            <p className="mt-6 flex items-start gap-2 text-sm leading-relaxed text-ink-body">
+              <Banknote className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
+              Refunds go to a bank account only, even if you paid for your
+              ticket with bKash. They are never sent to bKash or any other
+              mobile wallet.
+            </p>
+          </div>
         </div>
 
-        <Reveal delay={180}>
-          <p className="mt-6 flex max-w-[60ch] items-start gap-2 text-xs leading-relaxed text-ink-body">
-            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            Details are quoted from the Registrar&apos;s notice on the{" "}
-            {REFUND.semester} bus fare refund.
-          </p>
-        </Reveal>
+        <p className="mx-auto mt-8 max-w-[65ch] text-center text-sm leading-relaxed text-ink-body">
+          Details are quoted from the Registrar&apos;s notice on the{" "}
+          {REFUND.semester} bus fare refund.
+        </p>
       </div>
     </section>
   );

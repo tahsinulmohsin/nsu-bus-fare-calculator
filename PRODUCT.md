@@ -71,9 +71,11 @@ from the published notices and kept in step with them each semester.
 - Visual reference (owner's direction, September 2026): the site should look
   like northsouth.edu, NSU's official website, and must not look generic,
   AI-made, corporate or cold.
-- It is unofficial and must always say so. It may share northsouth.edu's
-  institutional look, but must never claim to be or pass as the official site:
-  no NSU crest, seal or logo, and a visible "Unofficial" label in the header.
+- It is unofficial and must always say so. It shares northsouth.edu's
+  institutional look and, at the owner's request (September 2026), the North
+  South University logo and seal, but must never claim to be the official
+  site: the "Unofficial" label sits beside the logo in the header, and the
+  footer says it is not run by North South University.
 - Binding assets: the hero footage of the NSU AC bus (`public/video/`), the
   photo of a white NSU minibus (`app/assets/nsu-student-bus.jpg`), and both a
   light and a dark theme with a toggle.

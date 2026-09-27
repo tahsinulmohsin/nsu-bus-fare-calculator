@@ -16,7 +16,8 @@ route's stops and times, and how refunds work. Proof is the notice data in
 app/lib; no invented claims.
 
 Constraints: hero bus video, bus photo, light and dark themes, the name "NSU
-Bus Fare Calculator", visibly unofficial with no NSU crest or logo, every
+Bus Fare Calculator", visibly unofficial (the owner asked for the NSU logo
+and seal in the header and footer; the "Unofficial" tag stays beside it), every
 existing feature and the search engine setup preserved.
 
 Memorable moment: the ticket sale rendered as an NSU notice list, date tiles

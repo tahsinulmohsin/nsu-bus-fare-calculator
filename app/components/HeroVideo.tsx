@@ -114,11 +114,17 @@ export function HeroVideo() {
         tabIndex={-1}
       />
 
-      {/* Scrim. The hero text sits on moving footage, so the gradient is
-          strong on the text side and lets the video show on the other. */}
-      <div className="absolute inset-0 bg-media/40" aria-hidden="true" />
+      {/* Scrim. As on northsouth.edu the footage stays bright on the far
+          side; the navy deepens under the headline and toward the foot of
+          the hero, where the buttons sit, so the white type holds AA. On a
+          phone the text spans the full width, so the scrim is even. */}
+      <div className="absolute inset-0 bg-media/70 sm:hidden" aria-hidden="true" />
       <div
-        className="absolute inset-0 bg-gradient-to-r from-media/95 via-media/70 to-media/25"
+        className="absolute inset-0 hidden bg-gradient-to-r from-media/90 via-media/60 to-media/0 sm:block"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-0 bg-gradient-to-t from-media/60 via-transparent to-transparent"
         aria-hidden="true"
       />
 
@@ -126,7 +132,7 @@ export function HeroVideo() {
         type="button"
         onClick={toggle}
         aria-label={playing ? "Pause background video" : "Play background video"}
-        className="pressable absolute right-4 bottom-4 z-20 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-on-media/20 bg-media/60 text-on-media hover:bg-media/80"
+        className="pressable absolute right-4 bottom-4 z-20 flex size-12 cursor-pointer items-center justify-center rounded-full bg-media text-on-media hover:bg-utility sm:right-6 sm:bottom-6"
       >
         {playing ? (
           <Pause className="h-4 w-4" aria-hidden="true" />

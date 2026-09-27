@@ -3,31 +3,31 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ═══════════════════════════════════════════════════════
-   Design tokens
+   Design tokens: northsouth.edu's institutional identity
 
-   Components use only these semantic names. Each maps to a CSS
-   variable that swaps between the light and dark palettes below, so no
-   component carries its own dark variant and a colour can only change
-   in one place. DESIGN.md documents the roles.
+   Components use only these semantic names. Each maps to a variable
+   that swaps between the light and dark palettes below.
 
-   Accent lock: blue is the single brand accent. Orange (cta) is
-   reserved for the one booking action. Positive, caution and danger
-   are status only, always paired with an icon or words.
-
-   Shapes: cards use rounded-card, controls rounded-control, pills
-   rounded-full.
+   Shapes follow the reference site: buttons are square, inputs 8px,
+   date tiles 12px, cards 16px, tags 4px, arrow links and icon buttons
+   round. DESIGN.md documents the roles.
    ═══════════════════════════════════════════════════════ */
 @theme inline {
   --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --radius-card: 16px;
-  --radius-control: 10px;
+  --radius-tile: 12px;
+  --radius-input: 8px;
+  --radius-tag: 4px;
+
+  --shadow-card: 0 6px 24px -8px rgb(6 23 66 / 0.14), 0 1px 3px rgb(6 23 66 / 0.06);
 
   --color-canvas: var(--canvas);
   --color-band: var(--band);
   --color-surface: var(--surface);
   --color-sunken: var(--sunken);
+  --color-tile: var(--tile);
 
   --color-line: var(--line);
   --color-line-soft: var(--line-soft);
@@ -35,6 +35,7 @@
   --color-line-hover: var(--line-hover);
 
   --color-ink: var(--ink);
+  --color-heading: var(--heading);
   --color-ink-strong: var(--ink-strong);
   --color-ink-body: var(--ink-body);
   --color-ink-muted: var(--ink-muted);
@@ -42,129 +43,149 @@
 
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
-  --color-accent-ink: var(--accent-ink);
-  --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
-  --color-on-accent: var(--on-accent);
 
-  --color-cta: var(--cta);
-  --color-cta-hover: var(--cta-hover);
+  --color-nav: var(--nav);
+  --color-utility: var(--utility);
+  --color-on-nav: var(--on-nav);
+  --color-on-nav-muted: var(--on-nav-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-pale: var(--pale);
+  --color-pale-hover: var(--pale-hover);
+  --color-on-pale: var(--on-pale);
+
+  --color-notice: var(--notice);
+  --color-notice-hover: var(--notice-hover);
+  --color-on-notice: var(--on-notice);
+  --color-tag: var(--tag);
+  --color-on-tag: var(--on-tag);
+  --color-tag-muted: var(--tag-muted);
+  --color-on-tag-muted: var(--on-tag-muted);
 
   --color-positive: var(--positive);
-  --color-positive-soft: var(--positive-soft);
-  --color-positive-ink: var(--positive-ink);
-  --color-caution-soft: var(--caution-soft);
-  --color-caution-ink: var(--caution-ink);
   --color-danger: var(--danger);
-  --color-neutral-soft: var(--neutral-soft);
-  --color-neutral-ink: var(--neutral-ink);
 
   --color-inverse: var(--inverse);
   --color-on-inverse: var(--on-inverse);
   --color-on-inverse-muted: var(--on-inverse-muted);
   --color-on-inverse-subtle: var(--on-inverse-subtle);
 
-  /* The hero sits on footage in both themes, so its colours never swap. */
+  /* The hero and footer sit on footage and photos in both themes. */
   --color-media: var(--media);
   --color-on-media: var(--on-media);
   --color-on-media-muted: var(--on-media-muted);
-  --color-on-media-chip: var(--on-media-chip);
-  --color-media-accent: var(--media-accent);
 }
 
 :root {
   color-scheme: light;
 
-  --canvas: oklch(100% 0 0);
-  --band: oklch(98.4% 0.003 247.858);
-  --surface: oklch(100% 0 0);
-  --sunken: oklch(98.4% 0.003 247.858);
+  --canvas: #ffffff;
+  --band: #f5f5f5;
+  --surface: #ffffff;
+  --sunken: #f5f5f5;
+  --tile: #ececef;
 
-  --line: oklch(92.9% 0.013 255.508);
-  --line-soft: oklch(96.8% 0.007 247.896);
-  --line-control: oklch(92.9% 0.013 255.508);
-  --line-hover: oklch(86.9% 0.022 252.894);
+  --line: #e5e7eb;
+  --line-soft: #eeeeee;
+  --line-control: #cfd5de;
+  --line-hover: #9aa6b8;
 
-  --ink: oklch(20.8% 0.042 265.755);
-  --ink-strong: oklch(37.2% 0.044 257.287);
-  --ink-body: oklch(44.6% 0.043 257.281);
-  --ink-muted: oklch(55.4% 0.046 257.417);
+  --ink: #0c2b4b;
+  --heading: #211e53;
+  --ink-strong: #0c2b4b;
+  --ink-body: #555555;
+  --ink-muted: #666666;
   /* Decorative icons only. Never text. */
-  --ink-faint: oklch(70.4% 0.04 256.788);
+  --ink-faint: #9aa3ae;
 
-  --accent: oklch(54.6% 0.245 262.881);
-  --accent-hover: oklch(48.8% 0.243 264.376);
-  --accent-ink: oklch(54.6% 0.245 262.881);
-  --accent-strong: oklch(48.8% 0.243 264.376);
-  --accent-soft: oklch(97% 0.014 254.604);
-  --on-accent: oklch(100% 0 0);
+  --accent: #0877ad;
+  --accent-hover: #06648f;
+  --accent-soft: #e6f2f9;
 
-  --cta: oklch(55.3% 0.195 38.402);
-  --cta-hover: oklch(47% 0.157 37.304);
+  --nav: #061742;
+  --utility: #183f78;
+  --on-nav: #ffffff;
+  --on-nav-muted: #c9d4e8;
 
-  --positive: oklch(50.8% 0.118 165.612);
-  --positive-soft: oklch(95% 0.052 163.051);
-  --positive-ink: oklch(50.8% 0.118 165.612);
-  --caution-soft: oklch(96.2% 0.059 95.617);
-  --caution-ink: oklch(47.3% 0.137 46.201);
-  --danger: oklch(50.5% 0.213 27.518);
-  --neutral-soft: oklch(92.9% 0.013 255.508);
-  --neutral-ink: oklch(37.2% 0.044 257.287);
+  --primary: #061742;
+  --primary-hover: #183f78;
+  --on-primary: #ffffff;
+  --pale: #f3f6f8;
+  --pale-hover: #e3e9ef;
+  --on-pale: #061742;
 
-  --inverse: oklch(20.8% 0.042 265.755);
-  --on-inverse: oklch(100% 0 0);
-  --on-inverse-muted: oklch(86.9% 0.022 252.894);
-  --on-inverse-subtle: oklch(70.4% 0.04 256.788);
+  --notice: #0877ad;
+  --notice-hover: #06648f;
+  --on-notice: #ffffff;
+  --tag: #ffe14d;
+  --on-tag: #061742;
+  --tag-muted: #e5e7eb;
+  --on-tag-muted: #374151;
 
-  --media: oklch(12.9% 0.042 264.695);
-  --on-media: oklch(100% 0 0);
-  --on-media-muted: oklch(86.9% 0.022 252.894);
-  --on-media-chip: oklch(93.2% 0.032 255.585);
-  --media-accent: oklch(70.7% 0.165 254.624);
+  --positive: #0a7a4a;
+  --danger: #b42318;
 
-  --focus: oklch(54.6% 0.245 262.881);
+  --inverse: #061742;
+  --on-inverse: #ffffff;
+  --on-inverse-muted: #c9d4e8;
+  --on-inverse-subtle: #9fb0cc;
 
+  --media: #061742;
+  --on-media: #ffffff;
+  --on-media-muted: #dde5f1;
+
+  --focus: #0877ad;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .dark {
   color-scheme: dark;
 
-  --canvas: oklch(12.9% 0.042 264.695);
-  --band: color-mix(in oklab, oklch(20.8% 0.042 265.755) 40%, oklch(12.9% 0.042 264.695));
-  --surface: oklch(20.8% 0.042 265.755);
-  --sunken: color-mix(in oklab, oklch(27.9% 0.041 260.031) 60%, oklch(20.8% 0.042 265.755));
+  --canvas: #030b21;
+  --band: #061742;
+  --surface: #0a1d4a;
+  --sunken: #0e2657;
+  --tile: #132e66;
 
-  --line: oklch(27.9% 0.041 260.031);
-  --line-soft: color-mix(in oklab, oklch(27.9% 0.041 260.031) 60%, oklch(20.8% 0.042 265.755));
-  --line-control: oklch(37.2% 0.044 257.287);
-  --line-hover: oklch(44.6% 0.043 257.281);
+  --line: #1c3872;
+  --line-soft: #152d63;
+  --line-control: #2a4a8a;
+  --line-hover: #4a6db0;
 
-  --ink: oklch(98.4% 0.003 247.858);
-  --ink-strong: oklch(92.9% 0.013 255.508);
-  --ink-body: oklch(86.9% 0.022 252.894);
-  --ink-muted: oklch(70.4% 0.04 256.788);
-  --ink-faint: oklch(55.4% 0.046 257.417);
+  --ink: #f3f6f8;
+  --heading: #ffffff;
+  --ink-strong: #e3e9f4;
+  --ink-body: #c3cee2;
+  --ink-muted: #a3b2cd;
+  --ink-faint: #6f83a8;
 
-  --accent: oklch(54.6% 0.245 262.881);
-  --accent-hover: oklch(62.3% 0.214 259.815);
-  --accent-ink: oklch(70.7% 0.165 254.624);
-  --accent-strong: oklch(80.9% 0.105 251.813);
-  --accent-soft: color-mix(in oklab, oklch(62.3% 0.214 259.815) 12%, oklch(20.8% 0.042 265.755));
+  --accent: #5cc0f2;
+  --accent-hover: #8ad3f7;
+  --accent-soft: #0f2e5e;
 
-  --positive: oklch(76.5% 0.177 163.223);
-  --positive-soft: color-mix(in oklab, oklch(69.6% 0.17 162.48) 15%, oklch(20.8% 0.042 265.755));
-  --positive-ink: oklch(84.5% 0.143 164.978);
-  --caution-soft: color-mix(in oklab, oklch(76.9% 0.188 70.08) 15%, oklch(20.8% 0.042 265.755));
-  --caution-ink: oklch(87.9% 0.169 91.605);
-  --danger: oklch(70.4% 0.191 22.216);
-  --neutral-soft: oklch(27.9% 0.041 260.031);
-  --neutral-ink: oklch(86.9% 0.022 252.894);
+  --nav: #020a1f;
+  --utility: #0d2757;
+  --on-nav-muted: #b9c6de;
 
-  --inverse: color-mix(in oklab, oklch(27.9% 0.041 260.031) 70%, oklch(20.8% 0.042 265.755));
-  --on-inverse-subtle: oklch(70.4% 0.04 256.788);
+  --primary: #f3f6f8;
+  --primary-hover: #ffffff;
+  --on-primary: #061742;
+  --pale: #14306a;
+  --pale-hover: #1c3c7e;
+  --on-pale: #f3f6f8;
 
-  --focus: oklch(70.7% 0.165 254.624);
+  --tag-muted: #1f3a73;
+  --on-tag-muted: #d6def0;
+
+  --positive: #4ade9a;
+  --danger: #ff8a80;
+
+  --inverse: #020a1f;
+
+  --focus: #8ad3f7;
 }
 
 html {
@@ -180,7 +201,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* The parts the browser draws still carry the palette. */
 ::selection {
   background: color-mix(in oklab, var(--accent) 24%, transparent);
   color: var(--ink);
@@ -206,15 +226,12 @@ a {
   background: var(--line-hover);
   border-radius: 999px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--ink-faint);
-}
 
 /* ═══════════════════════════════════════════════════════
-   Motion
+   Motion: NSU-quiet
 
-   Interface feedback stays under 300ms and eases out, so movement
-   starts the moment the user acts. Nothing scales from zero.
+   Rows shade on hover, chevrons turn, buttons press, and the hero
+   headline rises once. Nothing loops except the countdown digits.
    ═══════════════════════════════════════════════════════ */
 @keyframes rise {
   from {
@@ -230,11 +247,11 @@ a {
 @keyframes settle {
   from {
     opacity: 0;
-    transform: translate3d(0, 6px, 0) scale(0.98);
+    transform: translate3d(0, 6px, 0);
   }
   to {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -247,51 +264,40 @@ a {
   }
 }
 
-/* Hero copy enters on load, staggered by 60ms per element. */
 .rise {
-  animation: rise 520ms var(--ease-out) both;
+  animation: rise 560ms var(--ease-out) both;
 }
 
-.stagger-1 { animation-delay: 60ms; }
-.stagger-2 { animation-delay: 120ms; }
-.stagger-3 { animation-delay: 180ms; }
-
-/* Scroll reveal. Hidden until the observer marks it visible. */
-.reveal {
-  opacity: 0;
-}
-
-.reveal[data-visible="true"] {
-  animation: settle 480ms var(--ease-out) both;
-}
-
-/* Without JavaScript the observer never runs, so the reveal must not
-   be allowed to hide content permanently. */
-@media (scripting: none) {
-  .reveal {
-    opacity: 1;
-  }
-}
+.stagger-1 { animation-delay: 80ms; }
+.stagger-2 { animation-delay: 160ms; }
 
 /* Content swapped inside a container crossfades rather than snapping. */
 .swap {
-  animation: settle 320ms var(--ease-out) both;
+  animation: settle 280ms var(--ease-out) both;
 }
 
-/* Pressable surfaces confirm the press instantly. */
 .pressable {
   transition: transform 160ms var(--ease-out),
     background-color 160ms var(--ease-out),
     border-color 160ms var(--ease-out), color 160ms var(--ease-out),
-    box-shadow 160ms var(--ease-out);
+    box-shadow 160ms var(--ease-out), opacity 200ms var(--ease-out),
+    translate 200ms var(--ease-out);
 }
 
 .pressable:active {
   transform: scale(0.97);
 }
 
-/* Phone fare bar. Slides up from its own edge when the calculator is on
-   screen, and leaves faster than it arrives. */
+/* Disclosure chevrons turn a quarter to show the row is open. */
+.chevron {
+  transition: transform 200ms var(--ease-out);
+}
+
+details[open] > summary .chevron {
+  transform: rotate(90deg);
+}
+
+/* Phone fare bar: slides up from its own edge, leaves faster. */
 .fare-bar {
   transform: translate3d(0, 110%, 0);
   transition: transform 160ms var(--ease-out);
@@ -302,9 +308,7 @@ a {
   transition-duration: 240ms;
 }
 
-/* Reduced motion keeps every state change but drops the movement:
-   entrances become short fades or appear at once, presses stop
-   scaling, and colour changes still ease so feedback is not lost. */
+/* Reduced motion keeps every state change but drops the movement. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -316,24 +320,21 @@ a {
   }
 
   .stagger-1,
-  .stagger-2,
-  .stagger-3 {
+  .stagger-2 {
     animation-delay: 0ms;
-  }
-
-  .reveal,
-  .reveal[data-visible="true"] {
-    opacity: 1;
-    animation: none;
   }
 
   .pressable {
     transition: background-color 160ms linear, border-color 160ms linear,
-      color 160ms linear;
+      color 160ms linear, opacity 160ms linear;
   }
 
   .pressable:active {
     transform: none;
+  }
+
+  .chevron {
+    transition: none;
   }
 
   .fare-bar {
@@ -343,7 +344,6 @@ a {
   }
 
   .fare-bar[data-visible="true"] {
-    transform: none;
     opacity: 1;
   }
 }
@@ -362,4 +362,11 @@ input[type="number"] {
 
 select {
   background-image: none;
+}
+
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
 }

@@ -1,22 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTheme } from "next-themes";
-import {
-  AlertTriangle,
-  ArrowUpRight,
-  Bus,
-  Calendar,
-  Check,
-  CreditCard,
-  Info,
-  Link2,
-  Minus,
-  Moon,
-  Plus,
-  Sun,
-  Ticket,
-} from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, CreditCard, Link2, Minus, Plus } from "lucide-react";
 import {
   BOOKING_URL,
   CALENDAR_URL,
@@ -40,14 +25,15 @@ import {
   type TripType,
 } from "../lib/semester";
 import { useNow } from "../lib/useNow";
-import { useIsClient } from "../lib/useClient";
 import { useFareParams } from "../lib/useFareParams";
 import { ROUTE_LIST } from "../lib/routes";
 import { HeroVideo } from "./HeroVideo";
 import { RefundNotice } from "./RefundNotice";
-import { Reveal } from "./Reveal";
 import { RouteSchedule, routeAnchor } from "./RouteSchedule";
+import { ScrollTopButton } from "./ScrollTopButton";
+import { SiteHeader } from "./SiteHeader";
 import { TicketSaleCountdowns } from "./TicketSaleCountdowns";
+import { SectionHeading } from "./ui";
 
 /* Labels follow the notice: Round Trip, One Way Trip, Pay Per Ticket. */
 const TRIP_OPTIONS: { value: TripType; label: string; hint: string }[] = [
@@ -60,15 +46,15 @@ export default function BusFareCalculator({
   renderedAt,
   about,
   faq,
+  footer,
 }: {
   renderedAt: number;
   /* Server-rendered sections passed in so their text ships as plain HTML
      and adds nothing to the client bundle. */
   about?: React.ReactNode;
   faq?: React.ReactNode;
+  footer?: React.ReactNode;
 }) {
-  const { resolvedTheme, setTheme } = useTheme();
-  const mounted = useIsClient();
   const now = useNow(30_000);
 
   /* ─── Shareable state ───
@@ -226,124 +212,93 @@ export default function BusFareCalculator({
       }`
     : "";
 
+  const labelClass = "block text-base font-bold text-heading";
+  const helpClass = "mt-1 max-w-[60ch] text-sm leading-relaxed text-ink-body";
+  const stepperClass =
+    "pressable flex size-12 cursor-pointer items-center justify-center bg-pale text-on-pale ring-1 ring-line-control ring-inset hover:bg-pale-hover disabled:cursor-not-allowed disabled:opacity-40";
+
   return (
-    <div className="min-h-screen bg-canvas text-ink">
+    <div id="top" className="min-h-screen bg-canvas text-ink">
       <a
         href="#calculator"
-        className="sr-only rounded-control bg-surface px-4 py-3 text-sm font-semibold text-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
+        className="sr-only bg-surface px-4 py-3 text-sm font-semibold text-ink focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
       >
         Skip to the fare calculator
       </a>
 
-      {/* ═══════════════ Hero ═══════════════ */}
-      <header className="relative isolate overflow-hidden bg-media">
-        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* Navigation stays on one line and under 80px tall. */}
-          <nav aria-label="Site" className="flex h-[72px] items-center justify-between">
-            <span className="flex items-center gap-2 text-sm font-semibold text-on-media">
-              <Bus className="h-5 w-5 shrink-0 text-media-accent" aria-hidden="true" />
-              <span className="hidden sm:inline">North South University Bus Fare</span>
-              <span className="sm:hidden">NSU Bus Fare</span>
-            </span>
-            {mounted && (
-              <button
-                type="button"
-                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                aria-label={
-                  resolvedTheme === "dark" ? "Switch to light theme" : "Switch to dark theme"
-                }
-                className="pressable flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-on-media/20 text-on-media hover:bg-on-media/10"
-              >
-                {resolvedTheme === "dark" ? (
-                  <Sun className="h-4.5 w-4.5" aria-hidden="true" />
-                ) : (
-                  <Moon className="h-4.5 w-4.5" aria-hidden="true" />
-                )}
-              </button>
-            )}
-          </nav>
+      <SiteHeader />
 
-          <div className="max-w-2xl pt-10 pb-16 sm:pt-16 sm:pb-24">
-            <div className="rise flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-on-media/10 px-3 py-1 font-mono text-xs text-on-media-chip ring-1 ring-on-media/15 ring-inset">
-                <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                {SEMESTER_START} to {SEMESTER_END}
-              </span>
-              <span className="inline-flex items-center rounded-full bg-on-media/10 px-3 py-1 font-mono text-xs text-on-media-chip ring-1 ring-on-media/15 ring-inset">
-                {CHARGEABLE_DAYS} chargeable days
-              </span>
-            </div>
-
-            <h1 className="rise stagger-1 mt-5 text-4xl font-semibold tracking-tight text-balance text-on-media sm:text-5xl lg:text-6xl">
+      <main id="main">
+        {/* ═══════════════ Hero ═══════════════ */}
+        <section
+          aria-labelledby="page-title"
+          className="relative isolate flex min-h-[28rem] items-end overflow-hidden bg-media sm:min-h-[34rem] lg:min-h-[min(40rem,calc(100svh-7.75rem))]"
+        >
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pt-24 pb-20 sm:px-6 sm:pb-24 lg:px-8">
+            <h1
+              id="page-title"
+              className="rise max-w-3xl text-[2.5rem] leading-[1.08] font-bold tracking-tight text-balance text-on-media sm:text-6xl lg:text-[4rem]"
+            >
               NSU student bus fare calculator
             </h1>
-
-            <p className="rise stagger-2 mt-5 max-w-xl text-lg leading-relaxed text-on-media-muted">
-              Pick your days and see what North South University&apos;s{" "}
-              {SEMESTER_LABEL} bus costs, and what comes back if a trip is
-              cancelled.
+            <p className="rise stagger-1 mt-5 max-w-xl text-lg leading-relaxed text-pretty text-on-media-muted">
+              What North South University&apos;s {SEMESTER_LABEL} bus costs
+              for the days you travel, from {SEMESTER_START} to {SEMESTER_END}.
             </p>
-
-            <div className="rise stagger-3 mt-8">
+            <div className="rise stagger-2 mt-8 flex flex-wrap gap-1">
               <a
                 href="#calculator"
-                className="pressable inline-flex min-h-11 items-center gap-2 rounded-control bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent hover:bg-accent-hover"
+                className="pressable inline-flex min-h-14 items-center bg-media px-8 text-base font-medium text-on-media ring-1 ring-on-media/25 ring-inset hover:bg-utility"
               >
                 Work out my fare
               </a>
+              <a
+                href="#routes"
+                className="pressable inline-flex min-h-14 items-center bg-on-media px-8 text-base font-medium text-media hover:bg-on-media-muted"
+              >
+                See bus routes
+              </a>
             </div>
           </div>
-        </div>
 
-        {/* After the hero copy in the DOM so keyboard focus meets the
-            headline and its button before the video control, matching the
-            visual order; it still paints underneath. */}
-        <HeroVideo />
-      </header>
+          {/* After the hero copy in the DOM so keyboard focus meets the
+              headline and its buttons before the video control, matching
+              the visual order; it still paints underneath. */}
+          <HeroVideo />
+        </section>
 
-      {!NOTICE_PUBLISHED && (
-        <div className="border-b border-line bg-caution-soft">
-          <div className="mx-auto flex max-w-6xl gap-3 px-4 py-4 sm:px-6 lg:px-8">
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-caution-ink" aria-hidden="true" />
-            <p className="max-w-[65ch] text-sm leading-relaxed text-ink">
-              <span className="font-semibold">
-                North South University has not published the official{" "}
-                {SEMESTER_LABEL} bus service notice yet.
-              </span>{" "}
-              The dates, booking window and fares here are worked out from the{" "}
-              {SEMESTER_LABEL} academic calendar and how last semester ran, so
-              treat them as provisional. This page will be updated as soon as
-              the notice is out.
+        {!NOTICE_PUBLISHED && (
+          <div className="border-b border-line bg-tag">
+            <p className="mx-auto max-w-7xl px-4 py-4 text-sm leading-relaxed font-medium text-on-tag sm:px-6 lg:px-8">
+              North South University has not published the official{" "}
+              {SEMESTER_LABEL} bus service notice yet. The dates, booking
+              window and fares here are provisional until it is out.
             </p>
           </div>
-        </div>
-      )}
+        )}
 
-      <main id="main">
         <TicketSaleCountdowns renderedAt={renderedAt} />
 
         {/* ═══════════════ Calculator ═══════════════ */}
         <section
           id="calculator"
           aria-labelledby="calculator-title"
-          className="mx-auto max-w-6xl scroll-mt-4 px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+          className="scroll-mt-4 bg-band py-16 sm:py-24"
         >
-          <Reveal>
-            <h2 id="calculator-title" className="text-2xl font-semibold tracking-tight sm:text-3xl">
-              Your fare
-            </h2>
-            <p className="mt-3 max-w-[60ch] leading-relaxed text-ink-body">
-              Fridays are never charged. Everything else you pick is billed when
-              you book.
-            </p>
-          </Reveal>
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <SectionHeading id="calculator-title" title="Work out your semester fare">
+              Fridays are never charged. Every other day you pick is billed
+              when you book.
+            </SectionHeading>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-5">
-            {/* ─── Controls ─── */}
-            <div ref={controlsRef} className="min-w-0 space-y-8 lg:col-span-3 lg:row-start-1">
-              <Reveal delay={60}>
+            <div className="mt-10 grid gap-6 sm:mt-12 lg:grid-cols-12 lg:gap-8">
+              {/* ─── Controls ─── */}
+              <div
+                ref={controlsRef}
+                className="min-w-0 space-y-9 rounded-card bg-surface p-5 shadow-card ring-1 ring-line sm:p-8 lg:col-span-7"
+              >
                 <fieldset>
-                  <legend className="text-sm font-medium text-ink-strong">Trip type</legend>
+                  <legend className={labelClass}>Trip type</legend>
                   <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
                     {TRIP_OPTIONS.map((option) => {
                       const active = tripType === option.value;
@@ -353,52 +308,59 @@ export default function BusFareCalculator({
                           type="button"
                           onClick={() => changeTrip(option.value)}
                           aria-pressed={active}
-                          className={`pressable min-h-11 min-w-0 cursor-pointer rounded-control border px-4 py-3 text-left ${
+                          className={`pressable min-h-14 min-w-0 cursor-pointer px-4 py-3 text-left ${
                             active
-                              ? "border-accent bg-accent-soft"
-                              : "border-line-control bg-surface hover:border-line-hover"
+                              ? "bg-primary text-on-primary"
+                              : "bg-pale text-on-pale ring-1 ring-line-control ring-inset hover:bg-pale-hover"
                           }`}
                         >
+                          <span className="flex items-center justify-between gap-2 text-sm font-semibold">
+                            {option.label}
+                            {active && <Check className="size-4 shrink-0" aria-hidden="true" />}
+                          </span>
                           <span
-                            className={`block text-sm font-semibold ${
-                              active ? "text-accent-strong" : "text-ink"
+                            className={`mt-0.5 block text-xs ${
+                              active ? "text-on-primary/80" : "text-ink-body"
                             }`}
                           >
-                            {option.label}
+                            {option.hint}
                           </span>
-                          <span className="mt-0.5 block text-xs text-ink-body">{option.hint}</span>
                         </button>
                       );
                     })}
                   </div>
                 </fieldset>
-              </Reveal>
 
-              <Reveal delay={100}>
                 <div>
-                  <label htmlFor="route" className="block text-sm font-medium text-ink-strong">
-                    Route
+                  <label htmlFor="route" className={labelClass}>
+                    Your route
                   </label>
-                  <select
-                    id="route"
-                    value={selectedRoute}
-                    onChange={(e) => changeRoute(e.target.value)}
-                    aria-describedby="route-help"
-                    className="mt-2 min-h-11 w-full cursor-pointer rounded-control border border-line-control bg-surface px-3.5 py-2.5 text-sm text-ink"
-                  >
-                    <option value="">Select your route</option>
-                    {ROUTE_LIST.map((route) => (
-                      <option key={route.key} value={route.key}>
-                        {route.number} {route.label}
-                      </option>
-                    ))}
-                  </select>
-                  <p id="route-help" className="mt-2 max-w-[60ch] text-xs leading-relaxed text-ink-body">
+                  <div className="relative mt-3">
+                    <select
+                      id="route"
+                      value={selectedRoute}
+                      onChange={(e) => changeRoute(e.target.value)}
+                      aria-describedby="route-help"
+                      className="h-12 w-full cursor-pointer appearance-none rounded-input border border-line-control bg-surface pr-11 pl-4 text-base text-ink hover:border-line-hover"
+                    >
+                      <option value="">Select your route</option>
+                      {ROUTE_LIST.map((route) => (
+                        <option key={route.key} value={route.key}>
+                          Route {route.number}: {route.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-4 size-5 -translate-y-1/2 text-ink-muted"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <p id="route-help" className={helpClass}>
                     Your route does not change the fare.{" "}
                     {routeInfo ? (
                       <a
                         href={`#${routeAnchor(routeInfo.key)}`}
-                        className="-my-3 inline-flex items-center py-3 font-medium text-accent-ink underline hover:text-accent-strong"
+                        className="-my-3 inline-flex items-center py-3 font-semibold text-accent underline hover:text-accent-hover"
                       >
                         See the {routeInfo.label} stops and times
                       </a>
@@ -407,25 +369,23 @@ export default function BusFareCalculator({
                     )}
                   </p>
                 </div>
-              </Reveal>
 
-              {tripType !== "per-day" && (
-                <Reveal delay={140}>
+                {tripType !== "per-day" && (
                   <div role="group" aria-labelledby="days-label" aria-describedby="days-help">
                     <div className="flex items-center justify-between gap-3">
-                      <p id="days-label" className="text-sm font-medium text-ink-strong">
+                      <p id="days-label" className={labelClass}>
                         Days you will travel
                       </p>
                       <button
                         type="button"
                         onClick={toggleAllDays}
-                        className="-my-3 -mr-2 inline-flex cursor-pointer items-center px-2 py-3 text-sm font-medium text-accent-ink hover:text-accent-strong"
+                        className="-my-3 -mr-2 inline-flex cursor-pointer items-center px-2 py-3 text-sm font-semibold text-accent hover:text-accent-hover hover:underline"
                       >
                         {allDaysSelected ? "Clear all" : "Select all"}
                       </button>
                     </div>
-                    <p id="days-help" className="mt-1 max-w-[60ch] text-xs leading-relaxed text-ink-body">
-                      The number on each day is how many times it falls in the
+                    <p id="days-help" className={helpClass}>
+                      Each tile shows how many times that day falls in the
                       service period.
                     </p>
                     <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
@@ -438,152 +398,147 @@ export default function BusFareCalculator({
                             onClick={() => toggleDay(day.key)}
                             aria-pressed={active}
                             aria-label={`${day.full}, ${weekdayCounts[day.key]} days`}
-                            className={`pressable min-h-11 min-w-0 cursor-pointer rounded-control border px-2 py-2.5 ${
+                            className={`pressable flex min-h-[4.5rem] min-w-0 cursor-pointer flex-col items-center justify-center rounded-tile ${
                               active
-                                ? "border-accent bg-accent-soft"
-                                : "border-line-control bg-surface hover:border-line-hover"
+                                ? "bg-primary text-on-primary"
+                                : "bg-tile text-heading ring-line-hover ring-inset hover:ring-1"
                             }`}
                           >
+                            <span className="text-lg leading-none font-bold">{day.short}</span>
                             <span
-                              className={`block text-sm font-semibold ${
-                                active ? "text-accent-strong" : "text-ink-strong"
+                              className={`mt-1.5 text-[0.6875rem] font-semibold uppercase tabular-nums ${
+                                active ? "text-on-primary/80" : "text-ink-muted"
                               }`}
                             >
-                              {day.short}
-                            </span>
-                            <span className="mt-0.5 block font-mono text-xs text-ink-body tabular-nums">
-                              {weekdayCounts[day.key]}
+                              {weekdayCounts[day.key]} days
                             </span>
                           </button>
                         );
                       })}
                     </div>
                   </div>
-                </Reveal>
-              )}
+                )}
 
-              {tripType !== "per-day" && billedDays > 0 && (
-                <div className="swap">
-                  <div className="flex flex-wrap items-center justify-between gap-x-3">
-                    <label htmlFor="suspensions" className="text-sm font-medium text-ink-strong">
-                      Days you expect service to be suspended
-                    </label>
-                    <a
-                      href={CALENDAR_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="-my-3.5 inline-flex items-center gap-1 py-3.5 text-xs font-medium text-accent-ink hover:text-accent-strong"
-                    >
-                      Academic calendar
-                      <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
-                    </a>
+                {tripType !== "per-day" && billedDays > 0 && (
+                  <div className="swap">
+                    <div className="flex flex-wrap items-center justify-between gap-x-3">
+                      <label htmlFor="suspensions" className={labelClass}>
+                        Days you expect service to be suspended
+                      </label>
+                      <a
+                        href={CALENDAR_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="-my-3 inline-flex items-center gap-1 py-3 text-sm font-semibold text-accent hover:text-accent-hover hover:underline"
+                      >
+                        Academic calendar
+                        <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                        <span className="sr-only">(opens in a new tab)</span>
+                      </a>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => changeSuspensions(suspensions - 1)}
+                        disabled={suspensions <= 0}
+                        aria-label="One fewer day"
+                        className={stepperClass}
+                      >
+                        <Minus className="size-4" aria-hidden="true" />
+                      </button>
+                      <input
+                        id="suspensions"
+                        type="number"
+                        inputMode="numeric"
+                        min={0}
+                        max={billedDays}
+                        value={suspensions}
+                        onChange={(e) => changeSuspensions(parseInt(e.target.value, 10) || 0)}
+                        aria-describedby="suspensions-help"
+                        className="h-12 w-20 rounded-input border border-line-control bg-surface text-center text-lg font-bold text-ink tabular-nums hover:border-line-hover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => changeSuspensions(suspensions + 1)}
+                        disabled={suspensions >= billedDays}
+                        aria-label="One more day"
+                        className={stepperClass}
+                      >
+                        <Plus className="size-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                    <p id="suspensions-help" className={`${helpClass} mt-3`}>
+                      Fridays are already excluded. If the bus does not run on
+                      any other day, NSU sends that money back to your bank
+                      account after the semester. This is your expected refund,
+                      not a discount at booking.
+                    </p>
                   </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => changeSuspensions(suspensions - 1)}
-                      disabled={suspensions <= 0}
-                      aria-label="One fewer day"
-                      className="pressable flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border border-line-control bg-surface text-ink-body hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      <Minus className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                    <input
-                      id="suspensions"
-                      type="number"
-                      inputMode="numeric"
-                      min={0}
-                      max={billedDays}
-                      value={suspensions}
-                      onChange={(e) => changeSuspensions(parseInt(e.target.value, 10) || 0)}
-                      aria-describedby="suspensions-help"
-                      className="h-11 w-20 rounded-control border border-line-control bg-surface text-center font-mono text-lg font-semibold text-ink tabular-nums"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => changeSuspensions(suspensions + 1)}
-                      disabled={suspensions >= billedDays}
-                      aria-label="One more day"
-                      className="pressable flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border border-line-control bg-surface text-ink-body hover:bg-sunken disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      <Plus className="h-4 w-4" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <p id="suspensions-help" className="mt-2.5 max-w-[60ch] text-xs leading-relaxed text-ink-body">
-                    Fridays are already excluded. If the bus does not run on any
-                    other day, NSU sends that money back to your bank account
-                    after the semester. This is your expected refund, not a
-                    discount at booking.
-                  </p>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* ─── Summary ───
-                Only the live result lives beside the controls, so the two
-                columns start out nearly the same height. */}
-            <div className="min-w-0 lg:col-span-2 lg:col-start-4 lg:row-start-1">
-              {/* h-full gives the sticky card room to travel. Without it the
-                  wrapper is exactly the card's height and sticky never engages. */}
-              <Reveal delay={80} className="h-full">
+              {/* ─── Summary ───
+                  The grid item stretches to the controls' height, which
+                  gives the sticky card room to travel on desktop. */}
+              <div className="min-w-0 lg:col-span-5">
                 <div id="fare-summary" className="scroll-mt-4 lg:sticky lg:top-6">
-                  <div className="overflow-hidden rounded-card border border-line bg-surface">
-                    <div ref={totalRef} className="bg-inverse px-6 py-7">
+                  <div className="overflow-hidden rounded-card bg-surface shadow-card ring-1 ring-line">
+                    <div ref={totalRef} className="bg-inverse px-6 py-7 sm:px-8">
                       <p className="text-sm font-medium text-on-inverse-muted">
                         {tripType === "per-day" ? "Fare per trip" : "Charged at booking"}
                       </p>
-                      <p className="mt-1.5 font-mono text-4xl font-semibold tracking-tight text-on-inverse tabular-nums">
+                      <p className="mt-1.5 text-5xl font-bold tracking-tight text-on-inverse tabular-nums">
                         ৳{money(totalFare)}
                       </p>
-                      <p className="mt-2 text-xs text-on-inverse-subtle">{totalDetail}</p>
+                      <p className="mt-2 text-sm text-on-inverse-subtle">{totalDetail}</p>
                     </div>
 
                     {refundDays > 0 && (
-                      <div className="swap divide-y divide-line-soft">
-                        <div className="flex items-center justify-between px-6 py-3.5">
-                          <span className="text-sm text-ink-body">Expected refund</span>
-                          <span className="font-mono text-sm font-semibold text-positive tabular-nums">
+                      <dl className="swap divide-y divide-line-soft">
+                        <div className="flex items-center justify-between px-6 py-4 sm:px-8">
+                          <dt className="text-sm text-ink-body">Expected refund, after the semester</dt>
+                          <dd className="text-base font-bold text-positive tabular-nums">
                             ৳{money(refundAmount)}
-                          </span>
+                          </dd>
                         </div>
-                        <div className="flex items-center justify-between px-6 py-3.5">
-                          <span className="text-sm font-medium text-ink-strong">Net cost</span>
-                          <span className="font-mono text-sm font-bold text-ink tabular-nums">
+                        <div className="flex items-center justify-between px-6 py-4 sm:px-8">
+                          <dt className="text-sm font-semibold text-ink-strong">Net cost</dt>
+                          <dd className="text-base font-bold text-heading tabular-nums">
                             ৳{money(netFare)}
-                          </span>
+                          </dd>
                         </div>
-                      </div>
+                      </dl>
                     )}
 
-                    <div className="border-t border-line-soft p-6">
+                    <div className="border-t border-line-soft p-6 sm:p-8">
                       <a
                         href={BOOKING_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         id="book-ticket-cta"
-                        className="pressable flex min-h-11 items-center justify-center gap-2 rounded-control bg-cta px-5 py-3.5 text-sm font-semibold text-on-accent hover:bg-cta-hover"
+                        className="pressable flex min-h-14 items-center justify-center gap-2 bg-notice px-5 text-base font-semibold text-on-notice hover:bg-notice-hover"
                       >
-                        <Ticket className="h-4 w-4" aria-hidden="true" />
                         {saleOpen ? "Book on the NSU portal" : "Open the NSU portal"}
+                        <ArrowUpRight className="size-4" aria-hidden="true" />
                         <span className="sr-only">(opens in a new tab)</span>
                       </a>
 
-                      <div className="mt-3 space-y-2 text-xs leading-relaxed text-ink-body">
-                        <p className={saleClosed ? "font-medium text-danger" : undefined}>
+                      <div className="mt-4 space-y-2 text-sm leading-relaxed text-ink-body">
+                        <p className={saleClosed ? "font-semibold text-danger" : undefined}>
                           {saleNote}
                         </p>
                         {saleClosed && (
                           <button
                             type="button"
                             onClick={() => changeTrip("per-day")}
-                            className="-my-3.5 inline-flex cursor-pointer items-center py-3.5 font-medium text-accent-ink underline hover:text-accent-strong"
+                            className="-my-3 inline-flex cursor-pointer items-center py-3 font-semibold text-accent underline hover:text-accent-hover"
                           >
                             Switch to pay per ticket
                           </button>
                         )}
                         {sale.note && !saleClosed && tripType !== "per-day" && <p>{sale.note}</p>}
-                        <p className="flex items-start gap-1.5 font-medium text-ink-strong">
-                          <CreditCard className="mt-px h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                        <p className="flex items-start gap-2 font-semibold text-ink-strong">
+                          <CreditCard className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                           Pay with {PAYMENT_METHODS} only.
                         </p>
                       </div>
@@ -591,12 +546,12 @@ export default function BusFareCalculator({
                       <button
                         type="button"
                         onClick={copyLink}
-                        className="pressable mt-4 inline-flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-control border border-line-control px-4 py-3 text-sm font-medium text-ink-strong hover:border-line-hover hover:bg-sunken"
+                        className="pressable mt-5 inline-flex min-h-12 w-full cursor-pointer items-center justify-center gap-2 border border-primary px-4 text-sm font-semibold text-primary hover:bg-pale"
                       >
                         {copyState === "copied" ? (
-                          <Check className="h-4 w-4 text-positive" aria-hidden="true" />
+                          <Check className="size-4 text-positive" aria-hidden="true" />
                         ) : (
-                          <Link2 className="h-4 w-4" aria-hidden="true" />
+                          <Link2 className="size-4" aria-hidden="true" />
                         )}
                         {copyState === "copied"
                           ? "Link copied"
@@ -609,56 +564,48 @@ export default function BusFareCalculator({
                       </p>
                     </div>
                   </div>
-
                 </div>
-              </Reveal>
+              </div>
+
+              {/* ─── Reference facts ─── */}
+              <div
+                role="group"
+                aria-labelledby="glance-title"
+                className="min-w-0 rounded-card bg-surface p-6 shadow-card ring-1 ring-line sm:p-8 lg:col-span-12"
+              >
+                <h3 id="glance-title" className="text-lg font-bold text-heading">
+                  {SEMESTER_LABEL} at a glance
+                </h3>
+                <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:grid-cols-7">
+                  {[
+                    { term: "Service period", value: `${SEMESTER_START} to ${SEMESTER_END}`, wide: true },
+                    { term: "Chargeable days", value: `${CHARGEABLE_DAYS} of ${TOTAL_DAYS}` },
+                    { term: "Fridays excluded", value: String(FRIDAYS) },
+                    { term: "One way", value: `৳${FARE_PER_TRIP}` },
+                    { term: "Round trip", value: `৳${FARE_PER_TRIP * 2}` },
+                  ].map((fact) => (
+                    <div
+                      key={fact.term}
+                      className={fact.wide ? "col-span-2 sm:col-span-4 lg:col-span-3" : undefined}
+                    >
+                      <dt className="text-sm text-ink-body">{fact.term}</dt>
+                      <dd className="mt-1 text-base font-bold text-heading tabular-nums">
+                        {fact.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+                <p className="mt-6 border-t border-line-soft pt-4 text-sm leading-relaxed text-ink-body">
+                  From the {SEMESTER_LABEL} bus ticket notice issued by the
+                  Office of the Registrar.
+                </p>
+              </div>
             </div>
 
-            {/* ─── Reference facts ───
-                A full-width strip under both columns on large screens, and
-                after the fare on a phone, so it never leaves a hole beside
-                the shorter column. */}
-            <div className="min-w-0 lg:col-span-5 lg:col-start-1 lg:row-start-2">
-              <Reveal delay={120}>
-                <div
-                  role="group"
-                  aria-labelledby="glance-title"
-                  className="rounded-card border border-line bg-surface p-6"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Info className="h-5 w-5 text-accent-ink" aria-hidden="true" />
-                    <h3 id="glance-title" className="font-semibold text-ink">
-                      {SEMESTER_LABEL} at a glance
-                    </h3>
-                  </div>
-                  <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4 lg:grid-cols-7">
-                    {[
-                      { term: "Service period", value: `${SEMESTER_START} to ${SEMESTER_END}`, wide: true },
-                      { term: "Chargeable days", value: `${CHARGEABLE_DAYS} of ${TOTAL_DAYS}` },
-                      { term: "Fridays excluded", value: String(FRIDAYS) },
-                      { term: "One way", value: `৳${FARE_PER_TRIP}` },
-                      { term: "Round trip", value: `৳${FARE_PER_TRIP * 2}` },
-                    ].map((fact) => (
-                      <div key={fact.term} className={fact.wide ? "col-span-2 sm:col-span-4 lg:col-span-3" : undefined}>
-                        <dt className="text-xs text-ink-body">{fact.term}</dt>
-                        <dd className="mt-1 font-mono text-sm font-medium text-ink tabular-nums">
-                          {fact.value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                  <p className="mt-5 border-t border-line-soft pt-4 text-xs leading-relaxed text-ink-body">
-                    From the {SEMESTER_LABEL} bus ticket notice issued by the
-                    Office of the Registrar.
-                  </p>
-                </div>
-              </Reveal>
-            </div>
+            <p aria-live="polite" aria-atomic="true" className="sr-only">
+              {announcement}
+            </p>
           </div>
-
-          <p aria-live="polite" aria-atomic="true" className="sr-only">
-            {announcement}
-          </p>
         </section>
 
         {about}
@@ -668,49 +615,30 @@ export default function BusFareCalculator({
         {faq}
 
         <RefundNotice />
+
+        {/* Fixed in place; kept inside main so it sits in a landmark. */}
+        <ScrollTopButton />
       </main>
 
-      {/* ═══════════════ Footer ═══════════════ */}
-      <footer className="border-t border-line py-8 pb-28 lg:pb-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <span className="flex items-center gap-2 text-sm font-medium text-ink-body">
-            <Bus className="h-4 w-4" aria-hidden="true" />
-            North South University Bus Fare Calculator, {SEMESTER_LABEL}
-          </span>
-          <p className="text-xs leading-relaxed text-ink-body">
-            Unofficial tool. Always check the{" "}
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-accent-ink underline hover:text-accent-strong"
-            >
-              NSU Transport portal
-            </a>{" "}
-            before you rely on these numbers.
-          </p>
-        </div>
-      </footer>
+      {footer}
 
       {/* ═══════════════ Phone fare bar ═══════════════ */}
       <aside
         aria-label="Running fare total"
-        className="fare-bar fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface shadow-[0_-8px_24px_-12px_rgb(15_23_43/0.35)] lg:hidden"
+        className="fare-bar fixed inset-x-0 bottom-0 z-30 bg-inverse text-on-inverse shadow-[0_-8px_24px_-12px_rgb(6_23_66/0.5)] lg:hidden"
         data-visible={barVisible}
         inert={!barVisible}
         aria-hidden={!barVisible}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))]">
           <div className="min-w-0">
-            <p className="text-xs text-ink-body">
+            <p className="text-xs text-on-inverse-muted">
               {tripType === "per-day" ? "Fare per trip" : "Charged at booking"}
             </p>
-            <p className="font-mono text-xl font-semibold text-ink tabular-nums">
-              ৳{money(totalFare)}
-            </p>
+            <p className="text-xl font-bold tabular-nums">৳{money(totalFare)}</p>
           </div>
           <div className="min-w-0 text-right">
-            <p className="text-xs text-ink-body">
+            <p className="text-xs text-on-inverse-muted">
               {tripType === "per-day"
                 ? "Bought on the day"
                 : billedDays > 0
@@ -719,7 +647,7 @@ export default function BusFareCalculator({
             </p>
             <a
               href="#fare-summary"
-              className="inline-flex items-center py-3 text-sm font-semibold text-accent-ink underline"
+              className="inline-flex items-center py-3 text-sm font-semibold text-on-inverse underline"
             >
               See breakdown
             </a>

@@ -1,6 +1,7 @@
 import BusFareCalculator from "./components/BusFareCalculator";
 import { AboutBusService } from "./components/AboutBusService";
 import { Faq } from "./components/Faq";
+import { SiteFooter } from "./components/SiteFooter";
 import { ROUTE_LIST } from "./lib/routes";
 import { FAQS, SEO_DESCRIPTION, SEO_TITLE, SITE_NAME, SITE_URL } from "./lib/seo";
 import { FARE_PER_TRIP, SEMESTER_LABEL } from "./lib/semester";
@@ -100,7 +101,12 @@ export default function Home() {
         // Escape "<" so the JSON can never close the script element early.
         dangerouslySetInnerHTML={{ __html: json.replace(/</g, "\\u003c") }}
       />
-      <BusFareCalculator renderedAt={renderedAt} about={<AboutBusService />} faq={<Faq />} />
+      <BusFareCalculator
+        renderedAt={renderedAt}
+        about={<AboutBusService />}
+        faq={<Faq />}
+        footer={<SiteFooter />}
+      />
     </>
   );
 }

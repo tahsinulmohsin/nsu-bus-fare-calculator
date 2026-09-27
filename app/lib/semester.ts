@@ -121,6 +121,21 @@ export function formatBdDateTime(ms: number): string {
   return `${p.day} ${p.month} at ${p.hour}:${p.minute} ${p.dayPeriod}`;
 }
 
+/* Parts for a notice date tile: { day: "28", month: "Sep 26" }. */
+export function bdTileParts(ms: number): { day: string; month: string } {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Dhaka",
+      day: "numeric",
+      month: "short",
+      year: "2-digit",
+    })
+      .formatToParts(ms)
+      .map((p) => [p.type, p.value])
+  );
+  return { day: parts.day, month: `${parts.month} ${parts.year}` };
+}
+
 export const BOOKING_URL = "https://transport.northsouth.edu/";
 export const CALENDAR_URL = "https://www.northsouth.edu/academic/academic-calendar/";
 

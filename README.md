@@ -286,7 +286,8 @@ license notice stay with it.
 
 The license covers the code only. The hero video in `public/video/` comes from
 a third-party news clip, and the bus photograph in `app/assets/` is a
-third-party image. They, the North South University name, the route and fare
+third-party image. They, the North South University name, logo and seal
+(`app/assets/nsu-logo.png`, `app/assets/nsu-seal.png`), the route and fare
 data from its notices, and the NSU TV logo in the footage belong to their
 respective owners. None of these are licensed here.
 
