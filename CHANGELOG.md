@@ -5,6 +5,39 @@ All notable changes to the NSU Bus Fare Calculator. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Every version is a
 git tag and a [GitHub release](https://github.com/tahsinulmohsin/nsu-bus-fare-calculator/releases).
 
+## [Unreleased]
+
+### Changed
+
+- Redesigned the whole page in the style of northsouth.edu:
+  - A two-tier header: an NSU-blue bar of official links over a navy main
+    bar with the North South University logo, the tool's name and an
+    "Unofficial" tag, plus a menu on phones.
+  - Bold white type and square buttons over the bus footage.
+  - The ticket sale as a notice board. Its date tiles and yellow status
+    tags follow the live countdown: the tile turns navy while a sale is
+    open and greys out when it closes.
+  - Section titles centred on grey and white bands.
+  - The guide as a white card on a navy band.
+  - The routes as chevron rows beside a card of what every route shares.
+  - A photo footer with the NSU seal and a cyan link panel.
+- Numbers are set in Geist throughout. Sections no longer fade in as you
+  scroll; only the hero headline moves.
+- The channel marks are cropped out of the hero footage, and the still under
+  it is sharper and sized for each screen.
+- On phones the ticket sale board comes straight after the hero.
+- Removed the caption under the bus photo.
+
+### Added
+
+- Two more clips in the hero, from NSU Daily Hub and The Daily NSU. The hero
+  plays all three in turn with a crossfade, and credits the clip on screen.
+- A back-to-top button on desktop.
+
+### Removed
+
+- The scroll reveal component.
+
 ## [2.4.5] - 2026-09-27
 
 ### Added

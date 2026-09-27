@@ -76,7 +76,8 @@ from the published notices and kept in step with them each semester.
   South University logo and seal, but must never claim to be the official
   site: the "Unofficial" label sits beside the logo in the header, and the
   footer says it is not run by North South University.
-- Binding assets: the hero footage of the NSU AC bus (`public/video/`), the
+- Binding assets: the hero footage (`public/video/`: the NSU AC bus clip plus
+  two clips the owner added in September 2026, each credited on screen), the
   photo of a white NSU minibus (`app/assets/nsu-student-bus.jpg`), and both a
   light and a dark theme with a toggle.
 

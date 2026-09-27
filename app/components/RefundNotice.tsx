@@ -58,7 +58,7 @@ export function RefundNotice() {
               has not reached your bank account, contact the Accounts Officer.
             </p>
 
-            <div className="mt-6 flex items-center gap-4 bg-sunken p-4">
+            <div className="mt-6 flex items-center gap-4 border-y border-line-soft py-5">
               <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary">
                 <CircleUser className="size-6" aria-hidden="true" />
               </span>

@@ -4,7 +4,7 @@ node_modules
 .gitignore
 .vercel
 .claude
-.claude-flow
+**/.claude-flow
 .impeccable
 Dockerfile
 docker-compose.yml

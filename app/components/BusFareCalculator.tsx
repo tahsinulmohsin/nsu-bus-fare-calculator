@@ -241,20 +241,20 @@ export default function BusFareCalculator({
             >
               NSU student bus fare calculator
             </h1>
-            <p className="rise stagger-1 mt-5 max-w-xl text-lg leading-relaxed text-pretty text-on-media-muted">
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-pretty text-on-media-muted">
               What North South University&apos;s {SEMESTER_LABEL} bus costs
               for the days you travel, from {SEMESTER_START} to {SEMESTER_END}.
             </p>
-            <div className="rise stagger-2 mt-8 flex flex-wrap gap-1">
+            <div className="mt-8 grid gap-1 sm:flex">
               <a
                 href="#calculator"
-                className="pressable inline-flex min-h-14 items-center bg-media px-8 text-base font-medium text-on-media ring-1 ring-on-media/25 ring-inset hover:bg-utility"
+                className="pressable inline-flex min-h-14 items-center justify-center bg-media px-8 text-base font-medium text-on-media ring-1 ring-on-media/25 ring-inset hover:bg-utility"
               >
                 Work out my fare
               </a>
               <a
                 href="#routes"
-                className="pressable inline-flex min-h-14 items-center bg-on-media px-8 text-base font-medium text-media hover:bg-on-media-muted"
+                className="pressable inline-flex min-h-14 items-center justify-center bg-on-media px-8 text-base font-medium text-media hover:bg-on-media-muted"
               >
                 See bus routes
               </a>

@@ -24,7 +24,7 @@ const linkClass = "font-semibold text-accent underline hover:text-accent-hover";
    costs and how paying works.
 
    Set the way northsouth.edu sets its Vice-Chancellor's message: a white
-   card on a navy band, a rounded photo with its caption on one side and
+   card on a navy band, a rounded photo on one side and
    the text with an outlined button on the other. */
 export function AboutBusService() {
   return (
@@ -45,9 +45,6 @@ export function AboutBusService() {
               placeholder="blur"
               className="h-auto w-full rounded-[1.75rem]"
             />
-            <figcaption className="mt-4 text-center text-lg font-bold text-heading">
-              An NSU student minibus
-            </figcaption>
           </figure>
 
           <div className="min-w-0 lg:col-span-8">

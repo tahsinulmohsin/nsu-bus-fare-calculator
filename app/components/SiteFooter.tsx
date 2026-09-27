@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import footerBus from "../assets/footer-bus.webp";
 import nsuSeal from "../assets/nsu-seal.png";
 import {
   BOOKING_URL,
@@ -32,7 +33,8 @@ const OFFICIAL = [
 const headingClass = "text-lg font-bold text-on-notice";
 const linkClass = "inline-flex min-h-9 items-center gap-1 text-sm text-on-notice hover:underline";
 
-/* northsouth.edu's footer: a photo band with the seal and name over it,
+/* northsouth.edu's footer: a photo band with the seal and name over it
+   (here the NSU lettering on a bus, as no campus photograph is on hand),
    then a cyan panel with rounded top corners holding four link columns.
    The name is this tool's, and the last column and the closing line say
    plainly that it is not the university's site. */
@@ -40,11 +42,12 @@ export function SiteFooter() {
   return (
     <footer className="relative isolate overflow-hidden bg-media">
       <Image
-        src="/video/hero-poster.webp"
+        src={footerBus}
         alt=""
         fill
+        placeholder="blur"
         sizes="100vw"
-        className="-z-10 object-cover object-[50%_40%]"
+        className="-z-10 object-cover"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-media/85 via-media/60 to-media/40" aria-hidden="true" />
 

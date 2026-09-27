@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { CreditCard } from "lucide-react";
 import nsuSeal from "../assets/nsu-seal.png";
+import ticketBus from "../assets/ticket-bus.webp";
 import {
   BOOKING_URL,
   PAYMENT_METHODS,
@@ -60,8 +61,8 @@ function splitDuration(ms: number): number[] {
 }
 
 /* The ticket sale, set out as northsouth.edu sets out its notices: a
-   photo card on the left, and on the right a board under a cyan NOTICE
-   bar whose rows each lead with a date tile.
+   board under a cyan NOTICE bar whose rows each lead with a date tile,
+   and beside it a photo card on how to buy and pay.
 
    The rows are live. Each tile shows the day the countdown is running
    to, turns navy while that sale is open and greys out once it closes,
@@ -101,63 +102,16 @@ export function TicketSaleCountdowns({ renderedAt }: { renderedAt: number }) {
   return (
     <section id="ticket-sale" aria-labelledby="ticket-sale-title" className="scroll-mt-4 bg-canvas py-14 sm:py-20">
       <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:px-6 lg:grid-cols-12 lg:gap-8 lg:px-8">
-        {/* ─── Photo card ─── */}
-        <div className="relative isolate overflow-hidden rounded-card bg-media lg:col-span-5">
-          <Image
-            src="/video/hero-poster.webp"
-            alt=""
-            fill
-            sizes="(min-width: 1024px) 40vw, 100vw"
-            className="-z-10 object-cover"
-          />
-          <div
-            className="absolute inset-0 -z-10 bg-gradient-to-b from-media/95 via-media/80 to-utility/70"
-            aria-hidden="true"
-          />
-          <div className="flex h-full flex-col p-6 sm:p-8">
-            <Image
-              src={nsuSeal}
-              alt="North South University seal"
-              sizes="48px"
-              className="mb-5 h-12 w-auto self-start"
-            />
-            <h2
-              id="ticket-sale-title"
-              className="text-2xl font-bold tracking-tight text-balance text-on-media sm:text-3xl"
-            >
-              {SEMESTER_LABEL} bus tickets
-            </h2>
-            <p className="mt-3 max-w-[48ch] text-sm leading-relaxed text-on-media-muted sm:text-base">
-              Round trip and one way tickets sell in separate windows on the
-              NSU Transport portal. Every time on this board is Bangladesh
-              time.
-            </p>
-
-            <div className="mt-6 rounded-card border border-on-media/15 bg-media/60 p-5 lg:mt-auto">
-              <p className="flex items-start gap-2 text-sm font-semibold text-on-media">
-                <CreditCard className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                Pay with {PAYMENT_METHODS} only.
-              </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-on-media-muted">
-                Missed both sales? Pay per ticket at least an hour before a
-                trip, if seats are available.
-              </p>
-              <a
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pressable mt-4 flex min-h-12 items-center justify-center bg-notice px-5 text-sm font-semibold text-on-notice hover:bg-notice-hover"
-              >
-                Open the NSU Transport portal
-                <span className="sr-only">(opens in a new tab)</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* ─── Notice board ─── */}
+        {/* ─── Notice board ───
+            First in the page order, so on a phone the live rows come
+            straight after the hero; on desktop it sits on the right. */}
         <div className="flex flex-col overflow-hidden rounded-card bg-surface shadow-card ring-1 ring-line lg:col-span-7">
-          <NoticeBar>Ticket sale notice</NoticeBar>
+          <h2
+            id="ticket-sale-title"
+            className="bg-notice px-5 py-2.5 text-center text-sm font-semibold tracking-wide text-on-notice uppercase"
+          >
+            {SEMESTER_LABEL} ticket sale notice
+          </h2>
           <ul className="divide-y divide-line-soft">
             {SALE_ROWS.map((row) => (
               <SaleRow key={row.type} type={row.type} title={row.title} now={now} live={live} />
@@ -178,6 +132,59 @@ export function TicketSaleCountdowns({ renderedAt }: { renderedAt: number }) {
           </ul>
           <div className="mt-auto flex justify-center border-t border-line-soft px-5 py-4">
             <ArrowLink href="#calculator">Work out what you will pay</ArrowLink>
+          </div>
+        </div>
+
+        {/* ─── Photo card ─── */}
+        <div className="relative isolate overflow-hidden rounded-card bg-media lg:order-first lg:col-span-5">
+          <Image
+            src={ticketBus}
+            alt=""
+            fill
+            placeholder="blur"
+            sizes="(min-width: 1024px) 40vw, 100vw"
+            className="-z-10 object-cover"
+          />
+          <div
+            className="absolute inset-0 -z-10 bg-gradient-to-b from-media/95 via-media/80 to-utility/70"
+            aria-hidden="true"
+          />
+          <div className="flex h-full flex-col p-6 sm:p-8">
+            <div className="flex items-center gap-4">
+              <Image
+                src={nsuSeal}
+                alt="North South University seal"
+                sizes="48px"
+                className="h-12 w-auto shrink-0"
+              />
+              <h3 className="text-2xl font-bold tracking-tight text-balance text-on-media sm:text-3xl">
+                Buying your ticket
+              </h3>
+            </div>
+            <p className="mt-4 max-w-[48ch] text-sm leading-relaxed text-on-media-muted sm:text-base">
+              Both sales run on the NSU Transport portal. Every time on this
+              board is Bangladesh time.
+            </p>
+
+            <div className="mt-6 border-t border-on-media/20 pt-5 lg:mt-auto">
+              <p className="flex items-start gap-2 text-sm font-semibold text-on-media">
+                <CreditCard className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                Pay with {PAYMENT_METHODS} only.
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-on-media-muted">
+                Missed both sales? Pay per ticket at least an hour before a
+                trip, if seats are available.
+              </p>
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pressable mt-5 flex min-h-12 items-center justify-center bg-notice px-5 text-sm font-semibold text-on-notice hover:bg-notice-hover"
+              >
+                Open the NSU Transport portal
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

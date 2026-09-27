@@ -27,6 +27,7 @@ always confirm on the [NSU Transport portal](https://transport.northsouth.edu/).
 - [Search engine setup](#search-engine-setup)
 - [Deployment](#deployment)
 - [Versions and releases](#versions-and-releases)
+- [Media and credits](#media-and-credits)
 - [License](#license)
 
 ## Features
@@ -134,8 +135,7 @@ Then open <http://localhost:3000>.
 [React 19](https://react.dev/), [Tailwind CSS v4](https://tailwindcss.com/),
 [Geist](https://vercel.com/font), [Lucide](https://lucide.dev/) icons and
 [next-themes](https://github.com/pacocoursey/next-themes). Animation runs in
-CSS with `IntersectionObserver`, so there is no animation library in the
-bundle.
+CSS, so there is no animation library in the bundle.
 
 ## Project structure
 
@@ -147,22 +147,25 @@ app/
   manifest.ts
   globals.css               Colour tokens for both themes, motion
   components/
-    BusFareCalculator.tsx   The page: hero, calculator, fare bar, footer
-    TicketSaleCountdowns.tsx  Live countdowns for the two ticket sales
+    BusFareCalculator.tsx   The page: hero, calculator, phone fare bar
+    SiteHeader.tsx          Utility bar, main bar with logo, phone menu, theme toggle
+    SiteFooter.tsx          Photo footer with the link panel (server rendered)
+    TicketSaleCountdowns.tsx  Ticket sale notice board with live countdowns
     RouteSchedule.tsx       All six routes with stops and trips back
     AboutBusService.tsx     "How the NSU student bus works" and bus photo (server rendered)
     Faq.tsx                 FAQ (server rendered)
     RefundNotice.tsx        Summer 2026 refund note
     HeroVideo.tsx           Background video with data and motion checks
-    Reveal.tsx              Scroll reveal
+    ScrollTopButton.tsx     Back-to-top button on desktop
+    ui.tsx                  Section titles, date tiles, tags, notice bars, arrow links
   lib/
     semester.ts             Semester dates, fares, sale windows, refund data
     routes.ts               Routes, stops, arrivals and departures
     seo.ts                  Site URL, title, description and FAQ content
     useFareParams.ts        Calculator state kept in the URL
     useNow.ts, useClient.ts Clock, hydration and motion-preference stores
-app/assets/                 Bus photograph (optimised by next/image)
-public/video/               Hero video (desktop and phone) and poster
+app/assets/                 Hero still, footer and card frames, bus photo, NSU logo and seal
+public/video/               The three hero clips, each cut for phones and wider screens
 Dockerfile, docker-compose.yml  Self-hosting
 DESIGN.md                   Visual design system
 CHANGELOG.md                Every version and what changed
@@ -237,15 +240,7 @@ search engines treat that as the one real page. To make another address the
 canonical one, build with
 `--build-arg NEXT_PUBLIC_SITE_URL=https://your.domain`.
 
-To regenerate the hero videos from a source file:
-
-```bash
-ffmpeg -i source.mkv -an -vf "scale=1152:-2,fps=24" -c:v libx264 -crf 35 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero.mp4
-```
-
-```bash
-ffmpeg -i source.mkv -an -vf "scale=640:-2,fps=24" -c:v libx264 -profile:v main -crf 39 -preset veryslow -pix_fmt yuv420p -movflags +faststart public/video/hero-mobile.mp4
-```
+To regenerate the hero videos, see [Media and credits](#media-and-credits).
 
 ## Versions and releases
 
@@ -278,17 +273,41 @@ git push -f origin production
 gh release create v2.5.0 --title "v2.5.0" --notes-file notes.md
 ```
 
+## Media and credits
+
+None of the media below is covered by the MIT license. Every file is listed
+with where it came from and how it was made.
+
+| File | Source | How it was made |
+| --- | --- | --- |
+| `public/video/warming-up.mp4`, `warming-up-mobile.mp4` | "NSU bus is warming up before carrying our CGPA struggles", a YouTube Short by NSU Daily Hub (`_AkmkB1o-nA`) | Bottom 200 px with the channel mark cropped off. Phone cut: the whole portrait frame at 480 px wide. Desktop cut: the centre 1080×576 band |
+| `public/video/bus-service.mp4`, `bus-service-mobile.mp4` | "NSU bus service", a YouTube Short by The Daily NSU, filmed by Rafiur Rahim Rafi (`ZkyqGpvHJyM`) | Top 110 px and bottom 140 px with the channel mark and signature cropped off. Phone cut: 480 px wide. Desktop cut: the centre 720×384 band |
+| `public/video/ac-bus.mp4`, `ac-bus-mobile.mp4` | "Big News! NSU is launching AC bus service for students", NSU TV & Radio (`-TNg9uyT6rA`) | Top 184 px with the channel mark cropped off, then scaled to 1152 px and 640 px wide |
+| `app/assets/hero-poster.webp` | Frame at 6 s of the AC bus video | Same crop, 1920 px wide. next/image serves it at the size each screen needs |
+| `app/assets/footer-bus.webp` | Frame at 16 s of the AC bus video | Same crop, 1600 px wide |
+| `app/assets/ticket-bus.webp` | Frame at 12 s of the AC bus video | Same crop, 1200 px wide |
+| `app/assets/nsu-student-bus.jpg` | Third-party photo of an NSU minibus, supplied by the owner | As supplied, 480×640 |
+| `app/assets/nsu-logo.png`, `nsu-seal.png` | North South University's logo and seal, from northsouth.edu | As published, used at the owner's request |
+
+The channel marks are cropped out to keep the footage clean, so the hero
+credits the clip that is playing in its bottom corner. Videos are silent
+H.264, two-pass encoded (about 500 kbps for wide screens and 120 to 200 kbps
+for phones) with `-movflags +faststart`. For example, the AC bus clip:
+
+```bash
+ffmpeg -i source.mkv -an -vf "crop=1920:896:0:184,scale=1152:-2" -c:v libx264 -preset slow -b:v 500k -pass 1 -f mp4 /dev/null
+ffmpeg -i source.mkv -an -vf "crop=1920:896:0:184,scale=1152:-2" -c:v libx264 -preset slow -b:v 500k -pass 2 -pix_fmt yuv420p -movflags +faststart public/video/ac-bus.mp4
+```
+
 ## License
 
 The source code is released under the [MIT License](LICENSE). You are free to
 use, change and share it, including commercially, as long as the copyright and
 license notice stay with it.
 
-The license covers the code only. The hero video in `public/video/` comes from
-a third-party news clip, and the bus photograph in `app/assets/` is a
-third-party image. They, the North South University name, logo and seal
-(`app/assets/nsu-logo.png`, `app/assets/nsu-seal.png`), the route and fare
-data from its notices, and the NSU TV logo in the footage belong to their
+The license covers the code only. The videos and images listed under
+[Media and credits](#media-and-credits), the North South University name, logo
+and seal, and the route and fare data from its notices belong to their
 respective owners. None of these are licensed here.
 
 ---
