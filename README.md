@@ -1,4 +1,4 @@
-# North South University (NSU) Bus Fare Calculator (v2.1.0)
+# North South University (NSU) Bus Fare Calculator (v2.2.0)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
@@ -32,14 +32,20 @@ back, not as a discount, so the number you see is the number you actually pay.
 
 ### Ticket sale windows
 
-Round trip and one way tickets sell in two different windows, so the app shows
-the one matching the trip type you picked.
+Round trip and one way tickets sell in two different windows. The app shows a
+separate live countdown for each, and the booking note in the calculator follows
+the trip type you picked.
 
 | Trip type | Sale window |
 |---|---|
 | Round trip | 28 to 29 September 2026, 10:00 AM to 4:00 PM |
 | One way | 30 September to 1 October 2026, 10:00 AM to 4:00 PM, seats permitting |
 | Pay per ticket | At least 1 hour before the trip, seats permitting |
+
+The notice gives each window as a date range with 10:00 AM to 4:00 PM hours. The
+app reads that as those hours on each day, so a countdown runs to the opening
+time, then to that day's close, then to the next morning's reopening, and stops
+once the last day closes.
 
 ### Timings
 
@@ -62,14 +68,16 @@ the 7:40 AM arrival and the stoppage lists are identical in both notices.
 
 ## Features
 
+- **Ticket sale countdowns**, one each for round trip and one way, that know
+  whether a sale has not opened, is open, is paused overnight, or has closed.
 - **Fare calculator** for round trip, one way, and per day ad hoc trips, with a
   per weekday breakdown of how often each day falls in the semester.
 - **Refund estimate** for days you expect the service to be suspended, shown
   alongside the amount charged at booking and your net cost.
-- **Summer 2026 refund guide** with the suspended dates, the claim steps, the
-  form deadline with a live countdown, and who to contact if something is wrong.
 - **Route schedules** for all six routes (Uttara, Mirpur, Mohammadpur,
   Dhanmondi, Azimpur, Khilgaon), as a table on desktop and cards on mobile.
+- **Summer 2026 refund guide** at the end of the page, with the suspended
+  dates, the claim steps, and who to contact if something is wrong.
 - **Light and dark themes**, both checked to WCAG AA contrast.
 - **Motion that respects `prefers-reduced-motion`**, including the hero video,
   which never autoplays when reduced motion is requested and always has a
@@ -83,7 +91,8 @@ weekday counts can never disagree with each other.
 
 1. Set `SEMESTER_LABEL`, `SEMESTER_START`, `SEMESTER_END` and the two `Date`
    objects from the new academic calendar.
-2. Set `TICKET_SALES` from the transport notice, one entry per trip type.
+2. Set `TICKET_SALES` from the transport notice, one entry per trip type, with
+   one `sessions` entry per selling day. The countdowns read from it.
 3. Set `NOTICE_PUBLISHED` to `false` while you are working from derived figures
    rather than a published notice. That shows a banner saying so, and back to
    `true` once the real notice is out.

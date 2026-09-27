@@ -31,13 +31,16 @@ import {
   TRIP_LABELS,
   WEEKDAYS,
   countWeekdayInRange,
+  getSaleStatus,
   type TripType,
 } from "../lib/semester";
+import { useNow } from "../lib/useNow";
 import { ARRIVALS, ROUTES, ROUTE_LIST } from "../lib/routes";
 import { HeroVideo } from "./HeroVideo";
 import { RefundNotice } from "./RefundNotice";
 import { Reveal } from "./Reveal";
 import { RouteSchedule } from "./RouteSchedule";
+import { TicketSaleCountdowns } from "./TicketSaleCountdowns";
 
 const TRIP_OPTIONS: { value: TripType; label: string; hint: string }[] = [
   { value: "round", label: "Round trip", hint: "Both ways" },
@@ -55,11 +58,10 @@ export default function BusFareCalculator() {
   const [fromNsuTiming, setFromNsuTiming] = useState("");
   const [selectedDays, setSelectedDays] = useState<number[]>([]);
   const [suspensions, setSuspensions] = useState(0);
-  const [now, setNow] = useState<number | null>(null);
+  const now = useNow(30_000);
 
   useEffect(() => {
     setMounted(true);
-    setNow(Date.now());
   }, []);
 
   /* Round trip and one way tickets sell in different windows, so the
@@ -67,8 +69,8 @@ export default function BusFareCalculator() {
   const sale = TICKET_SALES[tripType];
   const saleClosed =
     now !== null &&
-    sale.deadlineISO !== undefined &&
-    now > new Date(sale.deadlineISO).getTime();
+    sale.sessions !== undefined &&
+    getSaleStatus(sale.sessions, now).state === "closed";
 
   /* How many times each weekday falls inside the service period. */
   const weekdayCounts = useMemo(() => {
@@ -218,6 +220,8 @@ export default function BusFareCalculator() {
           </div>
         </div>
       )}
+
+      <TicketSaleCountdowns />
 
       {/* ═══════════════ Calculator ═══════════════ */}
       <main
@@ -585,12 +589,13 @@ export default function BusFareCalculator() {
         </div>
       </main>
 
-      <RefundNotice />
 
       <RouteSchedule
         selectedRoute={selectedRoute}
         onSelectRoute={handleRouteChange}
       />
+
+      <RefundNotice />
 
       {/* ═══════════════ Footer ═══════════════ */}
       <footer className="border-t border-slate-200 py-8 dark:border-slate-800">

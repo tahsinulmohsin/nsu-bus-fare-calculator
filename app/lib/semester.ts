@@ -25,22 +25,35 @@ export const FARE_PER_TRIP = 100; // BDT per direction, per day
 
 /* Round trip and one way tickets go on sale in two different windows,
    and a pay per ticket trip is bought on the day. */
+/* The notice gives each sale as a date range with 10:00 AM to 4:00 PM
+   hours. That is read as those hours on each day, so the sale pauses
+   overnight and the countdown targets whichever boundary comes next. */
+export interface SaleSession {
+  opens: string; // ISO timestamp, Bangladesh time
+  closes: string;
+}
+
 export interface TicketSale {
   window: string;
-  /* When the window closes, for the countdown. Pay per ticket has no
-     fixed deadline, so it has none. */
-  deadlineISO?: string;
+  /* Pay per ticket is bought on the day, so it has no sessions. */
+  sessions?: SaleSession[];
   note?: string;
 }
 
 export const TICKET_SALES: Record<TripType, TicketSale> = {
   round: {
-    window: "28 to 29 September 2026, 10:00 AM to 4:00 PM",
-    deadlineISO: "2026-09-29T16:00:00+06:00",
+    window: "28 to 29 September 2026, 10:00 AM to 4:00 PM each day",
+    sessions: [
+      { opens: "2026-09-28T10:00:00+06:00", closes: "2026-09-28T16:00:00+06:00" },
+      { opens: "2026-09-29T10:00:00+06:00", closes: "2026-09-29T16:00:00+06:00" },
+    ],
   },
   "one-way": {
-    window: "30 September to 1 October 2026, 10:00 AM to 4:00 PM",
-    deadlineISO: "2026-10-01T16:00:00+06:00",
+    window: "30 September to 1 October 2026, 10:00 AM to 4:00 PM each day",
+    sessions: [
+      { opens: "2026-09-30T10:00:00+06:00", closes: "2026-09-30T16:00:00+06:00" },
+      { opens: "2026-10-01T10:00:00+06:00", closes: "2026-10-01T16:00:00+06:00" },
+    ],
     note: "Sold only if seats are still available.",
   },
   "per-day": {
@@ -48,6 +61,29 @@ export const TICKET_SALES: Record<TripType, TicketSale> = {
     note: "Sold only if seats are still available.",
   },
 };
+
+export type SaleState = "upcoming" | "open" | "paused" | "closed";
+
+export interface SaleStatus {
+  state: SaleState;
+  /* Timestamp the countdown runs to, or null once the sale is over. */
+  target: number | null;
+  /* True while the final day's session is open. */
+  lastDay: boolean;
+}
+
+export function getSaleStatus(sessions: SaleSession[], now: number): SaleStatus {
+  for (let i = 0; i < sessions.length; i++) {
+    const opens = Date.parse(sessions[i].opens);
+    const closes = Date.parse(sessions[i].closes);
+    const lastDay = i === sessions.length - 1;
+    if (now < opens) {
+      return { state: i === 0 ? "upcoming" : "paused", target: opens, lastDay };
+    }
+    if (now < closes) return { state: "open", target: closes, lastDay };
+  }
+  return { state: "closed", target: null, lastDay: true };
+}
 
 export const BOOKING_URL = "https://transport.northsouth.edu/";
 export const CALENDAR_URL = "https://www.northsouth.edu/academic/academic-calendar/";
