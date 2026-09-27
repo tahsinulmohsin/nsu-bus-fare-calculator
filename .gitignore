@@ -31,3 +31,7 @@ next-env.d.ts
 # local agent tooling
 .claude-flow/
 .claude/
+
+# impeccable scratch (decision page logs, review captures)
+.impeccable/questions/
+.impeccable/review/
