@@ -1,10 +1,11 @@
-# North South University (NSU) Bus Fare Calculator (v2.4.0)
+# North South University (NSU) Bus Fare Calculator (v2.4.1)
 
 Work out what the North South University student bus service costs you for the
 **Fall 2026** semester, check pickup points and times across all six Dhaka
 routes, and see who to contact about a Summer 2026 fare refund.
 
-Live: <https://nsu-bus-fare-calculator.vercel.app>
+Live: <https://nsu-bus.tahsinulmohsin.me>
+(the old <https://nsu-bus-fare-calculator.vercel.app> address redirects there)
 
 All figures come from the official notice, *Sale of NSU Students' Bus Ticket -
 Fall 2026*, issued by the Office of the Registrar.
@@ -181,8 +182,8 @@ docker compose up -d --build
 
 That serves it on port 3000. Pages regenerate hourly inside the container,
 exactly as on Vercel. The canonical URL, sitemap and structured data keep
-pointing at the Vercel address, so search engines treat that as the one real
-page. To make another address canonical instead, build with
+pointing at nsu-bus.tahsinulmohsin.me, so search engines treat that as the
+one real page. To make another address canonical instead, build with
 `--build-arg NEXT_PUBLIC_SITE_URL=https://your.domain`.
 
 ## Deployment

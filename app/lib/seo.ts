@@ -16,13 +16,14 @@ import {
   TOTAL_DAYS,
 } from "./semester";
 
-/* The canonical address. No trailing slash; build absolute URLs with
-   `new URL(path, SITE_URL)`. A self-hosted copy keeps pointing its
-   canonical, sitemap and structured data here, so search engines treat
-   the Vercel address as the one real page. Set NEXT_PUBLIC_SITE_URL at
-   build time only if another address should become the canonical one. */
+/* The canonical address, on the custom domain. No trailing slash; build
+   absolute URLs with `new URL(path, SITE_URL)`. The old vercel.app address
+   301s here (next.config.ts), and a self-hosted copy keeps pointing its
+   canonical, sitemap and structured data here too, so search engines see
+   one real page. Set NEXT_PUBLIC_SITE_URL at build time only if another
+   address should become the canonical one. */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://nsu-bus-fare-calculator.vercel.app"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://nsu-bus.tahsinulmohsin.me"
 ).replace(/\/$/, "");
 export const SITE_NAME = "NSU Bus Fare Calculator";
 
